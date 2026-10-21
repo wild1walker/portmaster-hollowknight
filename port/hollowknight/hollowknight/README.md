@@ -25,7 +25,8 @@ handheld.
    packs it for the player (one to three hours). If it is interrupted, launch again: it continues
    where it stopped. The log is `ports/hollowknight/patchlog.txt`.
 3. When it is done the game starts. The setup uses up the game's folder in `gamedata/` (its files
-   are moved into the converted game); archives you put there can be deleted afterwards.
+   are moved into the converted game), and deletes the archives or installers you put there once
+   the game is built (`keep_installers=1` in `ports/hollowknight/setup.txt` keeps them).
 
 Saves and settings: `ports/hollowknight/data/`. PortMaster's exit hotkey quits. The game's options
 (pointer mode, keys, ...) are in `ports/hollowknight/port.env`; `log.txt` is the last run's log.
