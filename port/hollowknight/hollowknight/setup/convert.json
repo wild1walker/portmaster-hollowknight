@@ -1,0 +1,22 @@
+{
+ "steps": [
+  "shaders",
+  "settings",
+  "audio",
+  "textures"
+ ],
+ "settings": {
+  "graphics_apis": [
+   11
+  ]
+ },
+ "textures": {
+  "scale": 1.0,
+  "block": [
+   4,
+   4
+  ],
+  "quality": "medium",
+  "mips": "keep"
+ }
+}

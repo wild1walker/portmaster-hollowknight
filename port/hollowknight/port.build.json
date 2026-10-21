@@ -1,0 +1,174 @@
+{
+ "made_by": "pmunity port new",
+ "config": {
+  "port": {
+   "name": "hollowknight",
+   "title": "Hollow Knight",
+   "route": "android",
+   "porter": [
+    "wild1walker"
+   ],
+   "desc": "Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the GOG Linux version.",
+   "inst": "Put the GOG Linux installer (hollow_knight_*.sh) or the installed game folder into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld.",
+   "genres": [
+    "action",
+    "adventure",
+    "platform"
+   ],
+   "availability": "paid",
+   "store": [
+    {
+     "name": "GOG",
+     "gameurl": "https://www.gog.com/game/hollow_knight",
+     "developerurl": ""
+    }
+   ],
+   "setup_time": "one to three hours",
+   "exp": true,
+   "ready_marker": ".setup_done"
+  },
+  "game": {
+   "data": "Hollow Knight_Data",
+   "build": "linux",
+   "unity_versions": [
+    "6000.0.61f1"
+   ],
+   "what": "Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder",
+   "size_mb": 4999,
+   "setup_space_mb": 0
+  },
+  "player": {
+   "backend": "mono",
+   "abi": "armeabi-v7a",
+   "url": "https://download.unity3d.com/download_unity/74a0adb02c31/TargetSupportInstaller/UnitySetup-Android-Support-for-Editor-6000.0.61f1.exe",
+   "sha256": {
+    "libmain.so": "f9ea09a232a33b4c971bfcb45053fc5ef4c7ccc5999014d7bf7f46bae0bd5a31",
+    "libunity.so": "4ac0f68ffd66e0af2470544b75500ccda60e1d3c00b172e870690bf75000007d"
+   }
+  },
+  "convert": {
+   "steps": [
+    "shaders",
+    "settings",
+    "audio",
+    "textures"
+   ],
+   "settings": {
+    "graphics_apis": [
+     11
+    ]
+   },
+   "textures": {
+    "scale": 1.0,
+    "block": [
+     4,
+     4
+    ],
+    "quality": "medium",
+    "mips": "keep"
+   }
+  },
+  "android_data": {
+   "asmpatch": "auto",
+   "video_shader": true,
+   "swappy": "off",
+   "streaming_assets": "both",
+   "data_path": false,
+   "name": "HollowKnight",
+   "package": "com.pmunity.hollowknight",
+   "args": []
+  },
+  "runtime": {
+   "UA_PAD_NAME": "Xbox Wireless Controller"
+  },
+  "questions": [
+   {
+    "id": "TEXTURE_QUALITY",
+    "question": "Texture quality? Medium is what this port is tested with. Fast makes the setup much shorter, with slightly less exact textures.",
+    "options": [
+     [
+      "medium",
+      "Medium (recommended)"
+     ],
+     [
+      "fast",
+      "Fast (shorter setup)"
+     ]
+    ],
+    "default": "medium",
+    "convert_set": "textures.quality"
+   }
+  ],
+  "files": {
+   "plugins": [],
+   "managed": [],
+   "assembly_patches": [],
+   "hooks": {},
+   "extra": []
+  },
+  "build": {
+   "commands": [],
+   "outputs": {},
+   "licenses": {}
+  }
+ },
+ "route": {
+  "title": "Unity's Android player (armv7, Mono), run natively by ua_host on the handheld's 32-bit userland",
+  "files": {
+   "@@TITLE@@.sh": "launcher.sh",
+   "@@PORTDIR@@/setup/patchscript": "patchscript",
+   "@@PORTDIR@@/README.md": "README.player.md",
+   "@@PORTDIR@@/gamedata/PUT_GAME_FILES_HERE.txt": "gamedata.txt",
+   "@@PORTDIR@@/@@PORTDIR@@.gptk": "hotkey.gptk",
+   "README.md": "README.port.md",
+   "package.sh": "package.sh"
+  },
+  "package": [
+   "ua_host",
+   "pmunity",
+   "pybundle",
+   "asmpatch?"
+  ]
+ },
+ "files": [
+  "Hollow Knight.sh",
+  "README.md",
+  "hollowknight/README.md",
+  "hollowknight/gamedata/PUT_GAME_FILES_HERE.txt",
+  "hollowknight/hollowknight.gptk",
+  "hollowknight/port.env",
+  "hollowknight/port.json",
+  "hollowknight/setup.txt",
+  "hollowknight/setup/convert.json",
+  "hollowknight/setup/patchscript",
+  "hollowknight/setup/questions.lua",
+  "hollowknight/setup/setup.env",
+  "package.sh"
+ ],
+ "check": {
+  "build": "linux",
+  "arch": "x86_64",
+  "backend": "mono",
+  "unity_version": "6000.0.61f1",
+  "scripting_runtime": ".NET 4.x (libmonobdwgc-2.0)",
+  "compressed": false,
+  "input_verdict": "mixed",
+  "route": "android",
+  "notes": [
+   "reads of Application.dataPath reach System.IO (asmpatch --survey says where; on Android dataPath is the APK or OBB file): when the game needs files there or writes there, android_data.data_path = true gives those reads Game_Data/ beside the APK, with the data folder's own files",
+   "StreamingAssets read as files (asmpatch: reads of Application.streamingAssetsPath reach System.IO): android_data.streaming_assets = \"both\" puts them beside the APK (Game_Data/StreamingAssets/, 0.0 MB, also in the OBB) and asmpatch's streaming-assets patch gives those reads that folder",
+   "InControl: it picks its Android profiles at run time by the pad's name; UA_PAD_NAME names the pad as one of them knows (asmpatch --survey lists them), else the pad is an unknown controller (docs/input.md)",
+   "reads the mouse and also selects UI elements: try the pad first; UA_POINTER=1 (with UA_POINTER_TOGGLE) where menus need the mouse",
+   "reads keyboard keys (Input.GetKey, 6 references): map pad buttons with UA_KEYMAP (e.g. start:escape) where the pad has no binding",
+   "Input System package (both): its desktop build has no layout for the Android player's pads: asmpatch's inputsystem-android patch registers them (docs/input.md)",
+   "text input (UI InputField, TouchScreenKeyboard, Input.inputString): Unity's soft keyboard opens ua_host's on-screen keyboard (the pad types); UA_OSK = \"done\" in runtime answers it at once where text does not matter (docs/input.md)",
+   "video: 0 VideoPlayers in the main data, clips {'vp8': 16}: android-data adds Hidden/VideoDecodeAndroid (keep android_data.video_shader on); VP8/VP9 and H.264 decode built in, AAC/HEVC/MP3 only with the system's libavcodec (else silent)",
+   "P/Invoke into GalaxyCSharpGlue (GalaxyCSharp), sdkencryptedappticket (com.rlabrecque.steamworks.net), steam_api (com.rlabrecque.steamworks.net): each needs an ARM library or a stub",
+   "services: GOG Galaxy, Steamworks",
+   "1849 MB of BC/DXT textures (main data): the handheld GPU cannot sample them, so Unity decodes them to RGBA when loading (4-8x the memory). The textures step (convert.steps += \"textures\") re-encodes them as ASTC: less memory, slightly different pixels, a longer setup; off by default",
+   "BC/DXT textures decode to about 7395 MB of RGBA on the handheld (its GPU cannot sample them): more than a 1 GB device can hold next to the game. The textures step is suggested (convert.steps), re-encoding them as ASTC at the GPU's own size; remove it only for a device with the memory to spare",
+   "4999 MB: the handheld's setup needs about 2-3 times that free while it runs"
+  ],
+  "warnings": []
+ }
+}

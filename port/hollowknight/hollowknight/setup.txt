@@ -1,0 +1,7 @@
+# Hollow Knight setup options, read once by the first-launch setup. PortMaster's setup
+# screen asks these itself; this file is used when it does not (older PortMaster versions).
+#
+# Texture quality? Medium is what this port is tested with. Fast makes the setup much shorter, with slightly less exact textures.
+#   medium  Medium (recommended)
+#   fast  Fast (shorter setup)
+texture_quality=medium

@@ -1,0 +1,43 @@
+{
+    "version": 4,
+    "name": "hollowknight.zip",
+    "items": [
+        "Hollow Knight.sh",
+        "hollowknight"
+    ],
+    "items_opt": [],
+    "attr": {
+        "title": "Hollow Knight",
+        "porter": [
+            "wild1walker"
+        ],
+        "desc": "Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the GOG Linux version.",
+        "desc_md": null,
+        "inst": "Put the GOG Linux installer (hollow_knight_*.sh) or the installed game folder into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld.",
+        "inst_md": null,
+        "genres": [
+            "action",
+            "adventure",
+            "platform"
+        ],
+        "image": null,
+        "rtr": false,
+        "exp": true,
+        "runtime": [],
+        "store": [
+            {
+                "name": "GOG",
+                "gameurl": "https://www.gog.com/game/hollow_knight",
+                "developerurl": ""
+            }
+        ],
+        "availability": "paid",
+        "reqs": [
+            "armhf"
+        ],
+        "arch": [
+            "aarch64"
+        ],
+        "min_glibc": ""
+    }
+}

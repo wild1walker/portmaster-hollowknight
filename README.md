@@ -32,9 +32,10 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 | Read the game's files and find its Unity version | Done (Unity 6, Mono scripting) |
 | Get Unity's matching Android player | Done (downloaded from Unity during setup, never shipped here) |
 | Convert the shaders for the handheld's GPU | Done |
-| Pack the game for the player | In progress |
-| First start in an emulated handheld | Next |
-| Shrink the textures so they fit in 1 GB of memory | To do |
+| Convert the textures so they fit in 1 GB of memory | Done (full resolution, re-encoded in a format the handheld's GPU reads) |
+| Pack the game for the player | Done |
+| First start in an emulated handheld | Done: the game starts, its menus draw, the pad works |
+| Get through the menus into the game | In progress |
 | Controls, saves and the setup screen | To do |
 | Tests on a real handheld | To do |
 | First test release | To do |
@@ -49,10 +50,18 @@ Please don't attach game files, and don't ask for them. Logs from the port are f
 
 ## For developers
 
-The port is built with [portmaster-unity](https://github.com/wild1walker/portmaster-unity)
-(`pmunity port new`, `port check`, `port package`); this repository will hold the port's own
-settings, launcher and setup scripts. Hollow Knight is also a test case for those tools: what it
-needs gets fixed there, so other Unity ports benefit too.
+The port is made with [portmaster-unity](https://github.com/wild1walker/portmaster-unity):
+`port/hollowknight/port.toml` holds its settings, and everything else in `port/hollowknight/` is
+generated from it by `pmunity port new`:
+
+```bash
+cd portmaster-unity/convert
+python -m pmunity port new hollowknight --data <the GOG game folder> --out <this repo>/port/hollowknight
+```
+
+`port/hollowknight/package.sh` builds the release zip (set `PMUNITY` to a portmaster-unity
+checkout with its runtime built). Hollow Knight is also a test case for those tools: what it needs
+gets fixed there, so other Unity ports benefit too.
 
 ## Licence and credits
 

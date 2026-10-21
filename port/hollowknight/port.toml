@@ -1,0 +1,105 @@
+# port.toml: a PortMaster port made with `python -m pmunity port new` (docs/porting.md).
+# Edit, then run `port new <name> --data <game>` again to regenerate the port folder.
+
+# the port: its folder in ports/ (name), the menu entry and launcher "<title>.sh" (title), the
+# route (port check recommends one), port.json fields, the patcher's time estimate
+[port]
+name = "hollowknight"
+title = "Hollow Knight"
+route = "android"
+porter = ["wild1walker"]
+desc = "Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the GOG Linux version."
+inst = "Put the GOG Linux installer (hollow_knight_*.sh) or the installed game folder into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld."
+genres = ["action", "adventure", "platform"]
+availability = "paid"
+store = [{name = "GOG", gameurl = "https://www.gog.com/game/hollow_knight", developerurl = ""}]
+setup_time = "one to three hours"
+exp = true
+ready_marker = ".setup_done"
+
+# what the player provides: the data folder the setup looks for (data, a glob), the build
+# kind (linux | macos | windows), the Unity versions the setup accepts (empty: any the
+# converter supports), how READMEs and messages describe it (what), its size in MB
+[game]
+data = "Hollow Knight_Data"
+build = "linux"
+unity_versions = ["6000.0.61f1"]
+what = "Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder"
+size_mb = 4999
+setup_space_mb = 0
+
+# Unity's Android player: backend/abi; url = the installer (`pmunity player url <version>`; empty:
+# looked up on the handheld); sha256 = {"<file>" = "<hash>"} checked after the fetch
+[player]
+backend = "mono"
+abi = "armeabi-v7a"
+url = "https://download.unity3d.com/download_unity/74a0adb02c31/TargetSupportInstaller/UnitySetup-Android-Support-for-Editor-6000.0.61f1.exe"
+sha256 = {"libmain.so" = "f9ea09a232a33b4c971bfcb45053fc5ef4c7ccc5999014d7bf7f46bae0bd5a31", "libunity.so" = "4ac0f68ffd66e0af2470544b75500ccda60e1d3c00b172e870690bf75000007d"}
+
+# pmunity convert's config (each step's DEFAULTS); "textures" re-encodes BC/DXT as ASTC
+# (less memory, a longer setup, slightly different pixels: off unless you add it)
+[convert]
+steps = ["shaders", "settings", "audio", "textures"]
+[convert.textures]
+scale = 1.0
+block = [4, 4]
+quality = "medium"
+mips = "keep"
+[convert.settings]
+graphics_apis = [11]
+
+# pmunity android-data: asmpatch = auto (run tools/asmpatch; it changes only what it
+# finds: Rewired, the Input System package) | off | ["patch", ...]; streaming_assets = obb |
+# both | loose (code that reads StreamingAssets as files: also/only beside the APK,
+# docs/android-data.md); data_path = true (files read or written at Application.dataPath);
+# name = the APK's, package (keep it: it names the PlayerPrefs file); args = more options
+[android_data]
+asmpatch = "auto"
+video_shader = true
+swappy = "off"
+streaming_assets = "both"
+data_path = false
+name = "HollowKnight"
+package = "com.pmunity.hollowknight"
+args = []
+
+# ua_host's environment (docs/runtime.md, docs/input.md), written to port.env:
+# e.g. UA_POINTER = "1", UA_POINTER_CURSOR = "0", UA_KEYMAP = "start:escape", UA_PAD_NAME,
+# UA_OSK = "done" (the on-screen keyboard answers every soft keyboard at once), UA_KEYBOARD = "1"
+[runtime]
+UA_PAD_NAME = "Xbox Wireless Controller"
+
+# the porter's own files (paths relative to this file), copied into setup/: converter plugins
+# (--plugin), managed = assemblies shipped into the game (--managed-file), assembly_patches =
+# [{name, command, files}] ({setup} = the setup folder), hooks = {game|pre_convert|post_convert|
+# post_pack|post_install = "x.sh"} sourced by the setup, extra = files for the port folder
+[files]
+plugins = []
+managed = []
+assembly_patches = []
+hooks = {}
+extra = []
+
+# commands `port package` runs in this folder first (env PMUNITY, PORT_SRC, BUILD), the files
+# they make put into the port folder (outputs = {"setup/files/x" = "build/x"}), and their licences
+# (licenses = {"LICENSE.x.txt" = "path"})
+[build]
+commands = []
+outputs = {}
+licenses = {}
+
+# Questions PortMaster's patcher asks before the setup (each answer is kept for later runs), e.g.:
+# [[questions]]
+# id = "TEXTURE_QUALITY"
+# question = "Texture quality? Medium is what this port is tested with."
+# options = [["medium", "Medium (recommended)"], ["fast", "Fast (shorter setup)"]]
+# default = "medium"
+# convert_set = "textures.quality"        # the answer -> pmunity convert --set textures.quality=<answer>
+# # env = "UA_POINTER"                    # or: the answer -> the game's environment
+
+[[questions]]
+id = "TEXTURE_QUALITY"
+question = "Texture quality? Medium is what this port is tested with. Fast makes the setup much shorter, with slightly less exact textures."
+options = [["medium", "Medium (recommended)"], ["fast", "Fast (shorter setup)"]]
+default = "medium"
+convert_set = "textures.quality"

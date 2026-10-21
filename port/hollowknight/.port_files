@@ -1,0 +1,14 @@
+Hollow Knight.sh
+README.md
+hollowknight/README.md
+hollowknight/gamedata/PUT_GAME_FILES_HERE.txt
+hollowknight/hollowknight.gptk
+hollowknight/port.env
+hollowknight/port.json
+hollowknight/setup.txt
+hollowknight/setup/convert.json
+hollowknight/setup/patchscript
+hollowknight/setup/questions.lua
+hollowknight/setup/setup.env
+package.sh
+port.build.json
