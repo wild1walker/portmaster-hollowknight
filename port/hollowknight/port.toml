@@ -67,7 +67,10 @@ args = []
 # e.g. UA_POINTER = "1", UA_POINTER_CURSOR = "0", UA_KEYMAP = "start:escape", UA_PAD_NAME,
 # UA_OSK = "done" (the on-screen keyboard answers every soft keyboard at once), UA_KEYBOARD = "1"
 [runtime]
-UA_PAD_NAME = "Xbox Wireless Controller"
+# The pad as a Switch Pro Controller: Hollow Knight then uses its own Switch controls (A, the
+# right button, jumps and confirms) and shows Switch buttons, as printed on Anbernic and most
+# handhelds. "Xbox Wireless Controller" instead: the bottom button jumps, with Xbox prompts.
+UA_PAD_NAME = "Nintendo Switch Pro Controller"
 
 # the porter's own files (paths relative to this file), copied into setup/: converter plugins
 # (--plugin), managed = assemblies shipped into the game (--managed-file), assembly_patches =

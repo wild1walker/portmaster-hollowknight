@@ -34,11 +34,21 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 | Convert the shaders for the handheld's GPU | Done |
 | Convert the textures so they fit in 1 GB of memory | Done (full resolution, re-encoded in a format the handheld's GPU reads) |
 | Pack the game for the player | Done |
-| First start in an emulated handheld | Done: the game starts, its menus draw, the pad works |
-| Get through the menus into the game | In progress |
-| Controls, saves and the setup screen | To do |
+| First start in an emulated handheld | Done: menus, the opening cinematics and the first area (King's Pass) all work |
+| Controls | Done: Hollow Knight's own Switch controls (see below) |
+| Saves and the setup screen | To do |
 | Tests on a real handheld | To do |
 | First test release | To do |
+
+## Controls
+
+The port presents the handheld's pad to the game as a Switch Pro Controller, so Hollow Knight uses
+its own Switch controls and shows Switch buttons in its prompts. They match the letters printed on
+Anbernic and most other handhelds: **A** (the right button) jumps and confirms, **B** (the bottom
+one) goes back. You can change any of them in the game's own controller settings.
+
+Prefer the Xbox layout (the bottom button jumps)? Edit `ports/hollowknight/port.env` and change
+`Nintendo Switch Pro Controller` to `Xbox Wireless Controller`.
 
 ## Reporting problems
 
