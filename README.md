@@ -36,8 +36,9 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 | Pack the game for the player | Done |
 | First start in an emulated handheld | Done: menus, the opening cinematics and the first area (King's Pass) all work |
 | Controls | Done: Hollow Knight's own Switch controls (see below) |
-| Saves and the setup screen | To do |
-| Tests on a real handheld | To do |
+| Saves | Done: Quit to Menu saves, and the save loads again (on a real handheld) |
+| Tests on a real handheld (RG34XX-SP, Knulli) | First launch to King's Pass, 30 minutes with steady memory. Title 37 fps, King's Pass 32 - 34 fps (the game's main thread is the limit on this CPU) |
+| The setup on the handheld (converting your copy there) | To do |
 | First test release | To do |
 
 ## Controls
