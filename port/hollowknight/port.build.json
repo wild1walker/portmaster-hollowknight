@@ -9,23 +9,29 @@
     "wild1walker"
    ],
    "desc": "Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the GOG Linux version.",
+   "desc_md": "",
    "inst": "Put the GOG Linux installer (hollow_knight_*.sh) or the installed game folder into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld.",
+   "inst_md": "",
    "genres": [
     "action",
     "adventure",
-    "platform"
+    "platformer"
    ],
    "availability": "paid",
    "store": [
     {
      "name": "GOG",
      "gameurl": "https://www.gog.com/game/hollow_knight",
-     "developerurl": ""
+     "developerurl": "https://www.teamcherry.com.au/"
     }
    ],
+   "reqs": [],
    "setup_time": "one to three hours",
-   "exp": true,
-   "ready_marker": ".setup_done"
+   "exp": false,
+   "ready_marker": ".setup_done",
+   "thanks": "Thanks to [Team Cherry](https://www.teamcherry.com.au/) for creating Hollow Knight and its hand-drawn kingdom of Hallownest.",
+   "screenshot": "screenshot.png",
+   "cover": "cover.png"
   },
   "game": {
    "data": "Hollow Knight_Data",
@@ -35,8 +41,15 @@
    ],
    "what": "Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder",
    "size_mb": 4999,
-   "setup_space_mb": 0
+   "setup_space_mb": 0,
+   "developer": "Team Cherry",
+   "publisher": "Team Cherry",
+   "release_date": "2017-02-24",
+   "genre": "",
+   "url": "",
+   "description": ""
   },
+  "controls": {},
   "player": {
    "backend": "mono",
    "abi": "armeabi-v7a",
@@ -135,6 +148,7 @@
   "README.md",
   "hollowknight/README.md",
   "hollowknight/gamedata/PUT_GAME_FILES_HERE.txt",
+  "hollowknight/gameinfo.xml",
   "hollowknight/hollowknight.ini",
   "hollowknight/port.env",
   "hollowknight/port.json",
@@ -143,7 +157,8 @@
   "hollowknight/setup/patchscript",
   "hollowknight/setup/questions.lua",
   "hollowknight/setup/setup.env",
-  "package.sh"
+  "package.sh",
+  "testing_thread.txt"
  ],
  "check": {
   "build": "linux",

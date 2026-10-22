@@ -10,11 +10,12 @@ route = "android"
 porter = ["wild1walker"]
 desc = "Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the GOG Linux version."
 inst = "Put the GOG Linux installer (hollow_knight_*.sh) or the installed game folder into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld."
-genres = ["action", "adventure", "platform"]
+genres = ["action", "adventure", "platformer"]
 availability = "paid"
-store = [{name = "GOG", gameurl = "https://www.gog.com/game/hollow_knight", developerurl = ""}]
+store = [{name = "GOG", gameurl = "https://www.gog.com/game/hollow_knight", developerurl = "https://www.teamcherry.com.au/"}]
 setup_time = "one to three hours"
-exp = true
+exp = false
+thanks = "Thanks to [Team Cherry](https://www.teamcherry.com.au/) for creating Hollow Knight and its hand-drawn kingdom of Hallownest."
 ready_marker = ".setup_done"
 
 # what the player provides: the data folder the setup looks for (data, a glob), the build
@@ -27,6 +28,9 @@ unity_versions = ["6000.0.61f1"]
 what = "Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder"
 size_mb = 4999
 setup_space_mb = 0
+developer = "Team Cherry"
+publisher = "Team Cherry"
+release_date = "2017-02-24"
 
 # Unity's Android player: backend/abi; url = the installer (`pmunity player url <version>`; empty:
 # looked up on the handheld); sha256 = {"<file>" = "<hash>"} checked after the fetch

@@ -2,6 +2,7 @@ Hollow Knight.sh
 README.md
 hollowknight/README.md
 hollowknight/gamedata/PUT_GAME_FILES_HERE.txt
+hollowknight/gameinfo.xml
 hollowknight/hollowknight.ini
 hollowknight/port.env
 hollowknight/port.json
@@ -12,3 +13,4 @@ hollowknight/setup/questions.lua
 hollowknight/setup/setup.env
 package.sh
 port.build.json
+testing_thread.txt

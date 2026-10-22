@@ -31,6 +31,14 @@ handheld.
 Saves and settings: `ports/hollowknight/data/`. PortMaster's exit hotkey quits. The game's options
 (pointer mode, keys, ...) are in `ports/hollowknight/port.env`; `log.txt` is the last run's log.
 
+## Controls
+
+The game reads the handheld's pad as a gamepad and keeps its own gamepad controls.
+
+| Button | Action |
+|--|--|
+| Select + Start | Quit |
+
 ## Licences
 
 The port's code is MIT (`licenses/`). The setup tools are removed when the setup is done; their

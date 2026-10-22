@@ -18,17 +18,17 @@
         "genres": [
             "action",
             "adventure",
-            "platform"
+            "platformer"
         ],
         "image": null,
         "rtr": false,
-        "exp": true,
+        "exp": false,
         "runtime": [],
         "store": [
             {
                 "name": "GOG",
                 "gameurl": "https://www.gog.com/game/hollow_knight",
-                "developerurl": ""
+                "developerurl": "https://www.teamcherry.com.au/"
             }
         ],
         "availability": "paid",

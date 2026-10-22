@@ -1,0 +1,32 @@
+How to install the test zip:
+Put hollowknight.zip into PortMaster's autoinstall folder, then start PortMaster.
+Or over SSH: harbourmaster install "<the link to the zip on Discord>"
+
+Game information
+Title: Hollow Knight
+URL: https://www.gog.com/game/hollow_knight
+
+Instructions:
+Put the GOG Linux installer (hollow_knight_*.sh) or the installed game folder into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld.
+Needs a handheld with a 32-bit (armhf) userland beside its 64-bit system (e.g. Knulli on Allwinner H700 devices).
+
+| Button | Action |
+|--|--|
+| Select + Start | Quit |
+
+CFW tests:
+[ ] AmberELEC
+[ ] ArkOS / dArkOS
+[ ] muOS
+ROCKNIX
+-> [ ] Libmali
+-> [ ] Panfrost
+-> [ ] Adreno (optional)
+[ ] Knulli
+[ ] CrossMix (optional)
+
+Resolutions:
+[ ] 480x320 (optional)
+[ ] 640x480
+[ ] 720x720 (RGB30, optional)
+[ ] 1280x720 and higher

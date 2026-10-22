@@ -1,28 +1,38 @@
-# Hollow Knight (PortMaster port)
-
-Made with portmaster-unity's `pmunity port new` (android route: Unity's Android player (armv7, Mono) on the handheld's 32-bit userland: portmaster-unity's runtime). Porter:
-wild1walker.
-
-| file | what |
-|---|---|
-| `port.toml` | the port's settings: edit, then `python -m pmunity port new hollowknight --data <game>` again |
-| `port.build.json` | everything resolved from port.toml and the game check (written by `port new`) |
-| `Hollow Knight.sh` | the launcher (PortMaster conventions; the first launch runs the setup) |
-| `hollowknight/` | the folder installed as `ports/hollowknight/`: `setup/patchscript` (the setup), `setup/setup.env`, `setup/convert.json`, `port.env` (ua_host's options), `port.json`, READMEs |
-| `package.sh` | builds the release zip (`out/hollowknight.zip`) with portmaster-unity's packager |
-
 ## Notes
 
-The player provides Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder; nothing of the game or of Unity is in
-this port. The first launch builds the game on the handheld (one to three hours).
+Thanks to [Team Cherry](https://www.teamcherry.com.au/) for creating Hollow Knight and its hand-drawn kingdom of Hallownest.
+
+This port does not include the game: you need Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder. Copy it into
+`ports/hollowknight/gamedata/`, then start Hollow Knight from the Ports menu. The first launch builds the
+game on the handheld from your copy (one to three hours, once) and downloads Unity's Android player for
+it from Unity (about 10 MB, Wi-Fi). It needs a handheld with a 32-bit (armhf) userland beside its 64-bit system (e.g. Knulli on Allwinner H700 devices).
+
+The game runs on Unity's own Android player, through
+[portmaster-unity](https://github.com/wild1walker/portmaster-unity)'s `ua_host` (its android
+route). Saves and settings are in `ports/hollowknight/data/`; the game's options are in
+`ports/hollowknight/port.env`.
 
 ## Controls
 
-The handheld's pad reaches the game as an Android gamepad. Port-specific options (pointer mode
-for mouse-driven menus, pad buttons that press keys) are in `hollowknight/port.env`.
+The game reads the handheld's pad as a gamepad and keeps its own gamepad controls.
 
-## Building
+| Button | Action |
+|--|--|
+| Select + Start | Quit |
 
-`./package.sh` (needs a portmaster-unity checkout with its runtime built: `PMUNITY=<checkout>`).
-Test the setup on a device, or in an arm64 container as docs/porting.md in portmaster-unity
-describes.
+## Compile
+
+The port folder is made by portmaster-unity's `pmunity port new` from the port's settings,
+`port.toml`. On Linux or macOS with git, Docker and Python 3.11 or newer:
+
+```sh
+git clone --recurse-submodules https://github.com/wild1walker/portmaster-unity.git
+cd portmaster-unity
+runtime/build.sh                                            # ua_host, the 32-bit runtime (Docker)
+tools/port/build_pybundle.sh tools/port/out/python.tar.gz   # the setup's Python, aarch64 (Docker)
+tools/asmpatch/build.sh                                     # asmpatch (.NET 8 SDK)
+python3 -m pip install -r convert/requirements.txt
+cd convert
+python3 -m pmunity port new hollowknight --out <port folder>   # reads <port folder>/port.toml
+python3 -m pmunity port package <port folder>                  # -> <port folder>/out/hollowknight.zip
+```
