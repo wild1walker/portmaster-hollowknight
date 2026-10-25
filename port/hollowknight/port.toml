@@ -44,6 +44,15 @@ sha256 = {"libmain.so" = "f9ea09a232a33b4c971bfcb45053fc5ef4c7ccc5999014d7bf7f46
 # (less memory, a longer setup, slightly different pixels: off unless you add it)
 [convert]
 steps = ["shaders", "settings", "audio", "textures"]
+# blend-mode sprites read the framebuffer instead of a grab copy before each of them: King's Pass
+# 18 passes a frame instead of 24 (+11 %); not exact: about 1.6 % of the static pixels off by 1 - 6
+# of 255 on the Mali (docs/shaders.md). The decision for this port: faster; "false" is the PC picture.
+[convert.shaders]
+grab_fetch = "always"
+# the game's resident atmosphere loops decoded at load as it has them, up to 36 MiB of PCM a scene
+# (16 by default): FMOD's mixer 56 -> 47 % of a core, memory as before (docs/profiling.md)
+[convert.audio]
+pcm_budget_mb = 36
 [convert.textures]
 scale = 1.0
 block = [4, 4]
@@ -58,7 +67,7 @@ graphics_apis = [11]
 # docs/android-data.md); data_path = true (files read or written at Application.dataPath);
 # name = the APK's, package (keep it: it names the PlayerPrefs file); args = more options
 [android_data]
-asmpatch = "auto"
+asmpatch = ["auto", "hk-blur"]      # the default patches and the blur reduction ASMPATCH_HK_BLUR reads (tools/asmpatch)
 video_shader = true
 swappy = "off"
 streaming_assets = "both"
@@ -75,6 +84,20 @@ args = []
 # right button, jumps and confirms) and shows Switch buttons, as printed on Anbernic and most
 # handhelds. "Xbox Wireless Controller" instead: the bottom button jumps, with Xbox prompts.
 UA_PAD_NAME = "Nintendo Switch Pro Controller"
+
+# On handhelds with 1 GB of RAM or less (MemTotal at most 1024 MB, read by port.env at each launch)
+# the picture gives a little, the game play nothing (docs/porting.md "Small handhelds"). Measured
+# together on the RG34XX-SP in King's Pass (portmaster-unity docs/compat/games.md). A player gets
+# the full picture back by editing port.env, or any one of them: ASMPATCH_HK_BLUR=full keeps the
+# game's four-pass background blur, UA_RENDER_SIZE= (empty) renders at the panel's size.
+[runtime_lowmem]
+# the far background blurred in two passes instead of four: the game's own Shader Quality Low look
+ASMPATCH_HK_BLUR = "low"
+# the game rendered at 600x400 and scaled to the panel by the display engine (fbdev path): softer
+UA_RENDER_SIZE = "600x400"
+# Unity's legacy graphics jobs on OpenGL ES (the draw calls built on the job workers; ua_host's
+# hook for this player build): the main thread, the limit at 600x400, +9 %; the same picture
+UA_GFX_JOBS = "legacy"
 
 # the porter's own files (paths relative to this file), copied into setup/: converter plugins
 # (--plugin), managed = assemblies shipped into the game (--managed-file), assembly_patches =

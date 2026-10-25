@@ -71,6 +71,12 @@
      11
     ]
    },
+   "shaders": {
+    "grab_fetch": "always"
+   },
+   "audio": {
+    "pcm_budget_mb": 36
+   },
    "textures": {
     "scale": 1.0,
     "block": [
@@ -82,17 +88,26 @@
    }
   },
   "android_data": {
-   "asmpatch": "auto",
+   "asmpatch": [
+    "auto",
+    "hk-blur"
+   ],
    "video_shader": true,
    "swappy": "off",
    "streaming_assets": "both",
    "data_path": false,
+   "winbcl": "auto",
    "name": "HollowKnight",
    "package": "com.pmunity.hollowknight",
    "args": []
   },
   "runtime": {
    "UA_PAD_NAME": "Nintendo Switch Pro Controller"
+  },
+  "runtime_lowmem": {
+   "ASMPATCH_HK_BLUR": "low",
+   "UA_RENDER_SIZE": "600x400",
+   "UA_GFX_JOBS": "legacy"
   },
   "questions": [
    {
@@ -140,7 +155,9 @@
    "ua_host",
    "pmunity",
    "pybundle",
-   "asmpatch?"
+   "asmpatch?",
+   "pmhlslcc?",
+   "pmspirvcross?"
   ]
  },
  "files": [
@@ -170,9 +187,9 @@
   "input_verdict": "mixed",
   "route": "android",
   "notes": [
-   "reads of Application.dataPath reach System.IO (asmpatch --survey says where; on Android dataPath is the APK or OBB file): when the game needs files there or writes there, android_data.data_path = true gives those reads Game_Data/ beside the APK, with the data folder's own files",
-   "StreamingAssets read as files (asmpatch: reads of Application.streamingAssetsPath reach System.IO): android_data.streaming_assets = \"both\" puts them beside the APK (Game_Data/StreamingAssets/, 0.0 MB, also in the OBB) and asmpatch's streaming-assets patch gives those reads that folder",
+   "StreamingAssets read as files (references to Application.streamingAssetsPath and System.IO in TeamCherry.BuildBot, TeamCherry.Cinematics (asmpatch, when built, says which reads reach System.IO)): android_data.streaming_assets = \"both\" puts them beside the APK (Game_Data/StreamingAssets/, 0.0 MB, also in the OBB) and asmpatch's streaming-assets patch gives those reads that folder",
    "InControl: it picks its Android profiles at run time by the pad's name; UA_PAD_NAME names the pad as one of them knows (asmpatch --survey lists them), else the pad is an unknown controller (docs/input.md)",
+   "PlayMaker (PlayMaker.dll): asmpatch's optimizations playmaker-loopcount and playmaker-delayedevents (the same behaviour, less work every frame for every FSM: tools/asmpatch/README.md, \"Optimizations\")",
    "reads the mouse and also selects UI elements: try the pad first; UA_POINTER=1 (with UA_POINTER_TOGGLE) where menus need the mouse",
    "reads keyboard keys (Input.GetKey, 6 references): map pad buttons with UA_KEYMAP (e.g. start:escape) where the pad has no binding",
    "Input System package (both): its desktop build has no layout for the Android player's pads: asmpatch's inputsystem-android patch registers them (docs/input.md)",
