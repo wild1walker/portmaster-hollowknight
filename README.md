@@ -2,28 +2,28 @@
 
 A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmaster.games/).
 
-> **Work in progress: not playable yet.** There is no release to download. This page says what
-> the port will need and how far it has got. Watch the repository (or its Releases page) to hear
-> when a first test build is ready.
+> **First test release: 2026.10.25** ([Releases](https://github.com/wild1walker/portmaster-hollowknight/releases)).
+> Tested on one handheld, an Anbernic RG34XX-SP with Knulli. The setup that converts your copy has
+> run end to end only in a stand-in for that handheld so far (see Status); please report how far it
+> gets on yours.
 
-- **You will need your own copy of the game.** This project contains **no game files**, and its
-  releases won't either. You bring the GOG Linux version; the port converts it for the handheld
+- **You need your own copy of the game.** This project contains **no game files**, and its
+  releases don't either. You bring the GOG Linux version; the port converts it for the handheld
   the first time you start it.
-- **How it will run:** Hollow Knight is made with Unity. The
+- **How it runs:** Hollow Knight is made with Unity. The
   [portmaster-unity](https://github.com/wild1walker/portmaster-unity) tools run Unity's Android
   player directly on the handheld's Linux, with no Android and no emulator. The same tools run
   [Cuphead](https://github.com/wild1walker/portmaster-cuphead) at close to 60 frames per second.
-- **It should look and play like the original.** Anything that changes the picture or the game
-  play (for example smaller textures, if a handheld's memory needs them) will be an option you
-  choose, with the original as the default wherever the handheld can manage it.
+- **It plays like the original.** On handhelds with 1 GB of memory or less the port gives a
+  little of the picture for speed (below, "Small handhelds"); one edit brings the full picture back.
 
-## What it will need
+## What it needs
 
 | | |
 |---|---|
 | **A handheld** | One that runs PortMaster and has a 32-bit (armhf) userland with OpenGL ES 3, like Knulli on Allwinner H700 handhelds. The first tests are on an Anbernic RG34XX-SP (1 GB RAM). |
 | **The game** | Hollow Knight for **Linux** from **GOG** (the `.sh` installer, or the installed game folder). Version 1.5.12620 is the one being tested. Other versions and stores: not tried. |
-| **Free space and time** | Not known yet. Hollow Knight's textures are large, so the first-launch setup will take a while and need several GB of free space. |
+| **Free space and time** | About 8 GB free on the card during the setup, about 4 GB once it is done. The setup runs once, on the first launch: one to three hours (estimated; 32 minutes in the stand-in). |
 
 ## Status
 
@@ -37,9 +37,24 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 | First start in an emulated handheld | Done: menus, the opening cinematics and the first area (King's Pass) all work |
 | Controls | Done: Hollow Knight's own Switch controls (see below) |
 | Saves | Done: Quit to Menu saves, and the save loads again (on a real handheld) |
-| Tests on a real handheld (RG34XX-SP, Knulli) | First launch to King's Pass, 30 minutes with steady memory. Title 37 fps, King's Pass 32 - 34 fps (the game's main thread is the limit on this CPU) |
+| Tests on a real handheld (RG34XX-SP, Knulli) | First launch to King's Pass, 30 minutes with steady memory. King's Pass about 36 fps with the full picture, **about 51 fps** with the small-handheld options (below) |
 | The setup on the handheld (converting your copy there) | Rehearsed in an arm64 container with 1 GB of memory: 32 minutes there, 3.9 GB installed, and the game it builds starts. On the handheld itself: to do |
-| First test release | To do |
+| First test release | Done: 2026.10.25 |
+
+## Small handhelds (1 GB of memory or less)
+
+On these the port turns on three options by itself (`ports/hollowknight/port.env`): the far
+background blurred in two passes instead of four (the game's own Shader Quality Low look), the
+game drawn at 600x400 and scaled to the screen (a little softer), and Unity's graphics jobs (the
+same picture, less work for the game's main thread). The game play does not change. Measured together in King's Pass on the RG34XX-SP: about 36 fps without
+them, about 51 with them.
+
+To get the full picture back, add these lines at the top of `port.env` (either one alone works too):
+
+```bash
+export ASMPATCH_HK_BLUR=full   # the game's four-pass background blur
+export UA_RENDER_SIZE=         # draw at the screen's own size
+```
 
 ## Controls
 
@@ -53,7 +68,7 @@ Prefer the Xbox layout (the bottom button jumps)? Edit `ports/hollowknight/port.
 
 ## Reporting problems
 
-There is nothing to test yet. Once a test build is out, use the
+Use the
 [issue forms](https://github.com/wild1walker/portmaster-hollowknight/issues/new/choose): they ask
 for the details that help.
 
