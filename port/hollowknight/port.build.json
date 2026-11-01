@@ -153,8 +153,9 @@
   },
   "package": [
    "ua_host",
-   "pmunity",
-   "pybundle",
+   "pmu?",
+   "pmunity?",
+   "pybundle?",
    "asmpatch?",
    "pmhlslcc?",
    "pmspirvcross?"

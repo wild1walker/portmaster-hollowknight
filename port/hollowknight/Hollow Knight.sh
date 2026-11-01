@@ -44,7 +44,6 @@ if [ ! -f "$GAMEDIR/.setup_done" ]; then
     export PATCHER_TIME="one to three hours, once"
     [ -f "$GAMEDIR/setup/questions.lua" ] && export PATCHER_QUESTIONS="$GAMEDIR/setup/questions.lua"
     source "$controlfolder/utils/patcher.txt"
-    $ESUDO kill -9 $(pidof gptokeyb gptokeyb2) 2>/dev/null
   fi
   if [ ! -f "$GAMEDIR/.setup_done" ]; then
     pm_message "Hollow Knight is not set up yet: put Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder in ports/hollowknight/gamedata and launch again (ports/hollowknight/README.md; log: ports/hollowknight/patchlog.txt)."
@@ -73,5 +72,4 @@ pm_platform_helper "$GAMEDIR/ua_host"
 LD_LIBRARY_PATH=/lib32:/usr/lib32${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH} ./ua_host "$GAMEDIR"
 echo "game exited ($?)"
 
-$ESUDO kill -9 $(pidof gptokeyb gptokeyb2) 2>/dev/null
 pm_finish

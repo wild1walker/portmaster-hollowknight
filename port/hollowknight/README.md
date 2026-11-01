@@ -29,7 +29,7 @@ The port folder is made by portmaster-unity's `pmunity port new` from the port's
 git clone --recurse-submodules https://github.com/wild1walker/portmaster-unity.git
 cd portmaster-unity
 runtime/build.sh                                            # ua_host, the 32-bit runtime (Docker)
-tools/port/build_pybundle.sh tools/port/out/python.tar.gz   # the setup's Python, aarch64 (Docker)
+setup-rs/tools/build_pmu.sh tools/port/out/pmu               # the setup's tools, pmu, aarch64 (Docker)
 tools/asmpatch/build.sh                                     # asmpatch (.NET 8 SDK)
 python3 -m pip install -r convert/requirements.txt
 cd convert
