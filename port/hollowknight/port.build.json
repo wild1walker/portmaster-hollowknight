@@ -105,9 +105,10 @@
    "UA_PAD_NAME": "Nintendo Switch Pro Controller"
   },
   "runtime_lowmem": {
-   "ASMPATCH_HK_BLUR": "low",
+   "ASMPATCH_HK_BLUR": "off",
    "UA_RENDER_SIZE": "600x400",
-   "UA_GFX_JOBS": "legacy"
+   "UA_GFX_JOBS": "legacy",
+   "UA_AUDIO_RATE": "24000"
   },
   "questions": [
    {

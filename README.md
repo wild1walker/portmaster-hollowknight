@@ -37,23 +37,30 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 | First start in an emulated handheld | Done: menus, the opening cinematics and the first area (King's Pass) all work |
 | Controls | Done: Hollow Knight's own Switch controls (see below) |
 | Saves | Done: Quit to Menu saves, and the save loads again (on a real handheld) |
-| Tests on a real handheld (RG34XX-SP, Knulli) | First launch to King's Pass, 30 minutes with steady memory. King's Pass about 36 fps with the full picture, **about 51 fps** with the small-handheld options (below) |
+| Tests on a real handheld (RG34XX-SP, Knulli) | First launch to King's Pass, 30 minutes with steady memory. King's Pass about 36 fps with the full picture; walking and fighting there, **about 55 fps** with the small-handheld options (below) |
 | The setup on the handheld (converting your copy there) | Rehearsed in an arm64 container with 1 GB of memory: 32 minutes there, 3.9 GB installed, and the game it builds starts. On the handheld itself: to do |
 | First test release | Done: 2026.10.25 |
 
 ## Small handhelds (1 GB of memory or less)
 
-On these the port turns on three options by itself (`ports/hollowknight/port.env`): the far
-background blurred in two passes instead of four (the game's own Shader Quality Low look), the
-game drawn at 600x400 and scaled to the screen (a little softer), and Unity's graphics jobs (the
-same picture, less work for the game's main thread). The game play does not change. Measured together in King's Pass on the RG34XX-SP: about 36 fps without
-them, about 51 with them.
+On these the port turns on four options by itself (`ports/hollowknight/port.env`):
 
-To get the full picture back, add these lines at the top of `port.env` (either one alone works too):
+- no background blur: the far background is drawn sharp instead of blurred
+- the game drawn at 600x400 and scaled to the screen (a little softer)
+- Unity's graphics jobs (the same picture, less work for the game's main thread)
+- the sound mixed at 24 kHz instead of 48 kHz (slightly duller highs, the same sounds)
+
+The game play does not change. Measured in King's Pass on the RG34XX-SP while walking, attacking
+and jumping: about 48 fps with the previous options (the blur at the game's Low, 48 kHz), 54 - 56
+with these, and about six times fewer slow frames (over 25 ms).
+
+To get the full picture and sound back, add these lines at the top of `port.env` (any one alone
+works too):
 
 ```bash
 export ASMPATCH_HK_BLUR=full   # the game's four-pass background blur
 export UA_RENDER_SIZE=         # draw at the screen's own size
+export UA_AUDIO_RATE=          # mix the sound at 48 kHz
 ```
 
 ## Controls
