@@ -3,7 +3,8 @@
   "shaders",
   "settings",
   "audio",
-  "textures"
+  "textures",
+  "video"
  ],
  "settings": {
   "graphics_apis": [

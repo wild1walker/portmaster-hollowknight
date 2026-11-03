@@ -53,6 +53,18 @@ if [ ! -f "$GAMEDIR/.setup_done" ]; then
   fi
 fi
 
+# ---- a game set up by an earlier release: what this release's setup does that it has not had yet
+# (setup/update, once: the setup folder comes with each release and goes when it is done)
+if [ -f "$GAMEDIR/setup/update" ] && [ -f "$controlfolder/utils/patcher.txt" ]; then
+  export GAMEDIR DEVICE_ARCH controlfolder
+  chmod +x "$GAMEDIR/setup/update"
+  export PATCHER_FILE="$GAMEDIR/setup/update"
+  export PATCHER_GAME="Hollow Knight"
+  export PATCHER_TIME="a few minutes, once"
+  unset PATCHER_QUESTIONS
+  source "$controlfolder/utils/patcher.txt"
+fi
+
 # the built-in pad reaches the game as an Android gamepad (ua_host: SDL GameController ->
 # KeyEvent and MotionEvent)
 export SDL_GAMECONTROLLERCONFIG="${SDL_GAMECONTROLLERCONFIG:-$sdl_controllerconfig}"
@@ -63,6 +75,8 @@ export UA_FPS=${UA_FPS:-10}                     # a line of frame statistics eve
 # the game's options (port.env), and the setup's answers that apply when the game runs
 [ -f "$GAMEDIR/port.env" ] && source "$GAMEDIR/port.env"
 [ -f "$GAMEDIR/answers.env" ] && source "$GAMEDIR/answers.env"
+# a Wwise game: ua_host's own Wwise player plays the banks the setup converted (set UA_WWISE_DATA= empty for none)
+[ -d "$GAMEDIR/wwise" ] && export UA_WWISE_DATA="${UA_WWISE_DATA-$GAMEDIR/wwise}"
 chmod +x "$GAMEDIR/ua_host"
 
 $GPTOKEYB2 "ua_host" -c "$GAMEDIR/hollowknight.ini" &   # exit hotkey only

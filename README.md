@@ -50,6 +50,12 @@ On these the port turns on four options by itself (`ports/hollowknight/port.env`
 - Unity's graphics jobs (the same picture, less work for the game's main thread)
 - the sound mixed at 24 kHz instead of 48 kHz (slightly duller highs, the same sounds)
 
+The setup also makes the cinematics smaller on these handhelds: 960x540 instead of 1920x1080, which
+looks the same on their screens and plays at the videos' own 30 pictures a second (at full size the
+handheld cannot decode them in time and they played in slow motion). A game set up by an earlier
+release gets this once, on its next launch after the update (a few minutes; PortMaster's patcher
+shows it). Set `[convert.video] mode = "off"` in `port.toml` to keep them as they are.
+
 The game play does not change. Measured in King's Pass on the RG34XX-SP while walking, attacking
 and jumping: about 48 fps with the previous options (the blur at the game's Low, 48 kHz), 54 - 56
 with these, and about six times fewer slow frames (over 25 ms).
