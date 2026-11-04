@@ -104,7 +104,8 @@
    "args": []
   },
   "runtime": {
-   "UA_PAD_NAME": "Nintendo Switch Pro Controller"
+   "UA_PAD_NAME": "Nintendo Switch Pro Controller",
+   "UA_JIT_WARM": "1"
   },
   "runtime_lowmem": {
    "ASMPATCH_HK_BLUR": "off",
