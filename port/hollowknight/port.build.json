@@ -114,7 +114,8 @@
    "UA_RENDER_SIZE": "540x360",
    "UA_GFX_JOBS": "legacy",
    "UA_AUDIO_RATE": "24000",
-   "UA_PREFS_DEFAULTS": "VidParticles=0 VidDithering=0"
+   "UA_PREFS_DEFAULTS": "VidParticles=0 VidDithering=0",
+   "UA_UNITY_ARGS": "-job-worker-count 1"
   },
   "questions": [
    {

@@ -139,6 +139,12 @@ UA_AUDIO_RATE = "24000"
 # and kept): Low halves the decorative particle systems the developers tagged; City of Tears
 # 45.1 -> 46.3 - 48.2 fps at 540x360 (muOS)
 UA_PREFS_DEFAULTS = "VidParticles=0 VidDithering=0"
+# one Unity job worker instead of three (the A53's four cores are shared by the main thread, the
+# render thread, FMOD's mixer and Mali's submission thread; three workers woken for every job batch
+# take CPU from both the main and the render thread). The same jobs, the same results; Greenpath
+# 42.1 / 42.2 -> 45.6 fps (Knulli), 44.2 / 43.7 -> 45.9 (muOS), Soul Master 48.9 -> 51.9 / 52.8
+# (Knulli), 50.7 -> 51.9 (muOS); the Colosseum, King's Pass and City of Tears as before
+UA_UNITY_ARGS = "-job-worker-count 1"
 
 # the porter's own files (paths relative to this file), copied into setup/: converter plugins
 # (--plugin), managed = assemblies shipped into the game (--managed-file), assembly_patches =
