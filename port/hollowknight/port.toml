@@ -117,7 +117,8 @@ UA_GL_ARENA = "1"
 # Measured together on the RG34XX-SP in King's Pass, walking and fighting (portmaster-unity
 # docs/compat/games.md). A player gets the full picture and sound back by editing port.env, or any
 # one of them: ASMPATCH_HK_BLUR=full keeps the game's four-pass background blur, UA_RENDER_SIZE=
-# (empty) renders at the panel's size, UA_AUDIO_RATE= (empty) mixes at 48 kHz.
+# (empty) renders at the panel's size, UA_AUDIO_RATE= (empty) mixes at 48 kHz; the particles and the
+# dithering come back in the game's own Options, Video.
 [runtime_lowmem]
 # no background blur: the background camera off and the far background drawn sharp (NoBlur's look);
 # the main thread draws one camera fewer
@@ -133,6 +134,11 @@ UA_GFX_JOBS = "legacy"
 # FMOD mixing at 24 kHz instead of 48: duller highs, the same sounds at the same times; its mixer
 # 48 -> 31 % of a core, CPU time the chip's shared power budget gives back to the Mali
 UA_AUDIO_RATE = "24000"
+# the game's own Particle Effects Low and Dithering off (Options, Video), as defaults the game reads
+# until the player picks otherwise there (ua_host UA_PREFS_DEFAULTS; a choice in the menu is stored
+# and kept): Low halves the decorative particle systems the developers tagged; City of Tears
+# 45.1 -> 46.3 - 48.2 fps at 540x360 (muOS)
+UA_PREFS_DEFAULTS = "VidParticles=0 VidDithering=0"
 
 # the porter's own files (paths relative to this file), copied into setup/: converter plugins
 # (--plugin), managed = assemblies shipped into the game (--managed-file), assembly_patches =

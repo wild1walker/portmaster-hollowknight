@@ -43,12 +43,13 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 
 ## Small handhelds (1 GB of memory or less)
 
-On these the port turns on four options by itself (`ports/hollowknight/port.env`):
+On these the port turns on five options by itself (`ports/hollowknight/port.env`):
 
 - no background blur: the far background is drawn sharp instead of blurred
 - the game drawn at 540x360 and scaled to the screen (a little softer)
 - Unity's graphics jobs (the same picture, less work for the game's main thread)
 - the sound mixed at 24 kHz instead of 48 kHz (slightly duller highs, the same sounds)
+- the game's own Particle Effects Low and Dithering off, until you choose otherwise in its Options, Video
 
 The setup also makes the cinematics smaller on these handhelds: 960x540 instead of 1920x1080, which
 looks the same on their screens and plays at the videos' own 30 pictures a second (at full size the
