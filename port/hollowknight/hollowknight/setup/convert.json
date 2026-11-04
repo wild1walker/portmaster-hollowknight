@@ -19,6 +19,8 @@
  },
  "textures": {
   "scale": 1.0,
+  "lowmem_scale": 0.5,
+  "sharp_names": "SDF|tmpro|Font Texture",
   "block": [
    4,
    4

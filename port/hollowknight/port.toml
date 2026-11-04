@@ -57,8 +57,15 @@ grab_fetch = "always"
 # (16 by default): FMOD's mixer 56 -> 47 % of a core, memory as before (docs/profiling.md)
 [convert.audio]
 pcm_budget_mb = 36
+# where the handheld has 1 GB of RAM or less, textures at half size (lowmem_scale, ram_mb 1024): the
+# game draws there at 600x400, and Hallownest's art, made for 1080p, still has more than a texel
+# for each pixel of a 720x480 panel. RG34XX-SP, King's Pass: the game ~830 -> ~670 MB (its GPU pages
+# ~300 -> ~142), ~240 MB left free instead of swapping, the same 51 fps. Text atlases (SDF, tmpro,
+# Font Texture) stay at full size. Elsewhere scale; the full textures back: unset it, run the setup again.
 [convert.textures]
 scale = 1.0
+lowmem_scale = 0.5
+sharp_names = "SDF|tmpro|Font Texture"
 block = [4, 4]
 quality = "medium"
 mips = "keep"
