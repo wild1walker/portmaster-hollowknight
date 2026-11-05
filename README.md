@@ -37,19 +37,20 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 | First start in an emulated handheld | Done: menus, the opening cinematics and the first area (King's Pass) all work |
 | Controls | Done: Hollow Knight's own Switch controls (see below) |
 | Saves | Done: Quit to Menu saves, and the save loads again (on a real handheld) |
-| Tests on a real handheld (RG34XX-SP, Knulli) | First launch to King's Pass, 30 minutes with steady memory. King's Pass about 36 fps with the full picture; walking and fighting there, **about 55 fps** with the small-handheld options (below) |
+| Tests on a real handheld (RG34XX-SP, Knulli) | First launch to King's Pass, 30 minutes with steady memory. King's Pass about 36 fps with the full picture; walking and fighting there, **about 56 fps** with the small-handheld options (below); across twelve areas from Greenpath (46 fps) to the Colosseum (62), eleven at 50 fps or more |
 | The setup on the handheld (converting your copy there) | Rehearsed in an arm64 container with 1 GB of memory: 32 minutes there, 3.9 GB installed, and the game it builds starts. On the handheld itself: to do |
 | First test release | Done: 2026.10.25 |
 
 ## Small handhelds (1 GB of memory or less)
 
-On these the port turns on five options by itself (`ports/hollowknight/port.env`):
+On these the port turns on six options by itself (`ports/hollowknight/port.env`):
 
 - no background blur: the far background is drawn sharp instead of blurred
 - the game drawn at 540x360 and scaled to the screen (a little softer)
 - Unity's graphics jobs (the same picture, less work for the game's main thread)
 - the sound mixed at 24 kHz instead of 48 kHz (slightly duller highs, the same sounds)
 - the game's own Particle Effects Low and Dithering off, until you choose otherwise in its Options, Video
+- one Unity job thread instead of three (the same game; the handheld's four cores go to the game itself)
 
 The setup also makes the cinematics smaller on these handhelds: 960x540 instead of 1920x1080, which
 looks the same on their screens and plays at the videos' own 30 pictures a second (at full size the
