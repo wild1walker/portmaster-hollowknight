@@ -30,7 +30,7 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 | Step | State |
 |---|---|
 | Read the game's files and find its Unity version | Done (Unity 6, Mono scripting) |
-| Get Unity's matching Android player | Done (downloaded from Unity during setup, never shipped here) |
+| Get Unity's matching Android player | Done: the release ships a donor (a small game of pong built with Unity 6000.0.61f1, whose APK carries the player: the same 75 files Unity's installer has); the setup never downloads anything, no Wi-Fi. Nothing of Unity's is in this repository |
 | Convert the shaders for the handheld's GPU | Done |
 | Convert the textures so they fit in 1 GB of memory | Done (full resolution, re-encoded in a format the handheld's GPU reads) |
 | Pack the game for the player | Done |

@@ -4,8 +4,7 @@ Thanks to [Team Cherry](https://www.teamcherry.com.au/) for creating Hollow Knig
 
 This port does not include the game: you need Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder. Copy it into
 `ports/hollowknight/gamedata/`, then start Hollow Knight from the Ports menu. The first launch builds the
-game on the handheld from your copy (one to three hours, once) and downloads Unity's Android player for
-it from Unity (about 10 MB, Wi-Fi). It needs a handheld with a 32-bit (armhf) userland beside its 64-bit system (e.g. Knulli on Allwinner H700 devices).
+game on the handheld from your copy (one to three hours, once). Unity's Android player comes with the port (`donor/`: small games built with Unity for it, whose APKs carry the player); nothing is downloaded, no Wi-Fi. It needs a handheld with a 32-bit (armhf) userland beside its 64-bit system (e.g. Knulli on Allwinner H700 devices).
 
 The game runs on Unity's own Android player, through
 [portmaster-unity](https://github.com/wild1walker/portmaster-unity)'s `ua_host` (its android
@@ -34,5 +33,5 @@ tools/asmpatch/build.sh                                     # asmpatch (.NET 8 S
 python3 -m pip install -r convert/requirements.txt
 cd convert
 python3 -m pmunity port new hollowknight --out <port folder>   # reads <port folder>/port.toml
-python3 -m pmunity port package <port folder>                  # -> <port folder>/out/hollowknight.zip
+DONORS=<donor folder> python3 -m pmunity port package <port folder>   # -> <port folder>/out/hollowknight.zip
 ```

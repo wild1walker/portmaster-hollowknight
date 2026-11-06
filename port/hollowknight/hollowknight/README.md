@@ -9,9 +9,7 @@ handheld.
 
 - **Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder.** The setup checks the Unity version it was built with (this port is made
   for 6000.0.61f1).
-- Wi-Fi on the first launch, to download Unity's Android player of that version from Unity (about
-  10 MB of its installer). Or put `UnitySetup-Android-Support-for-Editor-<version>.exe` from Unity's
-  download archive into `gamedata/` yourself.
+- Unity's Android player comes with the port (`donor/`: small games built with Unity for it, whose APKs carry the player); nothing is downloaded, no Wi-Fi.
 - About 15 GB free on the card during the setup.
 - A handheld with a 32-bit (armhf) userland and GLES 3 (e.g. Knulli on Allwinner H700 devices),
   and a 64-bit (aarch64) system for the setup's tools.
@@ -21,7 +19,7 @@ handheld.
 1. Copy the game (its folder, the archive it came in, or GOG's Linux installer `.sh`) into
    `ports/hollowknight/gamedata/`.
 2. Launch Hollow Knight from the Ports menu. PortMaster's patcher shows the setup's progress: it finds
-   (or unpacks) the game, downloads Unity's player, converts the game for the handheld's GPU and
+   (or unpacks) the game, unpacks Unity's player, converts the game for the handheld's GPU and
    packs it for the player (one to three hours). If it is interrupted, launch again: it continues
    where it stopped. The log is `ports/hollowknight/patchlog.txt`.
 3. When it is done the game starts. The setup uses up the game's folder in `gamedata/` (its files

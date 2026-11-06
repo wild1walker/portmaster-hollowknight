@@ -53,18 +53,21 @@
   "player": {
    "backend": "mono",
    "abi": "armeabi-v7a",
-   "url": "https://download.unity3d.com/download_unity/74a0adb02c31/TargetSupportInstaller/UnitySetup-Android-Support-for-Editor-6000.0.61f1.exe",
    "sha256": {
     "libmain.so": "f9ea09a232a33b4c971bfcb45053fc5ef4c7ccc5999014d7bf7f46bae0bd5a31",
     "libunity.so": "4ac0f68ffd66e0af2470544b75500ccda60e1d3c00b172e870690bf75000007d"
-   }
+   },
+   "donors": [
+    "donor-6000.0.61f1-mono-armv7.apk"
+   ]
   },
   "convert": {
    "steps": [
     "shaders",
     "settings",
     "audio",
-    "textures"
+    "textures",
+    "video"
    ],
    "settings": {
     "graphics_apis": [
@@ -102,6 +105,9 @@
    "name": "HollowKnight",
    "package": "com.pmunity.hollowknight",
    "args": []
+  },
+  "wwise": {
+   "banks": ""
   },
   "runtime": {
    "UA_PAD_NAME": "Nintendo Switch Pro Controller",
@@ -150,14 +156,21 @@
  },
  "route": {
   "title": "Unity's Android player (armv7, Mono), run natively by ua_host on the handheld's 32-bit userland",
+  "donors": [
+   "player"
+  ],
   "files": {
    "@@TITLE@@.sh": "launcher.sh",
    "@@PORTDIR@@/setup/patchscript": "patchscript",
+   "@@PORTDIR@@/setup/update": "update",
    "@@PORTDIR@@/README.md": "README.player.md",
    "@@PORTDIR@@/gamedata/PUT_GAME_FILES_HERE.txt": "gamedata.txt",
    "@@PORTDIR@@/@@PORTDIR@@.ini": "hotkey.ini",
    "README.md": "README.port.md",
-   "package.sh": "package.sh"
+   "package.sh": {
+    "template": "package.sh",
+    "mode": "755"
+   }
   },
   "package": [
    "ua_host",
@@ -183,33 +196,8 @@
   "hollowknight/setup/patchscript",
   "hollowknight/setup/questions.lua",
   "hollowknight/setup/setup.env",
+  "hollowknight/setup/update",
   "package.sh",
   "testing_thread.txt"
- ],
- "check": {
-  "build": "linux",
-  "arch": "x86_64",
-  "backend": "mono",
-  "unity_version": "6000.0.61f1",
-  "scripting_runtime": ".NET 4.x (libmonobdwgc-2.0)",
-  "compressed": false,
-  "input_verdict": "mixed",
-  "route": "android",
-  "notes": [
-   "StreamingAssets read as files (references to Application.streamingAssetsPath and System.IO in TeamCherry.BuildBot, TeamCherry.Cinematics (asmpatch, when built, says which reads reach System.IO)): android_data.streaming_assets = \"both\" puts them beside the APK (Game_Data/StreamingAssets/, 0.0 MB, also in the OBB) and asmpatch's streaming-assets patch gives those reads that folder",
-   "InControl: it picks its Android profiles at run time by the pad's name; UA_PAD_NAME names the pad as one of them knows (asmpatch --survey lists them), else the pad is an unknown controller (docs/input.md)",
-   "PlayMaker (PlayMaker.dll): asmpatch's optimizations playmaker-loopcount and playmaker-delayedevents (the same behaviour, less work every frame for every FSM: tools/asmpatch/README.md, \"Optimizations\")",
-   "reads the mouse and also selects UI elements: try the pad first; UA_POINTER=1 (with UA_POINTER_TOGGLE) where menus need the mouse",
-   "reads keyboard keys (Input.GetKey, 6 references): map pad buttons with UA_KEYMAP (e.g. start:escape) where the pad has no binding",
-   "Input System package (both): its desktop build has no layout for the Android player's pads: asmpatch's inputsystem-android patch registers them (docs/input.md)",
-   "text input (UI InputField, TouchScreenKeyboard, Input.inputString): Unity's soft keyboard opens ua_host's on-screen keyboard (the pad types); UA_OSK = \"done\" in runtime answers it at once where text does not matter (docs/input.md)",
-   "video: 0 VideoPlayers in the main data, clips {'vp8': 16}: android-data adds Hidden/VideoDecodeAndroid (keep android_data.video_shader on); VP8/VP9 and H.264 decode built in, AAC/HEVC/MP3 only with the system's libavcodec (else silent)",
-   "P/Invoke into GalaxyCSharpGlue (GalaxyCSharp), sdkencryptedappticket (com.rlabrecque.steamworks.net), steam_api (com.rlabrecque.steamworks.net): each needs an ARM library or a stub",
-   "services: GOG Galaxy, Steamworks",
-   "1849 MB of BC/DXT textures (main data): the handheld GPU cannot sample them, so Unity decodes them to RGBA when loading (4-8x the memory). The textures step (convert.steps += \"textures\") re-encodes them as ASTC: less memory, slightly different pixels, a longer setup; off by default",
-   "BC/DXT textures decode to about 7395 MB of RGBA on the handheld (its GPU cannot sample them): more than a 1 GB device can hold next to the game. The textures step is suggested (convert.steps), re-encoding them as ASTC at the GPU's own size; remove it only for a device with the memory to spare",
-   "4999 MB: the handheld's setup needs about 2-3 times that free while it runs"
-  ],
-  "warnings": []
- }
+ ]
 }
