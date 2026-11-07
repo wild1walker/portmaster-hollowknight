@@ -46,6 +46,12 @@ picture (ua_host's layers in `port.env`: Unity's moving sprites in one buffer dr
 buffers reused, the lit sprites without the lighting step their always-off light would add); a
 press can reach the screen up to one frame later than without them.
 
+The game's background flip-books (crowds, pulsing blobs, waterfalls, lamp bugs) are shown by a small
+stand-in instead of Unity's whole animation pipeline (`UA_FLIPBOOK` in `port.env`, the list in
+`flipbooks.txt`): the same pictures at the same speed, about one in 5,000 shown a frame (1/60 s) early or
+late. Arenas full of them gain most (Broken Vessel's 48 -> 55 fps). The game itself is untouched; set
+`UA_FLIPBOOK=` (empty) in `port.env` to turn it off.
+
 ## Small handhelds (1 GB of memory or less)
 
 On these the port turns on six options by itself (`ports/hollowknight/port.env`):

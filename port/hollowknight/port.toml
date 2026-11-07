@@ -124,6 +124,14 @@ UA_GL_MEMO = "0"
 # 57.1 -> 58.4, Gruz Mother in the Hall of Gods 49.3 -> 54-56, Greenpath and Deepnest as before.
 # The first launch with it compiles the game's shaders again (about 3 s over the first loads).
 UA_GL_SPEC = "1"
+# The game's background flip-books (crowds, pulsing blobs, waterfalls, lamp bugs: an Animator whose one
+# looping clip only swaps its own sprite, the 125 controllers in flipbooks.txt) shown by a small stand-in
+# instead of Unity's whole animation pipeline (ua_host's uaflipbook.dll): it watches each Animator until 240
+# frames in a row agree, then sets the sprite itself from the same time; the game's own changes hand it back.
+# Broken Vessel's arena (about 110 of them) 47.5 - 48.8 -> 54.6 fps, Gruz Mother 53.7 - 54.8 -> 55.7,
+# Greenpath 52.0 - 52.5 -> 53.0. Not bit-exact: about once in 5,000 frames one of these sprites changes a
+# frame (1/60 s) early or late; the game itself (its state, hits, timing) is untouched.
+UA_FLIPBOOK = "@flipbooks.txt"
 # (UA_GL_PERSIST, the same arena without the ranged draws, stays off: the slabs above.)
 
 # On handhelds with 1 GB of RAM or less (MemTotal at most 1024 MB, read by port.env at each launch)
@@ -169,7 +177,7 @@ plugins = []
 managed = []
 assembly_patches = []
 hooks = {}
-extra = []
+extra = ["flipbooks.txt"]   # the background flip-books' controllers (UA_FLIPBOOK above)
 
 # commands `port package` runs in this folder first (env PMUNITY, PORT_SRC, BUILD), the files
 # they make put into the port folder (outputs = {"setup/files/x" = "build/x"}), and their licences

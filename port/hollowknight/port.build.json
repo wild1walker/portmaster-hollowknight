@@ -116,7 +116,8 @@
    "UA_GLES_POOL": "1",
    "UA_PRESENT_SYNC": "end",
    "UA_GL_MEMO": "0",
-   "UA_GL_SPEC": "1"
+   "UA_GL_SPEC": "1",
+   "UA_FLIPBOOK": "@flipbooks.txt"
   },
   "runtime_lowmem": {
    "ASMPATCH_HK_BLUR": "off",
@@ -149,7 +150,9 @@
    "managed": [],
    "assembly_patches": [],
    "hooks": {},
-   "extra": []
+   "extra": [
+    "flipbooks.txt"
+   ]
   },
   "build": {
    "commands": [],
