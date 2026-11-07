@@ -102,9 +102,29 @@ UA_PAD_NAME = "Nintendo Switch Pro Controller"
 # so compiling them earlier changes nothing). King's Pass on the RG34XX-SP: no compiling in the
 # walk until the death's save, hitches of 100 ms or more 8 -> 4.
 UA_JIT_WARM = "1"
-# (UA_GL_PERSIST and UA_GL_ARENA, Unity's dynamic geometry in persistently mapped buffers, are off:
-# on the RG34XX-SP they let Unity overwrite vertices the GPU had not drawn yet, sprites stretched
-# into black slabs across the screen, 2026-11-06; ua_host keeps them opt-in until that is fixed.)
+# The layers below draw the same picture and were measured on the RG34XX-SP (Knulli, Mali-G31),
+# 2026-11-07, steady fps walking with attacks, screenshots checked in each area (portmaster-unity
+# docs/runtime.md has each one). Set one to "" in port.env to turn it off.
+# Unity's dynamic geometry (sprites, text, particles) in one persistently mapped arena, drawn with
+# glDrawRangeElements (the Mali driver keeps a stale index range for a buffer written through a
+# mapping, which stretched sprites into black slabs on 2026-11-06; the range given with each draw
+# makes it exact). Greenpath 42.1 -> 47.3.
+UA_GL_ARENA = "1"
+# Unity's GLES buffers reused from a pool instead of made and deleted every frame: 40.5 -> 42.1
+UA_GLES_POOL = "1"
+# Unity waits for a frame's present at the end of its frame instead of the start of the next
+# (its own GraphicsDeviceSettings.waitForPresentSyncPoint): the main thread's work overlaps the
+# GPU's. Greenpath 47.5 -> 50.0; a press can reach the screen up to one frame later.
+UA_PRESENT_SYNC = "end"
+# ua_host's GL state memo off: it skips nothing in Hollow Knight and costs the render thread: 50.0 -> 51.2
+UA_GL_MEMO = "0"
+# The lit sprite shader's light term folded away while the game's light colour is 0 (always, in
+# Hollow Knight): the same bits (50 draws compared on the RG34XX-SP, 0 differ), 5.1 -> 1.4 cycles
+# a fragment on the Mali-G31. City of Tears 51.8 -> 55.8, Crystal Peak 54.8 -> 56.9, Dirtmouth
+# 57.1 -> 58.4, Gruz Mother in the Hall of Gods 49.3 -> 54-56, Greenpath and Deepnest as before.
+# The first launch with it compiles the game's shaders again (about 3 s over the first loads).
+UA_GL_SPEC = "1"
+# (UA_GL_PERSIST, the same arena without the ranged draws, stays off: the slabs above.)
 
 # On handhelds with 1 GB of RAM or less (MemTotal at most 1024 MB, read by port.env at each launch)
 # the picture and the sound give a little, the game play nothing (docs/porting.md "Small handhelds").

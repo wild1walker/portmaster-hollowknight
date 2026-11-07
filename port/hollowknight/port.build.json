@@ -111,7 +111,12 @@
   },
   "runtime": {
    "UA_PAD_NAME": "Nintendo Switch Pro Controller",
-   "UA_JIT_WARM": "1"
+   "UA_JIT_WARM": "1",
+   "UA_GL_ARENA": "1",
+   "UA_GLES_POOL": "1",
+   "UA_PRESENT_SYNC": "end",
+   "UA_GL_MEMO": "0",
+   "UA_GL_SPEC": "1"
   },
   "runtime_lowmem": {
    "ASMPATCH_HK_BLUR": "off",
