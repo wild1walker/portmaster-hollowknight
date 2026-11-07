@@ -95,7 +95,8 @@
   "android_data": {
    "asmpatch": [
     "auto",
-    "hk-blur"
+    "hk-blur",
+    "hk-aspect"
    ],
    "video_shader": true,
    "swappy": "off",
@@ -117,7 +118,8 @@
    "UA_PRESENT_SYNC": "end",
    "UA_GL_MEMO": "0",
    "UA_GL_SPEC": "1",
-   "UA_FLIPBOOK": "@flipbooks.txt"
+   "UA_FLIPBOOK": "@flipbooks.txt",
+   "ASMPATCH_HK_ASPECT": "fill"
   },
   "runtime_lowmem": {
    "ASMPATCH_HK_BLUR": "off",
