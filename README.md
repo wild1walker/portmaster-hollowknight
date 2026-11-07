@@ -37,9 +37,14 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 | First start in an emulated handheld | Done: menus, the opening cinematics and the first area (King's Pass) all work |
 | Controls | Done: Hollow Knight's own Switch controls (see below) |
 | Saves | Done: Quit to Menu saves, and the save loads again (on a real handheld) |
-| Tests on a real handheld (RG34XX-SP, Knulli) | First launch to King's Pass, 30 minutes with steady memory. King's Pass about 36 fps with the full picture; walking and fighting there, **about 56 fps** with the small-handheld options (below); across twelve areas from Greenpath (46 fps) to the Colosseum (62), eleven at 50 fps or more |
+| Tests on a real handheld (RG34XX-SP, Knulli) | First launch to King's Pass, 30 minutes with steady memory. Walking and fighting with the small-handheld options (below), 2026-11-07: nine areas from Greenpath (52.5 fps) to Mantis Village (59.5); eighteen boss fights from the Hall of Gods from Broken Vessel (49) to False Knight (58), most 53 - 57 |
 | The setup on the handheld (converting your copy there) | Rehearsed in an arm64 container with 1 GB of memory: 32 minutes there, 3.9 GB installed, and the game it builds starts. On the handheld itself: to do |
 | First test release | Done: 2026.10.25 |
+
+On every handheld the game's sprites reach the graphics chip by a faster path that draws the same
+picture (ua_host's layers in `port.env`: Unity's moving sprites in one buffer drawn in place, its
+buffers reused, the lit sprites without the lighting step their always-off light would add); a
+press can reach the screen up to one frame later than without them.
 
 ## Small handhelds (1 GB of memory or less)
 
