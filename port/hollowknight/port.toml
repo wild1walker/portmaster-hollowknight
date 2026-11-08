@@ -142,6 +142,13 @@ UA_FLIPBOOK = "@flipbooks.txt"
 # below, the HUD in the top corner. The same frame rates (RG34XX-SP Greenpath 52.6, Dirtmouth 58.3).
 # "" brings the bars back.
 ASMPATCH_HK_ASPECT = "fill"
+# Handhelds whose Mali driver draws through SDL's KMSDRM (RK3326: the R36S family, the BattleXP G350) wait
+# in each swap until the GPU has finished the frame, so the game's render thread and the GPU took turns.
+# ua_host's present thread shows the frames instead (where the game renders at a smaller size: the
+# 1 GB handhelds below): the render thread goes straight on with the next frame. The same picture, up to
+# two frames queued. G350: Greenpath 17.5 -> 25.1 fps, King's Pass 32 -> 38, Dirtmouth 31 -> 50.
+# Nothing changes on the fbdev handhelds (Knulli, muOS on the H700).
+UA_PRESENT_THREAD = "1"
 # (UA_GL_PERSIST, the same arena without the ranged draws, stays off: the slabs above.)
 
 # On handhelds with 1 GB of RAM or less (MemTotal at most 1024 MB, read by port.env at each launch)

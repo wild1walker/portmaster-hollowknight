@@ -119,7 +119,8 @@
    "UA_GL_MEMO": "0",
    "UA_GL_SPEC": "1",
    "UA_FLIPBOOK": "@flipbooks.txt",
-   "ASMPATCH_HK_ASPECT": "fill"
+   "ASMPATCH_HK_ASPECT": "fill",
+   "UA_PRESENT_THREAD": "1"
   },
   "runtime_lowmem": {
    "ASMPATCH_HK_BLUR": "off",
