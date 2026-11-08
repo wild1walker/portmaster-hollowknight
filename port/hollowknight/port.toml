@@ -78,7 +78,7 @@ graphics_apis = [11]
 # docs/android-data.md); data_path = true (files read or written at Application.dataPath);
 # name = the APK's, package (keep it: it names the PlayerPrefs file); args = more options
 [android_data]
-asmpatch = ["auto", "hk-blur", "hk-aspect"]      # the default patches, the blur reduction ASMPATCH_HK_BLUR reads, the screen fit ASMPATCH_HK_ASPECT reads (tools/asmpatch)
+asmpatch = ["auto", "hk-blur", "hk-aspect", "hk-pad-letters"]      # the default patches, the blur reduction ASMPATCH_HK_BLUR reads, the screen fit ASMPATCH_HK_ASPECT reads, the prompts' letters UA_PAD_LETTERS reads (tools/asmpatch)
 video_shader = true
 swappy = "off"
 streaming_assets = "both"
@@ -87,14 +87,35 @@ name = "HollowKnight"
 package = "com.pmunity.hollowknight"
 args = []
 
+# the game's controls for the README and the testing thread, as the handheld labels its buttons (the
+# Nintendo layout: B at the bottom); Hollow Knight's own defaults, by position (the game's Options,
+# Controller changes them)
+[controls]
+"D-pad" = "Move; with up or down, the nail and spells go that way"
+"B (bottom)" = "Jump; confirm in menus"
+"Y (left)" = "Attack with the nail"
+"A (right)" = "Focus (hold) and cast spells; back in menus"
+"X (top)" = "Dream Nail"
+"R2" = "Dash"
+"L2" = "Crystal Dash"
+"L1" = "Quick map"
+"R1" = "Quick cast"
+"Select" = "Inventory"
+"Start" = "Pause"
+"Select + Start" = "Quit"
+
 # ua_host's environment (docs/runtime.md, docs/input.md), written to port.env:
 # e.g. UA_POINTER = "1", UA_POINTER_CURSOR = "0", UA_KEYMAP = "start:escape", UA_PAD_NAME,
 # UA_OSK = "done" (the on-screen keyboard answers every soft keyboard at once), UA_KEYBOARD = "1"
 [runtime]
-# The pad as a Switch Pro Controller: Hollow Knight then uses its own Switch controls (A, the
-# right button, jumps and confirms) and shows Switch buttons, as printed on Anbernic and most
-# handhelds. "Xbox Wireless Controller" instead: the bottom button jumps, with Xbox prompts.
-UA_PAD_NAME = "Nintendo Switch Pro Controller"
+# The pad as an Xbox pad: the buttons work by position, the bottom one jumps and confirms (as in the
+# game on every pad). Not a Switch pad's name: InControl's Input System device swaps a Switch pad's face
+# buttons by letter, and the right button jumped (until 2026.11.08.2). The prompts show the letters
+# printed on the handheld: asmpatch's hk-pad-letters ([android_data] below) gives them the Switch Pro
+# Controller's glyphs (B at the bottom, A on the right, as on Anbernic and most handhelds); "xbox" keeps
+# the game's Xbox glyphs, for handhelds printed like an Xbox pad. The buttons stay where they are either way.
+UA_PAD_NAME = "Xbox Wireless Controller"
+UA_PAD_LETTERS = "nintendo"
 # Mono compiles each of the game's methods the first time it runs, in that frame: the first slash,
 # hit or death stalled for its compiling (50-240 ms). The methods compiled are listed in
 # data/jitwarm.txt and compiled ahead at the next launch, over the title and the first load

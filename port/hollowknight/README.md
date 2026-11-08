@@ -9,14 +9,34 @@ game on the handheld from your copy (one to three hours, once). Unity's Android 
 The game runs on Unity's own Android player, through
 [portmaster-unity](https://github.com/wild1walker/portmaster-unity)'s `ua_host` (its android
 route). Saves and settings are in `ports/hollowknight/data/`; the game's options are in
-`ports/hollowknight/port.env`.
+`ports/hollowknight/port.env`. Tested on an Anbernic RG34XX-SP (Knulli, muOS) and a BattleXP G350
+(dArkOS).
+
+The picture fills 4:3 and 3:2 screens (the game's own rule for 16:10 carried down to them); `export
+ASMPATCH_HK_ASPECT=` at the top of `port.env` keeps the bars. On handhelds with 1 GB of memory or less
+the picture gives a little for speed, the game play never (the port's README says what and how to
+undo it). A newer release installed over this one updates the game in place on its first launch
+(about a minute; saves untouched).
 
 ## Controls
 
-The game reads the handheld's pad as a gamepad and keeps its own gamepad controls.
+The buttons work by position (the bottom one jumps and confirms); the prompts show the letters
+printed on the handheld (B at the bottom, A on the right). `export UA_PAD_LETTERS=xbox` in `port.env`
+shows the game's Xbox buttons instead, for handhelds printed like an Xbox pad.
 
 | Button | Action |
 |--|--|
+| D-pad | Move; with up or down, the nail and spells go that way |
+| B (bottom) | Jump; confirm in menus |
+| Y (left) | Attack with the nail |
+| A (right) | Focus (hold) and cast spells; back in menus |
+| X (top) | Dream Nail |
+| R2 | Dash |
+| L2 | Crystal Dash |
+| L1 | Quick map |
+| R1 | Quick cast |
+| Select | Inventory |
+| Start | Pause |
 | Select + Start | Quit |
 
 ## Compile

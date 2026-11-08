@@ -8,10 +8,21 @@ URL: https://www.gog.com/game/hollow_knight
 
 Instructions:
 Put the GOG Linux installer (hollow_knight_*.sh) or the installed game folder into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld.
-Needs a handheld with a 32-bit (armhf) userland beside its 64-bit system (e.g. Knulli on Allwinner H700 devices).
+Needs a handheld with a 32-bit (armhf) userland beside its 64-bit system (e.g. Knulli or muOS on Allwinner H700 devices, dArkOS on RK3326 ones). Tested on an Anbernic RG34XX-SP (Knulli, muOS) and a BattleXP G350 (dArkOS).
 
 | Button | Action |
 |--|--|
+| D-pad | Move; with up or down, the nail and spells go that way |
+| B (bottom) | Jump; confirm in menus |
+| Y (left) | Attack with the nail |
+| A (right) | Focus (hold) and cast spells; back in menus |
+| X (top) | Dream Nail |
+| R2 | Dash |
+| L2 | Crystal Dash |
+| L1 | Quick map |
+| R1 | Quick cast |
+| Select | Inventory |
+| Start | Pause |
 | Select + Start | Quit |
 
 CFW tests:

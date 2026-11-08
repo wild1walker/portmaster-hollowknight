@@ -96,7 +96,8 @@
    "asmpatch": [
     "auto",
     "hk-blur",
-    "hk-aspect"
+    "hk-aspect",
+    "hk-pad-letters"
    ],
    "video_shader": true,
    "swappy": "off",
@@ -111,7 +112,8 @@
    "banks": ""
   },
   "runtime": {
-   "UA_PAD_NAME": "Nintendo Switch Pro Controller",
+   "UA_PAD_NAME": "Xbox Wireless Controller",
+   "UA_PAD_LETTERS": "nintendo",
    "UA_JIT_WARM": "1",
    "UA_GL_ARENA": "1",
    "UA_GLES_POOL": "1",
@@ -120,7 +122,8 @@
    "UA_GL_SPEC": "1",
    "UA_FLIPBOOK": "@flipbooks.txt",
    "ASMPATCH_HK_ASPECT": "fill",
-   "UA_PRESENT_THREAD": "1"
+   "UA_PRESENT_THREAD": "1",
+   "UA_GL_REC": "auto"
   },
   "runtime_lowmem": {
    "ASMPATCH_HK_BLUR": "off",
