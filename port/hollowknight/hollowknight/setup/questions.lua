@@ -3,10 +3,10 @@
 return {
   {
     id = "TEXTURE_QUALITY",
-    question = "Texture quality? Medium is what this port is tested with. Fast makes the setup much shorter, with slightly less exact textures.",
+    question = "Texture quality? High is what this port is tested with. Low makes the setup much shorter, with slightly less exact textures.",
     options = {
-      { "medium", "Medium (recommended)" },
-      { "fast", "Fast (shorter setup)" },
+      { "medium", "High (recommended)" },
+      { "fast", "Low (shorter setup)" },
     },
   },
 }

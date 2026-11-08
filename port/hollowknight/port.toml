@@ -233,15 +233,15 @@ licenses = {}
 # Questions PortMaster's patcher asks before the setup (each answer is kept for later runs), e.g.:
 # [[questions]]
 # id = "TEXTURE_QUALITY"
-# question = "Texture quality? Medium is what this port is tested with."
-# options = [["medium", "Medium (recommended)"], ["fast", "Fast (shorter setup)"]]
+# question = "Texture quality? High is what this port is tested with."
+# options = [["medium", "High (recommended)"], ["fast", "Low (shorter setup)"]]
 # default = "medium"
 # convert_set = "textures.quality"        # the answer -> pmunity convert --set textures.quality=<answer>
 # # env = "UA_POINTER"                    # or: the answer -> the game's environment
 
 [[questions]]
 id = "TEXTURE_QUALITY"
-question = "Texture quality? Medium is what this port is tested with. Fast makes the setup much shorter, with slightly less exact textures."
-options = [["medium", "Medium (recommended)"], ["fast", "Fast (shorter setup)"]]
+question = "Texture quality? High is what this port is tested with. Low makes the setup much shorter, with slightly less exact textures."
+options = [["medium", "High (recommended)"], ["fast", "Low (shorter setup)"]]
 default = "medium"
 convert_set = "textures.quality"

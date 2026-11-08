@@ -2,9 +2,9 @@
 # PortMaster's setup screen asks the questions below itself; this file answers them when it
 # does not (older PortMaster versions).
 #
-# Texture quality? Medium is what this port is tested with. Fast makes the setup much shorter, with slightly less exact textures.
-#   medium  Medium (recommended)
-#   fast  Fast (shorter setup)
+# Texture quality? High is what this port is tested with. Low makes the setup much shorter, with slightly less exact textures.
+#   medium  High (recommended)
+#   fast  Low (shorter setup)
 texture_quality=medium
 #
 # keep_installers: 1 keeps the archives or installers you put in gamedata/ after the setup;
