@@ -12,15 +12,15 @@ route). Saves and settings are in `ports/hollowknight/data/`; the game's options
 `ports/hollowknight/port.env`. Tested on an Anbernic RG34XX-SP (Knulli, muOS) and a BattleXP G350
 (dArkOS).
 
-The picture fills 4:3 and 3:2 screens (the game's own rule for 16:10 carried down to them); `export
-ASMPATCH_HK_ASPECT=` at the top of `port.env` keeps the bars. On every handheld the picture gives a
+The picture fills 4:3 and 3:2 screens (the game's own rule for 16:10 carried down to them); the setup
+asks, and `bars` in `aspect.txt` keeps the game's 16:9 with bars. On every handheld the picture gives a
 little for speed, the game play never (the port's README says what). A newer release installed over this one updates the game in place on its first launch
 (about a minute; saves untouched).
 
 ## Controls
 
 The buttons work by position (the bottom one jumps and confirms); the prompts show the letters
-printed on the handheld (B at the bottom, A on the right). `export UA_PAD_LETTERS=xbox` in `port.env`
+printed on the handheld (B at the bottom, A on the right); the setup asks, and `xbox` in `buttons.txt`
 shows the game's Xbox buttons instead, for handhelds printed like an Xbox pad.
 
 | Button | Action |

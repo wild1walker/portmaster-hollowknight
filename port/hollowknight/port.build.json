@@ -161,6 +161,36 @@
     ],
     "default": "medium",
     "convert_set": "textures.quality"
+   },
+   {
+    "id": "ASPECT",
+    "question": "Picture shape? Hollow Knight is 16:9. (Change it later in ports/hollowknight/aspect.txt: fill or bars.)",
+    "options": [
+     [
+      "fill",
+      "Fill the screen: the same width, a little more above and below (recommended)"
+     ],
+     [
+      "bars",
+      "16:9 with black bars above and below"
+     ]
+    ],
+    "default": "fill"
+   },
+   {
+    "id": "BUTTONS",
+    "question": "Which letters are on your handheld's buttons? The game's prompts show them (the bottom button always jumps). (Change it later in ports/hollowknight/buttons.txt: nintendo or xbox.)",
+    "options": [
+     [
+      "nintendo",
+      "Nintendo: A on the right, B at the bottom (recommended)"
+     ],
+     [
+      "xbox",
+      "Xbox: A at the bottom, B on the right"
+     ]
+    ],
+    "default": "nintendo"
    }
   ],
   "files": {

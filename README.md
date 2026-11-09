@@ -82,7 +82,8 @@ to turn it off.
 black bars above and below. Hollow Knight already does this itself on 16:10 screens by showing a
 little more above and below; the port carries the game's own rule down to these screens. You see
 the same width as on a 16:9 screen and a little more above and below; the HUD stays in the top
-corner. To keep the bars, add `export ASMPATCH_HK_ASPECT=` at the top of `ports/hollowknight/port.env`.
+corner. The setup asks (from 2026.11.09.4; not on 16:9 and 16:10 screens); to change it later, put `fill` or `bars` in
+`ports/hollowknight/aspect.txt`.
 
 On RK3326 handhelds (the R36S family, the BattleXP G350) the graphics driver made the game wait at
 every frame until the GPU had finished drawing it. The port makes the game's graphics calls, and
@@ -174,9 +175,9 @@ and its position.
 
 These are Hollow Knight's own default controls; the game's **Options, Controller** changes them.
 
-Handheld printed like an Xbox pad (A at the bottom)? Add `export UA_PAD_LETTERS=xbox` at the top of
-`ports/hollowknight/port.env`: the prompts then show the game's Xbox buttons. The buttons themselves
-never move.
+Handheld printed like an Xbox pad (A at the bottom)? The setup asks which letters your buttons have
+(from 2026.11.09.4); to change it later, put `xbox` or `nintendo` in `ports/hollowknight/buttons.txt`:
+with `xbox` the prompts show the game's Xbox buttons. The buttons themselves never move.
 
 Test releases up to 2026.11.08.2 named the pad as a Switch Pro Controller, and the game took its
 buttons by their letters (the right button jumped and confirmed). From 2026.11.08.3 they work as

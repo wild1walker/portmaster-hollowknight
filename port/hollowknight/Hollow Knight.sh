@@ -120,6 +120,11 @@ export SDL_GAMECONTROLLERCONFIG="${SDL_GAMECONTROLLERCONFIG:-$sdl_controllerconf
 [ "$HK_ROUTE" = 64 ] && export UM_PMHWDEC=${UM_PMHWDEC-pmhwdec64/libpmhwdec.so.1}
 export UA_FPS=${UA_FPS:-10}                     # a line of frame statistics every 10 s in log.txt
 # the game's options (port.env), and the setup's answers that apply when the game runs
+# the picture shape and the button letters the setup asked for: aspect.txt (fill, or bars for the game's
+# 16:9 with black bars) and buttons.txt (nintendo or xbox), read at each launch; port.env's own lines are
+# defaults, so these win over them, and a line at the top of port.env wins over these
+case "$(cat "$GAMEDIR/aspect.txt" 2>/dev/null)" in fill) export ASMPATCH_HK_ASPECT=fill ;; bars) export ASMPATCH_HK_ASPECT= ;; esac
+case "$(cat "$GAMEDIR/buttons.txt" 2>/dev/null)" in nintendo) export UA_PAD_LETTERS=nintendo ;; xbox) export UA_PAD_LETTERS=xbox ;; esac
 [ -f "$GAMEDIR/port.env" ] && source "$GAMEDIR/port.env"
 [ -f "$GAMEDIR/answers.env" ] && source "$GAMEDIR/answers.env"
 # handhelds without analog sticks whose pad mapping still names a left stick: where PortMaster says there are

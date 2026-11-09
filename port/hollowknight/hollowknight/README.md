@@ -47,7 +47,7 @@ handhelds without a video engine the port can use): from about a minute to a few
 
 The picture fills 4:3 (640x480) and 3:2 (720x480) screens: the game's own rule for 16:10 screens
 (the width of 16:9, a little more above and below) carried down to them, instead of black bars. To
-keep the bars, add `export ASMPATCH_HK_ASPECT=` at the top of `port.env`.
+keep the bars, put `bars` in `aspect.txt` (the setup asks; `fill` fills the screen again).
 
 On every handheld the port gives a little of the picture for speed, the game play never: no
 background blur, the game drawn smaller and scaled up (540x360 on handhelds with 1 GB of memory or
@@ -88,8 +88,9 @@ handhelds (B at the bottom, A on the right), with the game's own Switch button p
 | Select + Start | Quit |
 
 These are Hollow Knight's own default controls; its Options, Controller changes them. A handheld
-printed like an Xbox pad (A at the bottom): add `export UA_PAD_LETTERS=xbox` at the top of
-`port.env`, and the prompts show the game's Xbox buttons. The buttons never move.
+printed like an Xbox pad (A at the bottom): the setup asks which letters your buttons have; to change
+it later, put `xbox` (or `nintendo`) in `buttons.txt`, and the prompts show the game's Xbox buttons.
+The buttons never move.
 
 ## Licences
 
