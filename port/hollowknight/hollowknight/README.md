@@ -52,6 +52,7 @@ each costs frame rate when it is off. To turn one off anyway, add its line at th
 
 ```bash
 export ASMPATCH_HK_BLUR=full   # the game's four-pass background blur
+export UA_RENDER_SIZE=1280x768 UA_RENDER_RAM= UA_RENDER_PIXELS=   # draw at a size of your choice (the screen's shape is kept)
 export UA_RENDER_SIZE= UA_RENDER_PIXELS=   # draw at the screen's own size
 export UA_AUDIO_RATE=          # mix the sound at 48 kHz
 ```
