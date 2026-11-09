@@ -123,7 +123,8 @@
    "UA_FLIPBOOK": "@flipbooks.txt",
    "ASMPATCH_HK_ASPECT": "fill",
    "UA_PRESENT_THREAD": "1",
-   "UA_GL_REC": "auto"
+   "UA_GL_REC": "auto",
+   "UM_PMHW": "pmhw/libpmhwdec.so.1"
   },
   "runtime_low": {
    "ASMPATCH_HK_BLUR": "off",
@@ -165,9 +166,18 @@
    ]
   },
   "build": {
-   "commands": [],
-   "outputs": {},
-   "licenses": {}
+   "commands": [
+    "\"$PMUNITY/tools/pmhwdec/build.sh\" \"$BUILD/pmhwdec\""
+   ],
+   "outputs": {
+    "pmhw/libpmhwdec.so.1": "{build}/pmhwdec/armhf/libpmhwdec.so.1",
+    "pmhw/pmhw-cedard": "{build}/pmhwdec/aarch64/pmhw-cedard"
+   },
+   "licenses": {
+    "LICENSE.libpmhwdec.txt": "{build}/pmhwdec/src/pmhwdec/LICENSE",
+    "LICENSE.pmhw-cedard.txt": "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhw-cedard",
+    "LICENSE.libpmhwdec-libvpx.txt": "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt"
+   }
   }
  },
  "route": {

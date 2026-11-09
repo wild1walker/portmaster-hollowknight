@@ -175,6 +175,13 @@ UA_PRESENT_THREAD = "1"
 # the render thread goes on with the next frame. The same calls in the same order, one frame in flight.
 # G350: Greenpath 23 -> 32 fps. Nothing changes on the fbdev handhelds.
 UA_GL_REC = "auto"
+# Knifethrower's libpmhwdec (portmaster-unity tools/pmhwdec/build.sh, shipped in pmhw/ by [build] below):
+# the cinematics (VP8) decoded on the video engine of Allwinner handhelds (H700, A133: Knulli, muOS).
+# Where it finds no decoder it can use as the port runs (Rockchip on dArkOS: the decoder is root-only and
+# there is no MPP library; nothing is changed for it), it says so at once (32 ms on the G350) and libvpx
+# plays them as before. RG34XX-SP, the 1080p intro: the four cores 73 -> 54 % busy, the lowest second
+# 20 -> 33 fps. The path is the port folder's (ua_host's working folder)
+UM_PMHW = "pmhw/libpmhwdec.so.1"
 # (UA_GL_PERSIST, the same arena without the ranged draws, stays off: the slabs above.)
 
 # The Low picture, on every handheld: the picture gives a little, the game play nothing (portmaster-unity
@@ -236,9 +243,9 @@ extra = ["flipbooks.txt"]   # the background flip-books' controllers (UA_FLIPBOO
 # they make put into the port folder (outputs = {"setup/files/x" = "build/x"}), and their licences
 # (licenses = {"LICENSE.x.txt" = "path"})
 [build]
-commands = []
-outputs = {}
-licenses = {}
+commands = ['"$PMUNITY/tools/pmhwdec/build.sh" "$BUILD/pmhwdec"']
+outputs = {"pmhw/libpmhwdec.so.1" = "{build}/pmhwdec/armhf/libpmhwdec.so.1", "pmhw/pmhw-cedard" = "{build}/pmhwdec/aarch64/pmhw-cedard"}
+licenses = {"LICENSE.libpmhwdec.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE", "LICENSE.pmhw-cedard.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhw-cedard", "LICENSE.libpmhwdec-libvpx.txt" = "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt"}
 
 # Questions PortMaster's patcher asks before the setup (each answer is kept for later runs), e.g.:
 # [[questions]]
