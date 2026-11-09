@@ -171,7 +171,8 @@
    ],
    "outputs": {
     "pmhw/libpmhwdec.so.1": "{build}/pmhwdec/armhf/libpmhwdec.so.1",
-    "pmhw/pmhw-cedard": "{build}/pmhwdec/aarch64/pmhw-cedard"
+    "pmhw/pmhw-cedard": "{build}/pmhwdec/aarch64/pmhw-cedard",
+    "pmhw/pmhw-test": "{build}/pmhwdec/armhf/pmhw-test"
    },
    "licenses": {
     "LICENSE.libpmhwdec.txt": "{build}/pmhwdec/src/pmhwdec/LICENSE",

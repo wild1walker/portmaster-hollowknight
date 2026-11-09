@@ -22,8 +22,9 @@ handheld.
    `ports/hollowknight/gamedata/`.
 2. Launch Hollow Knight from the Ports menu. PortMaster's patcher shows the setup's progress: it finds
    (or unpacks) the game, unpacks Unity's player, converts the game for the handheld's GPU and
-   packs it for the player (about 45 minutes on an RG34XX-SP with Knulli, about ten more for the
-   cinematics on 1 GB handhelds). If it is interrupted, launch again: it continues where it stopped.
+   packs it for the player (about 45 minutes on an RG34XX-SP with Knulli; about ten more for the
+   cinematics on 1 GB handhelds whose video engine the port cannot use, such as the G350). If it is
+   interrupted, launch again: it continues where it stopped.
    The log is `ports/hollowknight/patchlog.txt`.
 3. When it is done the game starts. The setup uses up the game's folder in `gamedata/` (its files
    are moved into the converted game), and deletes the archives or installers you put there once
@@ -35,7 +36,7 @@ run's log.
 
 **Updating:** install a newer release over this one, as you installed it. Its first launch brings
 the game you already have up to date in place (newer code patches, smaller cinematics on 1 GB
-handhelds): from about a minute to a few minutes, nothing downloaded, your saves untouched.
+handhelds without a video engine the port can use): from about a minute to a few minutes, nothing downloaded, your saves untouched.
 
 ## The picture
 
@@ -47,7 +48,8 @@ On every handheld the port gives a little of the picture for speed, the game pla
 background blur, the game drawn smaller and scaled up (540x360 on handhelds with 1 GB of memory or
 less, 480x360 on 4:3; at most about 960x576 on bigger ones), the game's own video options at their
 lowest (until you change them in its Options, Video). On 1 GB handhelds also the sound mixed at
-24 kHz and the textures and the cinematics at half size. The port is tested with all of these on;
+24 kHz, the textures at half size, and the cinematics too where the handheld's video engine cannot
+play them (it does on Allwinner handhelds with Knulli or muOS, through the port's libpmhwdec). The port is tested with all of these on;
 each costs frame rate when it is off. To turn one off anyway, add its line at the top of `port.env`:
 
 ```bash
