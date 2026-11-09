@@ -2,7 +2,7 @@
 
 A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmaster.games/).
 
-> **Latest test release: 2026.11.09.3** ([Releases](https://github.com/wild1walker/portmaster-hollowknight/releases)).
+> **Latest test release: 2026.11.09.4** ([Releases](https://github.com/wild1walker/portmaster-hollowknight/releases)).
 > Tested on an Anbernic RG34XX-SP (Knulli and muOS) and a BattleXP G350 (dArkOS, the RK3326 chip of
 > the R36S family). The setup that converts your copy has run end to end on the RG34XX-SP with
 > Knulli; the other two ran a copy converted there. Knifethrower reports it playable on an
@@ -63,7 +63,7 @@ yet run on a TrimUI handheld itself.
 | Saves | Done: Quit to Menu saves, and the save loads again (on a real handheld) |
 | Tests on real handhelds | RG34XX-SP with Knulli: first launch to King's Pass, 30 minutes with steady memory. Walking and fighting with the 1 GB options of 2026.11.08 (below, "The picture") and the picture filling the screen, 2026-11-08, frames per second: Colosseum of Fools, Mantis Village and Dirtmouth 59.5, Kingdom's Edge 58, Deepnest 57, Crystal Peak 56, Queen's Gardens 54 - 55, City of Tears 53 - 57, Greenpath 52 - 54; boss fights from the Hall of Gods 52 - 59. The same handheld with muOS: Greenpath 55 - 56. BattleXP G350 with dArkOS: Greenpath 30 - 33, the other areas 35 - 45, Mantis Lords 36. Anbernic RG552 with AmberELEC (reported by Knifethrower, 2026-11-08): playable; at the screen's full 1920x1152 with the full blur (4 GB: none of the small-handheld options) the title 44 - 50 fps, King's Pass about 11, loads about 5 s of black as on the handhelds above |
 | The setup on the handheld (converting your copy there) | Done on the RG34XX-SP with Knulli: about 45 minutes from GOG's installer (2026-11-02). Rehearsed before in an arm64 container with 1 GB of memory (32 minutes, 3.9 GB installed) |
-| Test releases | The first 2026.10.25; the latest 2026.11.08.3 |
+| Test releases | The first 2026.10.25; the latest 2026.11.09.4 (the first with the 64-bit build) |
 
 On every handheld the game's sprites reach the graphics chip by a faster path that draws the same
 picture (ua_host's layers in `port.env`: Unity's moving sprites in one buffer drawn in place, its
