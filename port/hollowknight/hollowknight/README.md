@@ -43,15 +43,16 @@ The picture fills 4:3 (640x480) and 3:2 (720x480) screens: the game's own rule f
 (the width of 16:9, a little more above and below) carried down to them, instead of black bars. To
 keep the bars, add `export ASMPATCH_HK_ASPECT=` at the top of `port.env`.
 
-On handhelds with 1 GB of memory or less the port gives a little of the picture for speed, the game
-play never: no background blur, the game drawn at 540x360 (480x360 on 4:3) and scaled up, the sound
-mixed at 24 kHz, the game's Particle Effects Low and Dithering off (until you change them in its
-Options, Video), the textures and the cinematics at half size. To get the picture and sound back,
-add any of these lines at the top of `port.env`:
+On every handheld the port gives a little of the picture for speed, the game play never: no
+background blur, the game drawn smaller and scaled up (540x360 on handhelds with 1 GB of memory or
+less, 480x360 on 4:3; at most about 960x576 on bigger ones), the game's own video options at their
+lowest (until you change them in its Options, Video). On 1 GB handhelds also the sound mixed at
+24 kHz and the textures and the cinematics at half size. The port is tested with all of these on;
+each costs frame rate when it is off. To turn one off anyway, add its line at the top of `port.env`:
 
 ```bash
 export ASMPATCH_HK_BLUR=full   # the game's four-pass background blur
-export UA_RENDER_SIZE=         # draw at the screen's own size
+export UA_RENDER_SIZE= UA_RENDER_PIXELS=   # draw at the screen's own size
 export UA_AUDIO_RATE=          # mix the sound at 48 kHz
 ```
 

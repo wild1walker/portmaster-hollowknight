@@ -13,9 +13,8 @@ route). Saves and settings are in `ports/hollowknight/data/`; the game's options
 (dArkOS).
 
 The picture fills 4:3 and 3:2 screens (the game's own rule for 16:10 carried down to them); `export
-ASMPATCH_HK_ASPECT=` at the top of `port.env` keeps the bars. On handhelds with 1 GB of memory or less
-the picture gives a little for speed, the game play never (the port's README says what and how to
-undo it). A newer release installed over this one updates the game in place on its first launch
+ASMPATCH_HK_ASPECT=` at the top of `port.env` keeps the bars. On every handheld the picture gives a
+little for speed, the game play never (the port's README says what). A newer release installed over this one updates the game in place on its first launch
 (about a minute; saves untouched).
 
 ## Controls

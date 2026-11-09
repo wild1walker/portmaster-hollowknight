@@ -125,12 +125,16 @@
    "UA_PRESENT_THREAD": "1",
    "UA_GL_REC": "auto"
   },
-  "runtime_lowmem": {
+  "runtime_low": {
    "ASMPATCH_HK_BLUR": "off",
    "UA_RENDER_SIZE": "540x360",
+   "UA_RENDER_RAM": "1024",
+   "UA_RENDER_PIXELS": "560000",
+   "UA_PREFS_DEFAULTS": "ShaderQuality=0 VidParticles=0 VidDithering=0 VidNoise=0"
+  },
+  "runtime_lowmem": {
    "UA_GFX_JOBS": "legacy",
    "UA_AUDIO_RATE": "24000",
-   "UA_PREFS_DEFAULTS": "VidParticles=0 VidDithering=0",
    "UA_UNITY_ARGS": "-job-worker-count 1"
   },
   "questions": [

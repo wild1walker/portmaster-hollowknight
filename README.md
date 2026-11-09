@@ -7,7 +7,7 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 > the R36S family). The setup that converts your copy has run end to end on the RG34XX-SP with
 > Knulli; the other two ran a copy converted there. Knifethrower reports it playable on an
 > Anbernic RG552 with AmberELEC (a 1920x1152 screen: King's Pass at about 11 fps with the full
-> picture, being looked into). Please report how far it gets on yours.
+> picture; the next release turns the port's speed options on there too). Please report how far it gets on yours.
 
 - **You need your own copy of the game.** This project contains **no game files**, and its
   releases don't either. You bring the GOG Linux version; the port converts it for the handheld
@@ -16,8 +16,8 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
   [portmaster-unity](https://github.com/wild1walker/portmaster-unity) tools run Unity's Android
   player directly on the handheld's Linux, with no Android and no emulator. The same tools run
   [Cuphead](https://github.com/wild1walker/portmaster-cuphead) at close to 60 frames per second.
-- **It plays like the original.** On handhelds with 1 GB of memory or less the port gives a
-  little of the picture for speed (below, "Small handhelds"); one edit brings the full picture back.
+- **It plays like the original.** The port gives a little of the picture for speed on every
+  handheld, never anything of the game play (below, "The picture").
 
 ## What it needs
 
@@ -39,7 +39,7 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 | First start in an emulated handheld | Done: menus, the opening cinematics and the first area (King's Pass) all work |
 | Controls | Done: Hollow Knight's own controls by position, the prompts in the letters printed on the handheld (see below) |
 | Saves | Done: Quit to Menu saves, and the save loads again (on a real handheld) |
-| Tests on real handhelds | RG34XX-SP with Knulli: first launch to King's Pass, 30 minutes with steady memory. Walking and fighting with the small-handheld options (below) and the picture filling the screen, 2026-11-08, frames per second: Colosseum of Fools, Mantis Village and Dirtmouth 59.5, Kingdom's Edge 58, Deepnest 57, Crystal Peak 56, Queen's Gardens 54 - 55, City of Tears 53 - 57, Greenpath 52 - 54; boss fights from the Hall of Gods 52 - 59. The same handheld with muOS: Greenpath 55 - 56. BattleXP G350 with dArkOS: Greenpath 30 - 33, the other areas 35 - 45, Mantis Lords 36. Anbernic RG552 with AmberELEC (reported by Knifethrower, 2026-11-08): playable; at the screen's full 1920x1152 with the full blur (4 GB: none of the small-handheld options) the title 44 - 50 fps, King's Pass about 11, loads about 5 s of black as on the handhelds above |
+| Tests on real handhelds | RG34XX-SP with Knulli: first launch to King's Pass, 30 minutes with steady memory. Walking and fighting with the 1 GB options of 2026.11.08 (below, "The picture") and the picture filling the screen, 2026-11-08, frames per second: Colosseum of Fools, Mantis Village and Dirtmouth 59.5, Kingdom's Edge 58, Deepnest 57, Crystal Peak 56, Queen's Gardens 54 - 55, City of Tears 53 - 57, Greenpath 52 - 54; boss fights from the Hall of Gods 52 - 59. The same handheld with muOS: Greenpath 55 - 56. BattleXP G350 with dArkOS: Greenpath 30 - 33, the other areas 35 - 45, Mantis Lords 36. Anbernic RG552 with AmberELEC (reported by Knifethrower, 2026-11-08): playable; at the screen's full 1920x1152 with the full blur (4 GB: none of the small-handheld options) the title 44 - 50 fps, King's Pass about 11, loads about 5 s of black as on the handhelds above |
 | The setup on the handheld (converting your copy there) | Done on the RG34XX-SP with Knulli: about 45 minutes from GOG's installer (2026-11-02). Rehearsed before in an arm64 container with 1 GB of memory (32 minutes, 3.9 GB installed) |
 | Test releases | The first 2026.10.25; the latest 2026.11.08.3 |
 
@@ -73,15 +73,21 @@ brings the game you already have up to date in place (newer code patches such as
 the smaller cinematics on 1 GB handhelds): from about a minute to a few minutes, nothing downloaded,
 your saves untouched.
 
-## Small handhelds (1 GB of memory or less)
+## The picture
 
-On these the port turns on six options by itself (`ports/hollowknight/port.env`):
+On every handheld the port turns on these by itself (`ports/hollowknight/port.env`):
 
 - no background blur: the far background is drawn sharp instead of blurred
-- the game drawn at 540x360 (480x360 on 4:3 screens) and scaled to the screen (a little softer)
+- the game drawn smaller and scaled to the screen (a little softer): 540x360 on handhelds with 1 GB
+  of memory or less (480x360 on 4:3 screens), at most about 960x576 on bigger ones (a 1920x1152
+  screen at half its size; a 720x480 one keeps its size)
+- the game's own video options at their lowest: Shader Quality Low, Particle Effects Low, Dithering
+  and Noise off, until you choose otherwise in its Options, Video
+
+On handhelds with 1 GB of memory or less, also:
+
 - Unity's graphics jobs (the same picture, less work for the game's main thread)
 - the sound mixed at 24 kHz instead of 48 kHz (slightly duller highs, the same sounds)
-- the game's own Particle Effects Low and Dithering off, until you choose otherwise in its Options, Video
 - one Unity job thread instead of three (the same game; the handheld's four cores go to the game itself)
 
 The setup also converts the textures at half size on these handhelds, the text at full size:
@@ -99,12 +105,12 @@ The game play does not change. Measured in King's Pass on the RG34XX-SP while wa
 and jumping: about 48 fps with the previous options (the blur at the game's Low, 48 kHz), 54 - 56
 with these, and about six times fewer slow frames (over 25 ms).
 
-To get the full picture and sound back, add these lines at the top of `port.env` (any one alone
-works too):
+The port is tested with all of these on, and the setup offers no other picture. Each one costs
+frame rate when it is off; to turn one off anyway, add its line at the top of `port.env`:
 
 ```bash
 export ASMPATCH_HK_BLUR=full   # the game's four-pass background blur
-export UA_RENDER_SIZE=         # draw at the screen's own size
+export UA_RENDER_SIZE= UA_RENDER_PIXELS=   # draw at the screen's own size
 export UA_AUDIO_RATE=          # mix the sound at 48 kHz
 ```
 
