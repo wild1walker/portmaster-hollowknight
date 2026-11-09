@@ -112,10 +112,17 @@ On handhelds with 1 GB of memory or less, also:
 - the sound mixed at 24 kHz instead of 48 kHz (slightly duller highs, the same sounds)
 - one Unity job thread instead of three (the same game; the handheld's four cores go to the game itself)
 
-The setup also converts the textures at half size on these handhelds, the text at full size:
-Hallownest's art, made for 1080p screens, still has more than a texel for each pixel of a 720x480
-screen, and the game leaves about 240 MB of memory free instead of swapping (building the port
-yourself, `[convert.textures] lowmem_scale = 1.0` in `port.toml` keeps them full size).
+The setup also converts the textures at 0.375 of their size on these handhelds, the text at full
+size: Hallownest's art, made for 1080p screens, still has about a texel for each pixel of the game's
+540x360 picture. And it keeps at most 16 MB of a scene's sounds decoded in memory (36 MB on bigger
+handhelds); the longer ones are decoded as they play. Handhelds with dArkOS keep EmulationStation in
+memory while the game runs (up to about 126 MB), and with no swap the game ran a 1 GB handheld out of
+memory in City of Tears before this. Measured on an RG34XX-SP with muOS in City of Tears: the game
+663 -> 597 MB, the same frame rate, the same picture side by side. A game set up by an earlier release
+keeps its textures and sounds as they were (the setup no longer has your copy's originals): to get
+these, put your copy in `ports/hollowknight/gamedata/` again and delete `ports/hollowknight/.setup_done`
+(`.setup_done64` for the 64-bit build); the next launch sets the game up again and your saves stay. Building the port yourself, `[convert.textures] lowmem_scale = 1.0` in
+`port.toml` keeps the textures full size.
 
 And it makes the cinematics smaller on these handhelds: 960x540 instead of 1920x1080, which
 looks the same on their screens and plays at the videos' own 30 pictures a second (at full size the

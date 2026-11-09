@@ -61,14 +61,18 @@ grab_fetch = "always"
 # (16 by default): FMOD's mixer 56 -> 47 % of a core, memory as before (docs/profiling.md)
 [convert.audio]
 pcm_budget_mb = 36
-# where the handheld has 1 GB of RAM or less, textures at half size (lowmem_scale, ram_mb 1024): the
-# game draws there at 540x360, and Hallownest's art, made for 1080p, still has more than a texel
-# for each pixel of a 720x480 panel. RG34XX-SP, King's Pass: the game ~830 -> ~670 MB (its GPU pages
-# ~300 -> ~142), ~240 MB left free instead of swapping, the same 51 fps. Text atlases (SDF, tmpro,
-# Font Texture) stay at full size. Elsewhere scale; the full textures back: unset it, run the setup again.
+# on handhelds with 1 GB of RAM or less (pmu's lowmem_pcm_budget_mb, ram_mb 1024) 16 MiB a scene: dArkOS keeps
+# EmulationStation in memory while a port runs (64 - 126 MB on the G350, no swap), and with the 36 MiB budget City
+# of Tears ran a G350 out of memory. muOS RG34XX-SP, City of Tears, with the textures below: the game 663 -> 597 MB, the lowest
+# available 266 -> 332 MB, 56.0 -> 56.3 fps; FMOD decodes the long clips as they play (a little more CPU).
+lowmem_pcm_budget_mb = 16
+# where the handheld has 1 GB of RAM or less, textures at 0.375 of their size (lowmem_scale, ram_mb 1024; 0.5 until
+# 2026.11.09.3): the game draws there at 540x360 (480x360 on 4:3), and Hallownest's art, made for 1080p, still has
+# about a texel for each pixel of it (405 lines for 360). Text atlases (SDF, tmpro, Font Texture) stay at full size.
+# (Side by side at 540x360 the same picture.) Elsewhere scale; the full textures back: unset it, run the setup again.
 [convert.textures]
 scale = 1.0
-lowmem_scale = 0.5
+lowmem_scale = 0.375
 sharp_names = "SDF|tmpro|Font Texture"
 block = [4, 4]
 quality = "medium"
