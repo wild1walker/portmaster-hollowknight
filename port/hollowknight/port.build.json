@@ -172,12 +172,14 @@
    "outputs": {
     "pmhw/libpmhwdec.so.1": "{build}/pmhwdec/armhf/libpmhwdec.so.1",
     "pmhw/pmhw-cedard": "{build}/pmhwdec/aarch64/pmhw-cedard",
-    "pmhw/pmhw-test": "{build}/pmhwdec/armhf/pmhw-test"
+    "pmhw/pmhw-test": "{build}/pmhwdec/armhf/pmhw-test",
+    "pmhw/librockchip_mpp.so": "{build}/pmhwdec/armhf/librockchip_mpp.so"
    },
    "licenses": {
     "LICENSE.libpmhwdec.txt": "{build}/pmhwdec/src/pmhwdec/LICENSE",
     "LICENSE.pmhw-cedard.txt": "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhw-cedard",
-    "LICENSE.libpmhwdec-libvpx.txt": "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt"
+    "LICENSE.libpmhwdec-libvpx.txt": "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt",
+    "LICENSE.mpp.txt": "{build}/pmhwdec/armhf/LICENSE.mpp.txt"
    }
   }
  },

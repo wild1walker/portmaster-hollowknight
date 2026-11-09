@@ -98,8 +98,11 @@ yourself, `[convert.textures] lowmem_scale = 1.0` in `port.toml` keeps them full
 And it makes the cinematics smaller on these handhelds: 960x540 instead of 1920x1080, which
 looks the same on their screens and plays at the videos' own 30 pictures a second (at full size the
 handheld cannot decode them in time and they played in slow motion). Not where the handheld's video
-engine decodes them (Allwinner handhelds with Knulli or muOS, such as the RG34XX-SP: the port's
-libpmhwdec): there they stay at full size and the setup is a few minutes shorter. A game set up by an earlier
+engine decodes them through the port's libpmhwdec (Allwinner handhelds with Knulli or muOS, such as
+the RG34XX-SP, and RK3326 handhelds with dArkOS, such as the G350): there they stay at full size and
+the setup is about ten minutes shorter. On dArkOS the launcher opens the video decoder to the game
+(its two device files, which are root-only there) while the game runs, and puts them back as they
+were when it ends. A game set up by an earlier
 release gets this once, on its next launch after the update (a few minutes; PortMaster's patcher
 shows it). Set `[convert.video] mode = "off"` in `port.toml` to keep them as they are.
 

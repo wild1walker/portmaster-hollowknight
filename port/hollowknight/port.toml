@@ -176,10 +176,10 @@ UA_PRESENT_THREAD = "1"
 # G350: Greenpath 23 -> 32 fps. Nothing changes on the fbdev handhelds.
 UA_GL_REC = "auto"
 # Knifethrower's libpmhwdec (portmaster-unity tools/pmhwdec/build.sh, shipped in pmhw/ by [build] below):
-# the cinematics (VP8) decoded on the video engine of Allwinner handhelds (H700, A133: Knulli, muOS).
-# Where it finds no decoder it can use as the port runs (Rockchip on dArkOS: the decoder is root-only and
-# there is no MPP library; nothing is changed for it), it says so at once (32 ms on the G350) and libvpx
-# plays them as before. RG34XX-SP, the 1080p intro: the four cores 73 -> 54 % busy, the lowest second
+# the cinematics (VP8) decoded on the video engine of Allwinner handhelds (H700, A133: Knulli, muOS) and,
+# through Rockchip MPP shipped beside it, of RK3326 ones on dArkOS (the launcher opens the decoder's
+# nodes to the video group for the game and puts them back when it ends). Where it finds no decoder it
+# can use, it says so at once (32 ms on the G350 before) and libvpx plays them as before. RG34XX-SP, the 1080p intro: the four cores 73 -> 54 % busy, the lowest second
 # 20 -> 33 fps. The path is the port folder's (ua_host's working folder). Where its test program
 # (pmhw/pmhw-test) finds the decoder, the setup leaves the cinematics at full size (Knifethrower's idea):
 # no re-encode on 1 GB Allwinner handhelds, a shorter setup
@@ -246,8 +246,8 @@ extra = ["flipbooks.txt"]   # the background flip-books' controllers (UA_FLIPBOO
 # (licenses = {"LICENSE.x.txt" = "path"})
 [build]
 commands = ['"$PMUNITY/tools/pmhwdec/build.sh" "$BUILD/pmhwdec"']
-outputs = {"pmhw/libpmhwdec.so.1" = "{build}/pmhwdec/armhf/libpmhwdec.so.1", "pmhw/pmhw-cedard" = "{build}/pmhwdec/aarch64/pmhw-cedard", "pmhw/pmhw-test" = "{build}/pmhwdec/armhf/pmhw-test"}
-licenses = {"LICENSE.libpmhwdec.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE", "LICENSE.pmhw-cedard.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhw-cedard", "LICENSE.libpmhwdec-libvpx.txt" = "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt"}
+outputs = {"pmhw/libpmhwdec.so.1" = "{build}/pmhwdec/armhf/libpmhwdec.so.1", "pmhw/pmhw-cedard" = "{build}/pmhwdec/aarch64/pmhw-cedard", "pmhw/pmhw-test" = "{build}/pmhwdec/armhf/pmhw-test", "pmhw/librockchip_mpp.so" = "{build}/pmhwdec/armhf/librockchip_mpp.so"}
+licenses = {"LICENSE.libpmhwdec.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE", "LICENSE.pmhw-cedard.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhw-cedard", "LICENSE.libpmhwdec-libvpx.txt" = "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt", "LICENSE.mpp.txt" = "{build}/pmhwdec/armhf/LICENSE.mpp.txt"}
 
 # Questions PortMaster's patcher asks before the setup (each answer is kept for later runs), e.g.:
 # [[questions]]
