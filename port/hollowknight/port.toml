@@ -8,11 +8,11 @@ name = "hollowknight"
 title = "Hollow Knight"
 route = "android"
 porter = ["wild1walker"]
-desc = "Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the GOG Linux version."
-inst = "Put the GOG Linux installer (hollow_knight_*.sh) or the installed game folder into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld."
+desc = "Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the Linux version from GOG or Steam."
+inst = "Put the GOG Linux installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld."
 genres = ["action", "adventure", "platformer"]
 availability = "paid"
-store = [{name = "GOG", gameurl = "https://www.gog.com/game/hollow_knight", developerurl = "https://www.teamcherry.com.au/"}]
+store = [{name = "GOG", gameurl = "https://www.gog.com/game/hollow_knight", developerurl = "https://www.teamcherry.com.au/"}, {name = "Steam", gameurl = "https://store.steampowered.com/app/367520/Hollow_Knight/", developerurl = "https://www.teamcherry.com.au/"}]
 setup_time = "one to three hours"
 exp = false
 thanks = "Thanks to [Team Cherry](https://www.teamcherry.com.au/) for creating Hollow Knight and its hand-drawn kingdom of Hallownest."
@@ -25,7 +25,7 @@ ready_marker = ".setup_done"
 data = "Hollow Knight_Data"
 build = "linux"
 unity_versions = ["6000.0.61f1"]
-what = "Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder"
+what = "Hollow Knight for Linux (Unity 6000.0.61f1): GOG's installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam"
 size_mb = 4999
 setup_space_mb = 0
 developer = "Team Cherry"
@@ -39,6 +39,10 @@ backend = "mono"
 abi = "armeabi-v7a"
 url = "https://download.unity3d.com/download_unity/74a0adb02c31/TargetSupportInstaller/UnitySetup-Android-Support-for-Editor-6000.0.61f1.exe"
 sha256 = {"libmain.so" = "f9ea09a232a33b4c971bfcb45053fc5ef4c7ccc5999014d7bf7f46bae0bd5a31", "libunity.so" = "4ac0f68ffd66e0af2470544b75500ccda60e1d3c00b172e870690bf75000007d"}
+# the donors the release ships: the 32-bit Mono player, and Unity's 64-bit IL2CPP player for the 64-bit
+# build (setup/patchscript64, on systems without a 32-bit userland: the game's own assemblies on Unity's Mono
+# for 64-bit ARM behind that player's libil2cpp.so, nothing compiled; its engine modules from the Mono donor)
+donors = ["donor-6000.0.61f1-mono-armv7.apk", "donor-6000.0.61f1-il2cpp-arm64.apk"]
 
 # pmunity convert's config (each step's DEFAULTS); "textures" re-encodes BC/DXT as ASTC
 # (less memory, a longer setup, slightly different pixels: off unless you add it)
@@ -175,15 +179,15 @@ UA_PRESENT_THREAD = "1"
 # the render thread goes on with the next frame. The same calls in the same order, one frame in flight.
 # G350: Greenpath 23 -> 32 fps. Nothing changes on the fbdev handhelds.
 UA_GL_REC = "auto"
-# Knifethrower's libpmhwdec (portmaster-unity tools/pmhwdec/build.sh, shipped in pmhw/ by [build] below):
+# Knifethrower's libpmhwdec (portmaster-unity tools/pmhwdec/build.sh, shipped in pmhwdec/ by [build] below):
 # the cinematics (VP8) decoded on the video engine of Allwinner handhelds (H700, A133: Knulli, muOS) and,
 # through Rockchip MPP shipped beside it, of RK3326 ones on dArkOS (the launcher opens the decoder's
 # nodes to the video group for the game and puts them back when it ends). Where it finds no decoder it
 # can use, it says so at once (32 ms on the G350 before) and libvpx plays them as before. RG34XX-SP, the 1080p intro: the four cores 73 -> 54 % busy, the lowest second
 # 20 -> 33 fps. The path is the port folder's (ua_host's working folder). Where its test program
-# (pmhw/pmhw-test) finds the decoder, the setup leaves the cinematics at full size (Knifethrower's idea):
+# (pmhwdec/pmhwdec-test) finds the decoder, the setup leaves the cinematics at full size (Knifethrower's idea):
 # no re-encode on 1 GB Allwinner handhelds, a shorter setup
-UM_PMHW = "pmhw/libpmhwdec.so.1"
+UM_PMHWDEC = "pmhwdec/libpmhwdec.so.1"
 # (UA_GL_PERSIST, the same arena without the ranged draws, stays off: the slabs above.)
 
 # The Low picture, on every handheld: the picture gives a little, the game play nothing (portmaster-unity
@@ -200,8 +204,10 @@ ASMPATCH_HK_BLUR = "off"
 # on 1 GB handhelds the game rendered at 540x360 and scaled to the panel (by the display engine on the
 # fbdev path, else the GPU): softer. 540x360 rather than 600x400 since 2026-11-04: the GPU-bound rooms
 # gain most (City of Tears 41.3 -> 47.3 fps, Crystal Peak 48.2 -> 52.9, Queen's Gardens 52.3 -> 54.0 on
-# Knulli; Greenpath 41.4 -> 43.6 on muOS), the picture a little softer still
-UA_RENDER_SIZE = "540x360"
+# Knulli; Greenpath 41.4 -> 43.6 on muOS), the picture a little softer still. Square screens (720x720) 480x480
+# instead of the 360x360 that 540x360 fits into them (hard to read, testers said): Greenpath on a 1:1 stand-in
+# (RG34XX-SP, UA_ASPECT=1:1) 53.6 fps at 360x360, 52.3 at 440x440, 51.5 at 480x480
+UA_RENDER_SIZE = "540x360 480x480"
 UA_RENDER_RAM = "1024"
 # on bigger devices at most about 560,000 pixels, scaled up by the GPU: a 1920x1152 screen 960x576, a
 # 1920x1080 one 992x558; a 720x480 one stays at its size
@@ -245,9 +251,12 @@ extra = ["flipbooks.txt"]   # the background flip-books' controllers (UA_FLIPBOO
 # they make put into the port folder (outputs = {"setup/files/x" = "build/x"}), and their licences
 # (licenses = {"LICENSE.x.txt" = "path"})
 [build]
-commands = ['"$PMUNITY/tools/pmhwdec/build.sh" "$BUILD/pmhwdec"']
-outputs = {"pmhw/libpmhwdec.so.1" = "{build}/pmhwdec/armhf/libpmhwdec.so.1", "pmhw/pmhw-cedard" = "{build}/pmhwdec/aarch64/pmhw-cedard", "pmhw/pmhw-test" = "{build}/pmhwdec/armhf/pmhw-test", "pmhw/librockchip_mpp.so" = "{build}/pmhwdec/armhf/librockchip_mpp.so"}
-licenses = {"LICENSE.libpmhwdec.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE", "LICENSE.pmhw-cedard.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhw-cedard", "LICENSE.libpmhwdec-libvpx.txt" = "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt", "LICENSE.mpp.txt" = "{build}/pmhwdec/armhf/LICENSE.mpp.txt"}
+# libpmhwdec for both builds (Rockchip MPP only for the 32-bit one: the Rockchip firmwares on vendor kernels, dArkOS
+# and ArkOS, have 32-bit libraries), and the 64-bit build's runtime (build64.sh: ua_host64, the Mono bridge and
+# Unity's Mono of the 6000.0 line, their licences)
+commands = ['"$PMUNITY/tools/pmhwdec/build.sh" "$BUILD/pmhwdec"', '"$PORT_SRC/build64.sh" "$BUILD/arm64"']
+outputs = {"pmhwdec/libpmhwdec.so.1" = "{build}/pmhwdec/armhf/libpmhwdec.so.1", "pmhwdec/pmhwdec-cedard" = "{build}/pmhwdec/aarch64/pmhwdec-cedard", "pmhwdec/pmhwdec-test" = "{build}/pmhwdec/armhf/pmhwdec-test", "pmhwdec/librockchip_mpp.so" = "{build}/pmhwdec/armhf/librockchip_mpp.so", "pmhwdec64/libpmhwdec.so.1" = "{build}/pmhwdec/arm64/libpmhwdec.so.1", "pmhwdec64/pmhwdec-cedard" = "{build}/pmhwdec/aarch64/pmhwdec-cedard", "pmhwdec64/pmhwdec-test" = "{build}/pmhwdec/arm64/pmhwdec-test", "ua_host64" = "{build}/arm64/ua_host64", "setup/mono64/6000.0/libil2cpp.so" = "{build}/arm64/mono64/libil2cpp.so", "setup/mono64/6000.0/libmonobdwgc-2.0.so" = "{build}/arm64/mono64/libmonobdwgc-2.0.so", "setup/mono64/6000.0/libMonoPosixHelper.so" = "{build}/arm64/mono64/libMonoPosixHelper.so", "setup/mono64/6000.0/libmono-native.so" = "{build}/arm64/mono64/libmono-native.so"}
+licenses = {"LICENSE.libpmhwdec.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE", "LICENSE.pmhwdec-cedard.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhwdec-cedard", "LICENSE.libpmhwdec-libvpx.txt" = "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt", "LICENSE.mpp.txt" = "{build}/pmhwdec/armhf/LICENSE.mpp.txt", "LICENSE.mono-6000.0.txt" = "{build}/arm64/LICENSE.mono-6000.0.txt", "LICENSE.bdwgc-6000.0.txt" = "{build}/arm64/LICENSE.bdwgc-6000.0.txt", "LICENSE.corefx-6000.0.txt" = "{build}/arm64/LICENSE.corefx-6000.0.txt"}
 
 # Questions PortMaster's patcher asks before the setup (each answer is kept for later runs), e.g.:
 # [[questions]]
@@ -260,7 +269,7 @@ licenses = {"LICENSE.libpmhwdec.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE", "L
 
 [[questions]]
 id = "TEXTURE_QUALITY"
-question = "Texture quality? High is what this port is tested with. Low makes the setup much shorter, with slightly less exact textures."
+question = "Texture quality? Both turn the textures into ASTC, the format the handheld's GPU reads (the same size and memory). High is what this port is tested with. Low makes the setup much shorter, with slightly less exact textures."
 options = [["medium", "High (recommended)"], ["fast", "Low (shorter setup)"]]
 default = "medium"
 convert_set = "textures.quality"

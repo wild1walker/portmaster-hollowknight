@@ -2,7 +2,7 @@
 # PortMaster's setup screen asks the questions below itself; this file answers them when it
 # does not (older PortMaster versions).
 #
-# Texture quality? High is what this port is tested with. Low makes the setup much shorter, with slightly less exact textures.
+# Texture quality? Both turn the textures into ASTC, the format the handheld's GPU reads (the same size and memory). High is what this port is tested with. Low makes the setup much shorter, with slightly less exact textures.
 #   medium  High (recommended)
 #   fast  Low (shorter setup)
 texture_quality=medium

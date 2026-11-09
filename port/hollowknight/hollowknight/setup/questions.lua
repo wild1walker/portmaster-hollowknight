@@ -3,7 +3,7 @@
 return {
   {
     id = "TEXTURE_QUALITY",
-    question = "Texture quality? High is what this port is tested with. Low makes the setup much shorter, with slightly less exact textures.",
+    question = "Texture quality? Both turn the textures into ASTC, the format the handheld's GPU reads (the same size and memory). High is what this port is tested with. Low makes the setup much shorter, with slightly less exact textures.",
     options = {
       { "medium", "High (recommended)" },
       { "fast", "Low (shorter setup)" },

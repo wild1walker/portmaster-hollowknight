@@ -7,8 +7,8 @@ Title: Hollow Knight
 URL: https://www.gog.com/game/hollow_knight
 
 Instructions:
-Put the GOG Linux installer (hollow_knight_*.sh) or the installed game folder into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld.
-Needs a handheld with a 32-bit (armhf) userland beside its 64-bit system (e.g. Knulli or muOS on Allwinner H700 devices, dArkOS on RK3326 ones). Tested on an Anbernic RG34XX-SP (Knulli, muOS) and a BattleXP G350 (dArkOS).
+Put the GOG Linux installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld.
+Runs on 64-bit ARM handhelds with GLES 3: the 32-bit build where the system has 32-bit (armhf) libraries (e.g. Knulli or muOS on Allwinner H700 devices, dArkOS on RK3326 ones), else the 64-bit build (TrimUI handhelds, for one; no compile, nothing downloaded). Tested on an Anbernic RG34XX-SP (Knulli, muOS) and a BattleXP G350 (dArkOS).
 
 | Button | Action |
 |--|--|

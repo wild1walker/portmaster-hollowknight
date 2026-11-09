@@ -95,6 +95,7 @@ body:
       options:
         - GOG Linux installer (.sh)
         - The game folder of the GOG Linux version
+        - Steam's Linux files (download_depot 367520 367523, or the game folder from Linux or a Steam Deck)
         - Something else (please say what below)
     validations:
       required: true
@@ -103,7 +104,7 @@ body:
     id: gameversion
     attributes:
       label: Game version
-      description: The installer's file name has it (for example hollow_knight_1_5_12620_89720.sh).
+      description: 'GOG: the installer''s file name has it (for example hollow_knight_1_5_12620_89720.sh). Steam: the manifest id if you gave download_depot one, else "latest" and the date.'
     validations:
       required: false
 

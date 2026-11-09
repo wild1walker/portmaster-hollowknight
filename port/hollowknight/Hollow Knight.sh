@@ -16,9 +16,12 @@ fi
 source $controlfolder/control.txt
 get_controls
 
-# Hollow Knight on Unity's own Android player, run natively on the handheld's 32-bit userland by
-# portmaster-unity's ua_host. On the first launch the setup builds the game from your copy in
-# ports/hollowknight/gamedata/ (see README.md there). Made with `pmunity port new` (android route).
+# Hollow Knight on Unity's own Android player, run natively by portmaster-unity's ua_host: the 32-bit
+# player (ua_host) where the system has a 32-bit (armhf) userland, else Unity's 64-bit player with the
+# game's code on Unity's Mono for 64-bit ARM (ua_host64, the game in arm64/): no IL2CPP compile, nothing
+# downloaded. On the first launch the setup builds the game from your copy in ports/hollowknight/gamedata/
+# (see README.md there). Made with `pmunity port new` (android route; the 64-bit setup, setup/patchscript64,
+# from its mono-arm64 route).
 
 GAMEDIR="/$directory/ports/hollowknight"
 cd "$GAMEDIR" || exit 1
@@ -26,49 +29,65 @@ mv -f "$GAMEDIR/log.txt" "$GAMEDIR/log.prev.txt" 2>/dev/null
 > "$GAMEDIR/log.txt" && exec > >(tee "$GAMEDIR/log.txt") 2>&1
 echo "Hollow Knight: $CFW_NAME on $DEVICE_NAME ($DEVICE_ARCH), ${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}, RAM $(awk '/MemTotal/{print int($2/1024)" MB"}' /proc/meminfo)"
 
-# ua_host is a 32-bit (armhf) program: the system needs a 32-bit userland (e.g. Knulli's /lib32)
-if [ ! -e /lib/ld-linux-armhf.so.3 ]; then
-  pm_message "Hollow Knight needs a 32-bit (armhf) userland, which this system does not have (no /lib/ld-linux-armhf.so.3)."
+# ---- the route: 32-bit where the system has 32-bit (armhf) libraries, else 64-bit. HK_ROUTE=64 at the
+# top of port.env picks the 64-bit one on a system with both. A build that is set up, or a setup under
+# way, keeps its route (the libraries' check alone flipped between launches on muOS for Cuphead's port).
+[ -n "$HK_ROUTE" ] || HK_ROUTE=$(sed -n 's/^[[:space:]]*export[[:space:]]*HK_ROUTE=[^0-9]*\([0-9]*\).*/\1/p' "$GAMEDIR/port.env" 2>/dev/null | tail -1)
+ARMHF=no; [ -e /lib/ld-linux-armhf.so.3 ] && ARMHF=yes
+if [ "$HK_ROUTE" = 64 ]; then ROUTE_WHY="HK_ROUTE=64"
+elif [ -f "$GAMEDIR/.setup_done" ] || [ -d "$GAMEDIR/gamedata/.setup" ]; then HK_ROUTE=32; ROUTE_WHY="the 32-bit build is there"
+elif [ -f "$GAMEDIR/.setup_done64" ] || [ -d "$GAMEDIR/gamedata/.setup64" ]; then HK_ROUTE=64; ROUTE_WHY="the 64-bit build is there"
+elif [ "$ARMHF" = yes ]; then HK_ROUTE=32; ROUTE_WHY="32-bit libraries found"
+else HK_ROUTE=64; ROUTE_WHY="no 32-bit libraries"; fi
+echo "$HK_ROUTE-bit build ($ROUTE_WHY; 32-bit libraries: $ARMHF)"
+if [ "$HK_ROUTE" = 32 ] && [ "$ARMHF" = no ]; then
+  pm_message "The 32-bit build is set up, but this system's 32-bit libraries are missing right now (/lib/ld-linux-armhf.so.3). Restart the handheld and launch again; please send ports/hollowknight/log.txt if it stays."
   sleep 8
   pm_finish
   exit 1
 fi
+if [ "$HK_ROUTE" = 64 ]; then
+  SETUP=patchscript64; READY=.setup_done64; HOST=ua_host64; GAME="$GAMEDIR/arm64"
+else
+  SETUP=patchscript; READY=.setup_done; HOST=ua_host; GAME="$GAMEDIR"
+fi
 
 # Rockchip handhelds on vendor kernels (dArkOS, ArkOS): the video decoder's nodes are root-only while
-# ports run as a user, and the port's libpmhwdec (pmhw/) needs them for the videos. They are opened to
+# ports run as a user, and the port's libpmhwdec (pmhwdec/) needs them for the videos. They are opened to
 # the video group for the game and put back exactly as they were when it ends (Knifethrower's fix;
 # PortMaster's Moonlight opens the same nodes). Nothing changes where they are usable already.
-pmhw_nodes=()
-if [ -d "$GAMEDIR/pmhw" ]; then
+[ -d "$GAMEDIR/pmhwdec" ] && rm -rf "$GAMEDIR/pmhw"   # the folder's name in releases before 2026-11-09
+pmhwdec_nodes=()
+if [ -d "$GAMEDIR/pmhwdec" ]; then
   for n in /dev/vpu_service /dev/hevc_service; do
     { [ -e "$n" ] && ! { [ -r "$n" ] && [ -w "$n" ]; }; } || continue
     o=$(stat -c '%u:%g:%a' "$n") || continue
-    $ESUDO chgrp video "$n" && $ESUDO chmod 660 "$n" && pmhw_nodes+=("$n:$o") && echo "$n: opened to the video group (was $o)"
+    $ESUDO chgrp video "$n" && $ESUDO chmod 660 "$n" && pmhwdec_nodes+=("$n:$o") && echo "$n: opened to the video group (was $o)"
   done
 fi
-pmhw_restore() {
+pmhwdec_restore() {
   local e n o
-  for e in "${pmhw_nodes[@]}"; do
+  for e in "${pmhwdec_nodes[@]}"; do
     n=${e%%:*}; o=${e#*:}
     $ESUDO chown "${o%:*}" "$n"; $ESUDO chmod "${o##*:}" "$n"; echo "$n: put back ($o)"
   done
-  pmhw_nodes=()
+  pmhwdec_nodes=()
 }
-trap pmhw_restore EXIT
+trap 'pmhwdec_restore; pm_message_end' EXIT   # funcs.txt set pm_message_end as the EXIT trap: a second trap replaces it
 
 # ---- first launch: build the game from your copy (PortMaster's patcher shows the progress)
-if [ ! -f "$GAMEDIR/.setup_done" ]; then
-  if [ -f "$GAMEDIR/setup/patchscript" ] && [ -f "$controlfolder/utils/patcher.txt" ]; then
+if [ ! -f "$GAMEDIR/$READY" ]; then
+  if [ -f "$GAMEDIR/setup/$SETUP" ] && [ -f "$controlfolder/utils/patcher.txt" ]; then
     export GAMEDIR DEVICE_ARCH controlfolder
-    chmod +x "$GAMEDIR/setup/patchscript"
-    export PATCHER_FILE="$GAMEDIR/setup/patchscript"
+    chmod +x "$GAMEDIR/setup/$SETUP"
+    export PATCHER_FILE="$GAMEDIR/setup/$SETUP"
     export PATCHER_GAME="Hollow Knight"
     export PATCHER_TIME="one to three hours, once"
     [ -f "$GAMEDIR/setup/questions.lua" ] && export PATCHER_QUESTIONS="$GAMEDIR/setup/questions.lua"
     source "$controlfolder/utils/patcher.txt"
   fi
-  if [ ! -f "$GAMEDIR/.setup_done" ]; then
-    pm_message "Hollow Knight is not set up yet: put Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder in ports/hollowknight/gamedata and launch again (ports/hollowknight/README.md; log: ports/hollowknight/patchlog.txt)."
+  if [ ! -f "$GAMEDIR/$READY" ]; then
+    pm_message "Hollow Knight is not set up yet: put Hollow Knight for Linux (Unity 6000.0.61f1): GOG's installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam in ports/hollowknight/gamedata and launch again (ports/hollowknight/README.md; log: ports/hollowknight/patchlog.txt)."
     sleep 8
     pm_finish
     exit 1
@@ -76,7 +95,10 @@ if [ ! -f "$GAMEDIR/.setup_done" ]; then
 fi
 
 # ---- a game set up by an earlier release: what this release's setup does that it has not had yet
-# (setup/update, once: the setup folder comes with each release and goes when it is done)
+# (setup/update, once: the setup folder comes with each release and goes when it is done). That step is
+# the 32-bit build's; the 64-bit build has none yet (it came after 2026.11.09.3), so a release over it
+# leaves its game as it is
+if [ "$HK_ROUTE" = 64 ]; then rm -rf "$GAMEDIR/setup"; fi
 if [ -f "$GAMEDIR/setup/update" ] && [ -f "$controlfolder/utils/patcher.txt" ]; then
   export GAMEDIR DEVICE_ARCH controlfolder
   chmod +x "$GAMEDIR/setup/update"
@@ -90,9 +112,12 @@ fi
 # the built-in pad reaches the game as an Android gamepad (ua_host: SDL GameController ->
 # KeyEvent and MotionEvent)
 export SDL_GAMECONTROLLERCONFIG="${SDL_GAMECONTROLLERCONFIG:-$sdl_controllerconfig}"
-# audio: the system's default ALSA device, else (a sound server holding the card and no 32-bit
-# client libraries) raw PCM piped into pw-cat / pacat
-export SDL_AUDIODRIVER=${SDL_AUDIODRIVER:-alsa}
+# audio: the 32-bit build the system's default ALSA device, else (a sound server holding the card and no
+# 32-bit client libraries) raw PCM piped into pw-cat / pacat; the 64-bit build SDL's own choice (a 64-bit
+# program reaches the system's sound server or ALSA itself)
+[ "$HK_ROUTE" = 32 ] && export SDL_AUDIODRIVER=${SDL_AUDIODRIVER:-alsa}
+# the 64-bit build's libpmhwdec (pmhwdec64/; port.env names the 32-bit one)
+[ "$HK_ROUTE" = 64 ] && export UM_PMHWDEC=${UM_PMHWDEC-pmhwdec64/libpmhwdec.so.1}
 export UA_FPS=${UA_FPS:-10}                     # a line of frame statistics every 10 s in log.txt
 # the game's options (port.env), and the setup's answers that apply when the game runs
 [ -f "$GAMEDIR/port.env" ] && source "$GAMEDIR/port.env"
@@ -104,14 +129,20 @@ if [ "${ANALOG_STICKS:-2}" = 0 ]; then
 fi
 # a Wwise game: ua_host's own Wwise player plays the banks the setup converted (set UA_WWISE_DATA= empty for none)
 [ -d "$GAMEDIR/wwise" ] && export UA_WWISE_DATA="${UA_WWISE_DATA-$GAMEDIR/wwise}"
-chmod +x "$GAMEDIR/ua_host"
-[ -f "$GAMEDIR/pmhw/pmhw-cedard" ] && chmod +x "$GAMEDIR/pmhw/pmhw-cedard"   # libpmhwdec's Allwinner decoder, where the port ships it
+chmod +x "$GAMEDIR/$HOST"
+for d in pmhwdec pmhwdec64; do   # libpmhwdec's Allwinner decoder, where the port ships it
+  [ -f "$GAMEDIR/$d/pmhwdec-cedard" ] && chmod +x "$GAMEDIR/$d/pmhwdec-cedard"
+done
 
-$GPTOKEYB2 "ua_host" -c "$GAMEDIR/hollowknight.ini" &   # exit hotkey only
-pm_platform_helper "$GAMEDIR/ua_host"
+$GPTOKEYB2 "$HOST" -c "$GAMEDIR/hollowknight.ini" &   # exit hotkey only
+pm_platform_helper "$GAMEDIR/$HOST"
 
-# the 32-bit libraries first (Knulli: /lib32, /usr/lib32)
-LD_LIBRARY_PATH=/lib32:/usr/lib32${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH} ./ua_host "$GAMEDIR"
+if [ "$HK_ROUTE" = 64 ]; then
+  ./ua_host64 "$GAME"
+else
+  # the 32-bit libraries first (Knulli: /lib32, /usr/lib32)
+  LD_LIBRARY_PATH=/lib32:/usr/lib32${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH} ./ua_host "$GAME"
+fi
 echo "game exited ($?)"
 
 pm_finish

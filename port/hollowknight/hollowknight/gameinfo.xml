@@ -3,7 +3,7 @@
   <game>
     <path>./Hollow Knight.sh</path>
     <name>Hollow Knight</name>
-    <desc>Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the GOG Linux version.</desc>
+    <desc>Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the Linux version from GOG or Steam.</desc>
     <releasedate>20170224T000000</releasedate>
     <developer>Team Cherry</developer>
     <publisher>Team Cherry</publisher>

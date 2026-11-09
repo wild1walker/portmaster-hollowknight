@@ -8,9 +8,9 @@
    "porter": [
     "wild1walker"
    ],
-   "desc": "Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the GOG Linux version.",
+   "desc": "Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the Linux version from GOG or Steam.",
    "desc_md": "",
-   "inst": "Put the GOG Linux installer (hollow_knight_*.sh) or the installed game folder into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld.",
+   "inst": "Put the GOG Linux installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld.",
    "inst_md": "",
    "genres": [
     "action",
@@ -22,6 +22,11 @@
     {
      "name": "GOG",
      "gameurl": "https://www.gog.com/game/hollow_knight",
+     "developerurl": "https://www.teamcherry.com.au/"
+    },
+    {
+     "name": "Steam",
+     "gameurl": "https://store.steampowered.com/app/367520/Hollow_Knight/",
      "developerurl": "https://www.teamcherry.com.au/"
     }
    ],
@@ -39,7 +44,7 @@
    "unity_versions": [
     "6000.0.61f1"
    ],
-   "what": "Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder",
+   "what": "Hollow Knight for Linux (Unity 6000.0.61f1): GOG's installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam",
    "size_mb": 4999,
    "setup_space_mb": 0,
    "developer": "Team Cherry",
@@ -58,7 +63,8 @@
     "libunity.so": "4ac0f68ffd66e0af2470544b75500ccda60e1d3c00b172e870690bf75000007d"
    },
    "donors": [
-    "donor-6000.0.61f1-mono-armv7.apk"
+    "donor-6000.0.61f1-mono-armv7.apk",
+    "donor-6000.0.61f1-il2cpp-arm64.apk"
    ]
   },
   "convert": {
@@ -124,11 +130,11 @@
    "ASMPATCH_HK_ASPECT": "fill",
    "UA_PRESENT_THREAD": "1",
    "UA_GL_REC": "auto",
-   "UM_PMHW": "pmhw/libpmhwdec.so.1"
+   "UM_PMHWDEC": "pmhwdec/libpmhwdec.so.1"
   },
   "runtime_low": {
    "ASMPATCH_HK_BLUR": "off",
-   "UA_RENDER_SIZE": "540x360",
+   "UA_RENDER_SIZE": "540x360 480x480",
    "UA_RENDER_RAM": "1024",
    "UA_RENDER_PIXELS": "560000",
    "UA_PREFS_DEFAULTS": "ShaderQuality=0 VidParticles=0 VidDithering=0 VidNoise=0"
@@ -141,7 +147,7 @@
   "questions": [
    {
     "id": "TEXTURE_QUALITY",
-    "question": "Texture quality? High is what this port is tested with. Low makes the setup much shorter, with slightly less exact textures.",
+    "question": "Texture quality? Both turn the textures into ASTC, the format the handheld's GPU reads (the same size and memory). High is what this port is tested with. Low makes the setup much shorter, with slightly less exact textures.",
     "options": [
      [
       "medium",
@@ -167,19 +173,31 @@
   },
   "build": {
    "commands": [
-    "\"$PMUNITY/tools/pmhwdec/build.sh\" \"$BUILD/pmhwdec\""
+    "\"$PMUNITY/tools/pmhwdec/build.sh\" \"$BUILD/pmhwdec\"",
+    "\"$PORT_SRC/build64.sh\" \"$BUILD/arm64\""
    ],
    "outputs": {
-    "pmhw/libpmhwdec.so.1": "{build}/pmhwdec/armhf/libpmhwdec.so.1",
-    "pmhw/pmhw-cedard": "{build}/pmhwdec/aarch64/pmhw-cedard",
-    "pmhw/pmhw-test": "{build}/pmhwdec/armhf/pmhw-test",
-    "pmhw/librockchip_mpp.so": "{build}/pmhwdec/armhf/librockchip_mpp.so"
+    "pmhwdec/libpmhwdec.so.1": "{build}/pmhwdec/armhf/libpmhwdec.so.1",
+    "pmhwdec/pmhwdec-cedard": "{build}/pmhwdec/aarch64/pmhwdec-cedard",
+    "pmhwdec/pmhwdec-test": "{build}/pmhwdec/armhf/pmhwdec-test",
+    "pmhwdec/librockchip_mpp.so": "{build}/pmhwdec/armhf/librockchip_mpp.so",
+    "pmhwdec64/libpmhwdec.so.1": "{build}/pmhwdec/arm64/libpmhwdec.so.1",
+    "pmhwdec64/pmhwdec-cedard": "{build}/pmhwdec/aarch64/pmhwdec-cedard",
+    "pmhwdec64/pmhwdec-test": "{build}/pmhwdec/arm64/pmhwdec-test",
+    "ua_host64": "{build}/arm64/ua_host64",
+    "setup/mono64/6000.0/libil2cpp.so": "{build}/arm64/mono64/libil2cpp.so",
+    "setup/mono64/6000.0/libmonobdwgc-2.0.so": "{build}/arm64/mono64/libmonobdwgc-2.0.so",
+    "setup/mono64/6000.0/libMonoPosixHelper.so": "{build}/arm64/mono64/libMonoPosixHelper.so",
+    "setup/mono64/6000.0/libmono-native.so": "{build}/arm64/mono64/libmono-native.so"
    },
    "licenses": {
     "LICENSE.libpmhwdec.txt": "{build}/pmhwdec/src/pmhwdec/LICENSE",
-    "LICENSE.pmhw-cedard.txt": "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhw-cedard",
+    "LICENSE.pmhwdec-cedard.txt": "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhwdec-cedard",
     "LICENSE.libpmhwdec-libvpx.txt": "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt",
-    "LICENSE.mpp.txt": "{build}/pmhwdec/armhf/LICENSE.mpp.txt"
+    "LICENSE.mpp.txt": "{build}/pmhwdec/armhf/LICENSE.mpp.txt",
+    "LICENSE.mono-6000.0.txt": "{build}/arm64/LICENSE.mono-6000.0.txt",
+    "LICENSE.bdwgc-6000.0.txt": "{build}/arm64/LICENSE.bdwgc-6000.0.txt",
+    "LICENSE.corefx-6000.0.txt": "{build}/arm64/LICENSE.corefx-6000.0.txt"
    }
   }
  },

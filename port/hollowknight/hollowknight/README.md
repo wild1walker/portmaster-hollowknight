@@ -7,19 +7,24 @@ handheld.
 
 ## What you need
 
-- **Hollow Knight for Linux from GOG (version 1.5.12620, Unity 6000.0.61f1): GOG's installer (hollow_knight_*.sh) or the installed game folder.** The setup checks the Unity version it was built with (this port is made
+- **Hollow Knight for Linux (Unity 6000.0.61f1): GOG's installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam.** The setup checks the Unity version it was built with (this port is made
   for 6000.0.61f1).
 - Unity's Android player comes with the port (`donor/`: small games built with Unity for it, whose APKs carry the player); nothing is downloaded, no Wi-Fi.
 - About 15.5 GB free on the card during the setup when you start from GOG's installer (the setup
   checks it before unpacking), about 8 GB from the installed game folder, about 4 GB once it is done.
-- A handheld with a 32-bit (armhf) userland and GLES 3, and a 64-bit (aarch64) system for the
-  setup's tools: Knulli or muOS on Allwinner H700 handhelds, dArkOS on RK3326 ones. Tested on an
-  Anbernic RG34XX-SP (Knulli, muOS) and a BattleXP G350 (dArkOS).
+- A handheld with a 64-bit (aarch64) system and GLES 3. With 32-bit (armhf) libraries beside it (Knulli
+  or muOS on Allwinner H700 handhelds, dArkOS on RK3326 ones) the port runs its 32-bit build; without them
+  (TrimUI handhelds, for one) its 64-bit build, in arm64/: Unity's 64-bit player with the game's code on
+  Unity's Mono, nothing compiled, nothing downloaded. `export HK_ROUTE=64` at the top of port.env picks the
+  64-bit build where both would run (before the first launch). Tested on an Anbernic RG34XX-SP (Knulli,
+  muOS) and a BattleXP G350 (dArkOS).
 
 ## Setting it up
 
-1. Copy the game (its folder, the archive it came in, or GOG's Linux installer `.sh`) into
-   `ports/hollowknight/gamedata/`.
+1. Copy the game (its Linux folder from GOG or Steam, the archive it came in, or GOG's Linux installer
+   `.sh` as downloaded, without renaming it) into `ports/hollowknight/gamedata/`. Steam's Linux files from
+   any PC with Steam: in Steam's console (`steam://open/console`), `download_depot 367520 367523`, then
+   copy the folder Steam names when it is done.
 2. Launch Hollow Knight from the Ports menu. PortMaster's patcher shows the setup's progress: it finds
    (or unpacks) the game, unpacks Unity's player, converts the game for the handheld's GPU and
    packs it for the player (about 45 minutes on an RG34XX-SP with Knulli; about ten more for the

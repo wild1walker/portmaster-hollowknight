@@ -10,7 +10,7 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 > picture; the next release turns the port's speed options on there too). Please report how far it gets on yours.
 
 - **You need your own copy of the game.** This project contains **no game files**, and its
-  releases don't either. You bring the GOG Linux version; the port converts it for the handheld
+  releases don't either. You bring the Linux version, from GOG or Steam; the port converts it for the handheld
   the first time you start it.
 - **How it runs:** Hollow Knight is made with Unity. The
   [portmaster-unity](https://github.com/wild1walker/portmaster-unity) tools run Unity's Android
@@ -23,9 +23,31 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 
 | | |
 |---|---|
-| **A handheld** | One that runs PortMaster and has a 32-bit (armhf) userland with OpenGL ES 3: Knulli or muOS on Allwinner H700 handhelds, dArkOS on RK3326 ones. Tested on an Anbernic RG34XX-SP and a BattleXP G350 (1 GB of RAM or less each). |
-| **The game** | Hollow Knight for **Linux** from **GOG** (the `.sh` installer, or the installed game folder). Version 1.5.12620 is the one being tested. Other versions and stores: not tried. |
+| **A handheld** | One that runs PortMaster, with OpenGL ES 3 and a 64-bit ARM system. With 32-bit (armhf) libraries beside it (Knulli or muOS on Allwinner H700 handhelds, dArkOS on RK3326 ones) the port runs its 32-bit build; without them (TrimUI handhelds, for one), its 64-bit build (below, "The 64-bit build"). Tested on an Anbernic RG34XX-SP and a BattleXP G350 (1 GB of RAM or less each). |
+| **The game** | Hollow Knight for **Linux**, from **GOG** (its `.sh` installer as downloaded, no need to rename it, or the installed game folder) or **Steam** (the Linux game folder: below). GOG's 1.5.12620 is the version tested here; testers report Steam's current Linux files working too (2026-11-09). Both are Unity 6000.0.61f1, which the setup checks. |
 | **Free space and time** | About 15.5 GB free on the card when you start from GOG's installer (the setup checks this before unpacking it), about 8 GB from the installed game folder, about 4 GB once it is done. The setup runs once, on the first launch: about 45 minutes on an RG34XX-SP with Knulli (2026-11-02), plus about ten minutes for the cinematics on 1 GB handhelds (below). |
+
+**Steam's Linux files, from any PC with Steam** (Windows and macOS too): open Steam's console (type
+`steam://open/console` into a web browser's address bar, or Windows' Run box), enter
+`download_depot 367520 367523` and wait for Steam to say where it put the files (about 1 GB to download,
+in Steam's folder under `steamapps/content/app_367520/depot_367523`). Copy everything in that folder
+(`hollow_knight_Data`, `hollow_knight.x86_64`, `UnityPlayer.so` and the rest) into
+`ports/hollowknight/gamedata/`. On Linux or a Steam Deck, install the game and copy its folder
+(`steamapps/common/Hollow Knight`) instead. The Mac and Windows versions are not used.
+
+## The 64-bit build
+
+Firmwares without 32-bit (armhf) libraries, TrimUI handhelds for one, get a 64-bit build of the same game:
+Unity's 64-bit player, with the game's own code run by Unity's Mono for 64-bit ARM, which the release ships.
+Nothing is compiled on the handheld and nothing is downloaded. The setup is the 32-bit one's (the same
+question, the same conversion of your copy), and the game goes into `ports/hollowknight/arm64/`. The launcher
+picks the build by itself. On a handheld that has both, `export HK_ROUTE=64` at the top of
+`ports/hollowknight/port.env` before the first launch picks the 64-bit one; a game already set up keeps its build.
+
+Tested 2026-11-09: the whole 64-bit setup on a 64-bit-only system with 1 GB of memory and no network (an arm64
+container on a PC, through the port's own launcher: 14 minutes there), then the game on an RG34XX-SP with muOS:
+Greenpath, walking and fighting, 49.7 fps (the 32-bit build there: 50.0), at least 189 MB of memory free. Not
+yet run on a TrimUI handheld itself.
 
 ## Status
 
@@ -79,7 +101,7 @@ On every handheld the port turns on these by itself (`ports/hollowknight/port.en
 
 - no background blur: the far background is drawn sharp instead of blurred
 - the game drawn smaller and scaled to the screen (a little softer): 540x360 on handhelds with 1 GB
-  of memory or less (480x360 on 4:3 screens), at most about 960x576 on bigger ones (a 1920x1152
+  of memory or less (480x360 on 4:3 screens, 480x480 on square ones), at most about 960x576 on bigger ones (a 1920x1152
   screen at half its size; a 720x480 one keeps its size)
 - the game's own video options at their lowest: Shader Quality Low, Particle Effects Low, Dithering
   and Noise off, until you choose otherwise in its Options, Video
