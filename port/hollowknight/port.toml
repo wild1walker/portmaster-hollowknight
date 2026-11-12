@@ -86,7 +86,7 @@ graphics_apis = [11]
 # docs/android-data.md); data_path = true (files read or written at Application.dataPath);
 # name = the APK's, package (keep it: it names the PlayerPrefs file); args = more options
 [android_data]
-asmpatch = ["auto", "hk-blur", "hk-aspect", "hk-pad-letters"]      # the default patches, the blur reduction ASMPATCH_HK_BLUR reads, the screen fit ASMPATCH_HK_ASPECT reads, the prompts' letters UA_PAD_LETTERS reads (tools/asmpatch)
+asmpatch = ["auto", "hk-blur", "hk-aspect", "hk-pad-letters", "hk-render-size"]      # the default patches, the blur reduction ASMPATCH_HK_BLUR reads, the screen fit ASMPATCH_HK_ASPECT reads, the prompts' letters UA_PAD_LETTERS reads, the world's render size ASMPATCH_HK_RENDER_SIZE reads (tools/asmpatch)
 video_shader = true
 swappy = "off"
 streaming_assets = "both"
@@ -212,6 +212,13 @@ ASMPATCH_HK_BLUR = "off"
 # instead of the 360x360 that 540x360 fits into them (hard to read, testers said): Greenpath on a 1:1 stand-in
 # (RG34XX-SP, UA_ASPECT=1:1) 53.6 fps at 360x360, 52.3 at 440x440, 51.5 at 480x480
 UA_RENDER_SIZE = "540x360 480x480"
+# that render size by the game itself, its HUD, inventory, map and dialogue text at the panel's size (testers could
+# not read the inventory's small text on a 3.4" 720x480 panel scaled up from 540x360): ua_host gives the size to
+# asmpatch's hk-render-size in ASMPATCH_HK_RENDER_SIZE and Unity keeps the panel's size (portmaster-unity
+# docs/runtime.md UA_RENDER_SIZE_VAR, tools/asmpatch/README.md). G350 (640x480, world at 480x360): Greenpath 41.8
+# fps without, 41.7 with; the title menu, drawn whole at the panel's size, 60 -> 50. The launcher turns it off
+# for a game whose code has not had that patch (.patches, written by the setup and the update)
+UA_RENDER_SIZE_VAR = "ASMPATCH_HK_RENDER_SIZE"
 UA_RENDER_RAM = "1024"
 # on bigger devices at most about 560,000 pixels, scaled up by the GPU: a 1920x1152 screen 960x576, a
 # 1920x1080 one 992x558; a 720x480 one stays at its size

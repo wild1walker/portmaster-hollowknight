@@ -43,6 +43,8 @@ if { [ "${ASMPATCH:-off}" != off ] || [ "$SA" != obb ] || [ "${DATA_PATH:-0}" = 
   [ "${DATA_PATH:-0}" = 1 ] && a="$a --with=data-path"
   "$S/pmu" apk-asmpatch "$GAMEDIR/$APK_NAME.apk" "$GAMEDIR/.asmpatch-update" "$a" \
     || fail "Could not patch the game's code (see patchlog.txt)."
+  # (noted for the launcher, as the setup notes them)
+  [ -f "$GAMEDIR/$READY" ] && echo "asmpatch=$ASMPATCH" >> "$GAMEDIR/$READY"
 fi
 
 if [ -f "$S/convert.json" ] && grep -q '"video"' "$S/convert.json"; then

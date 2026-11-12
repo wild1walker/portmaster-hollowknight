@@ -104,7 +104,8 @@
     "auto",
     "hk-blur",
     "hk-aspect",
-    "hk-pad-letters"
+    "hk-pad-letters",
+    "hk-render-size"
    ],
    "video_shader": true,
    "swappy": "off",
@@ -136,6 +137,7 @@
   "runtime_low": {
    "ASMPATCH_HK_BLUR": "off",
    "UA_RENDER_SIZE": "540x360 480x480",
+   "UA_RENDER_SIZE_VAR": "ASMPATCH_HK_RENDER_SIZE",
    "UA_RENDER_RAM": "1024",
    "UA_RENDER_PIXELS": "560000",
    "UA_PREFS_DEFAULTS": "ShaderQuality=0 VidParticles=0 VidDithering=0 VidNoise=0"

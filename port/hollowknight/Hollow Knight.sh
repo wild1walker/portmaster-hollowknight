@@ -125,6 +125,11 @@ export UA_FPS=${UA_FPS:-10}                     # a line of frame statistics eve
 # defaults, so these win over them, and a line at the top of port.env wins over these
 case "$(cat "$GAMEDIR/aspect.txt" 2>/dev/null)" in fill) export ASMPATCH_HK_ASPECT=fill ;; bars) export ASMPATCH_HK_ASPECT= ;; esac
 case "$(cat "$GAMEDIR/buttons.txt" 2>/dev/null)" in nintendo) export UA_PAD_LETTERS=nintendo ;; xbox) export UA_PAD_LETTERS=xbox ;; esac
+# the world at its render size by the game itself, the HUD and the text at the panel's size (port.env's
+# UA_RENDER_SIZE_VAR with asmpatch's hk-render-size): only for a game whose code has had that patch (the setup
+# and the update note their patches in the setup's marker); a game set up before it keeps the picture that
+# ua_host scales, as it was
+grep -qs hk-render-size "$GAMEDIR/$READY" || export UA_RENDER_SIZE_VAR=${UA_RENDER_SIZE_VAR-}
 [ -f "$GAMEDIR/port.env" ] && source "$GAMEDIR/port.env"
 [ -f "$GAMEDIR/answers.env" ] && source "$GAMEDIR/answers.env"
 # handhelds without analog sticks whose pad mapping still names a left stick: where PortMaster says there are

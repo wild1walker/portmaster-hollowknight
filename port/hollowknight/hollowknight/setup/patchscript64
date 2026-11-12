@@ -330,7 +330,8 @@ top=${D#$GD/}; top=${top%%/*}
 case "$D" in "$W"/*) ;; *) [ -n "$top" ] && [ "$top" != "$(basename "$W")" ] && rm -rf "${GD:?}/$top";; esac
 rm -rf "$W" "$S"
 sync
-touch "$GAMEDIR/$READY"
+# (the code patches this game has had, for the launcher: a setting that needs one stays off without it)
+echo "asmpatch=$ASMPATCH" > "$GAMEDIR/$READY"
 # archives and installers the setup unpacked (the game's; a Unity installer an older setup read) are not needed
 # any more: removed, as PortMaster ports' setups do, unless setup.txt says keep_installers=1
 keep=$(sed -n 's/^[[:space:]]*keep_installers[[:space:]]*=[[:space:]]*\([01]\).*/\1/p' "$GAMEDIR/setup.txt" 2>/dev/null | tail -1)
