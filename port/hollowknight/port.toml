@@ -70,9 +70,13 @@ lowmem_pcm_budget_mb = 16
 # 2026.11.09.3): the game draws there at 540x360 (480x360 on 4:3), and Hallownest's art, made for 1080p, still has
 # about a texel for each pixel of it (405 lines for 360). Text atlases (SDF, tmpro, Font Texture) stay at full size.
 # (Side by side at 540x360 the same picture.) Elsewhere scale; the full textures back: unset it, run the setup again.
+# There also ASTC blocks of 6x6 texels instead of 4x4 (lowmem_block): 3.56 bits a texel instead of 8, the textures'
+# memory (in the GPU's share of the 1 GB) and the GPU's texture reads less than half. Testers found 8x8 visibly
+# blocky and 6x6 good enough; text atlases keep 4x4 (sharp_block).
 [convert.textures]
 scale = 1.0
 lowmem_scale = 0.375
+lowmem_block = [6, 6]
 sharp_names = "SDF|tmpro|Font Texture"
 block = [4, 4]
 quality = "medium"

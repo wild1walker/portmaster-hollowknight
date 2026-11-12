@@ -90,6 +90,10 @@
    "textures": {
     "scale": 1.0,
     "lowmem_scale": 0.375,
+    "lowmem_block": [
+     6,
+     6
+    ],
     "sharp_names": "SDF|tmpro|Font Texture",
     "block": [
      4,

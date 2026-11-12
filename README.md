@@ -115,7 +115,10 @@ On handhelds with 1 GB of memory or less, also:
 
 The setup also converts the textures at 0.375 of their size on these handhelds, the text at full
 size: Hallownest's art, made for 1080p screens, still has about a texel for each pixel of the game's
-540x360 picture. And it keeps at most 16 MB of a scene's sounds decoded in memory (36 MB on bigger
+540x360 picture. It packs them in larger compressed blocks there too (ASTC 6x6 instead of 4x4: less
+than half the memory, a little less detail; City of Tears 623 -> 588 MB on an RG34XX-SP with Knulli,
+the same frame rate; testers found 8x8 visibly blocky). And it keeps at most 16 MB of a scene's
+sounds decoded in memory (36 MB on bigger
 handhelds); the longer ones are decoded as they play. Handhelds with dArkOS keep EmulationStation in
 memory while the game runs (up to about 126 MB), and with no swap the game ran a 1 GB handheld out of
 memory in City of Tears before this. Measured on an RG34XX-SP with muOS in City of Tears: the game
