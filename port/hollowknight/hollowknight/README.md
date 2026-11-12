@@ -69,7 +69,8 @@ export UA_AUDIO_RATE=          # mix the sound at 48 kHz
 One more reduction is there to try and is not on by itself, because it takes scenery away: with
 this line at the top of `port.env` the far background (what the game shows blurred: far walls,
 waterfalls, far vines) is not drawn at all and the fog stands before black. The game play is the
-same; a slow handheld has fewer things to draw in big rooms.
+same; a slow handheld has fewer things to draw in big rooms (Greenpath: 53 -> 56 fps on an
+RG34XX-SP, 33 -> 35 on a G350).
 
 ```bash
 export ASMPATCH_HK_BLUR=off,hide   # the far background not drawn
