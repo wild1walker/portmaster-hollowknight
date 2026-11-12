@@ -99,12 +99,12 @@ if [ ! -f "$GAMEDIR/$READY" ]; then
 fi
 
 # ---- a game set up by an earlier release: what this release's setup does that it has not had yet
-# (setup/update, once: the setup folder comes with each release and goes when it is done). That step is
-# the 32-bit build's; the 64-bit build has none yet (it came after 2026.11.09.3), so a release over it
-# leaves its game as it is
-if [ "$HK_ROUTE" = 64 ]; then rm -rf "$GAMEDIR/setup"; fi
+# (setup/update, once: the setup folder comes with each release and goes when it is done), on the
+# build this handheld runs (UPDATE_*: the 64-bit build's files are in arm64/, its mark is .setup_done64)
 if [ -f "$GAMEDIR/setup/update" ] && [ -f "$controlfolder/utils/patcher.txt" ]; then
   export GAMEDIR DEVICE_ARCH controlfolder
+  export UPDATE_GAME="$GAME" UPDATE_READY="$READY" UPDATE_PMHWDEC=pmhwdec
+  [ "$HK_ROUTE" = 64 ] && UPDATE_PMHWDEC=pmhwdec64
   chmod +x "$GAMEDIR/setup/update"
   export PATCHER_FILE="$GAMEDIR/setup/update"
   export PATCHER_GAME="Hollow Knight"
