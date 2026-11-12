@@ -49,9 +49,11 @@ donors = ["donor-6000.0.61f1-mono-armv7.apk", "donor-6000.0.61f1-il2cpp-arm64.ap
 [convert]
 steps = ["shaders", "settings", "audio", "textures", "video"]
 # the cinematics (1920x1080 VP8: more than an A53 decodes in time while the game runs) halved to
-# 960x540 where the handheld has 1 GB of RAM or less (pmu's video step: mode "auto", ram_mb 1024,
-# max_height 720); they look the same on a 720x480 panel and play at their 30 pictures a second.
-# [convert.video] mode = "off" keeps them as they are everywhere.
+# 960x540 on every handheld whose video engine does not play them (pmu's video step: mode "on",
+# max_height 720; the setup and the update turn it off where libpmhwdec decodes VP8 in hardware);
+# they look the same on a 720x480 panel and play at their 30 pictures a second. Until 2026.11.12 only
+# where the handheld had 1 GB of RAM or less (mode "auto"): bigger handhelds with the same small cores
+# played them at full size. mode = "off" keeps them as they are everywhere.
 # blend-mode sprites read the framebuffer instead of a grab copy before each of them: King's Pass
 # 18 passes a frame instead of 24 (+11 %); not exact: about 1.6 % of the static pixels off by 1 - 6
 # of 255 on the Mali (docs/shaders.md). The decision for this port: faster; "false" is the PC picture.
@@ -65,24 +67,26 @@ pcm_budget_mb = 36
 # EmulationStation in memory while a port runs (64 - 126 MB on the G350, no swap), and with the 36 MiB budget City
 # of Tears ran a G350 out of memory. muOS RG34XX-SP, City of Tears, with the textures below: the game 663 -> 597 MB, the lowest
 # available 266 -> 332 MB, 56.0 -> 56.3 fps; FMOD decodes the long clips as they play (a little more CPU).
+# A memory cut, not a speedup: handhelds with more RAM keep the 36 MiB, the lighter one for the CPU.
 lowmem_pcm_budget_mb = 16
-# where the handheld has 1 GB of RAM or less, textures at 0.375 of their size (lowmem_scale, ram_mb 1024; 0.5 until
-# 2026.11.09.3): the game draws there at 540x360 (480x360 on 4:3), and Hallownest's art, made for 1080p, still has
-# about a texel for each pixel of it (405 lines for 360). Text atlases (SDF, tmpro, Font Texture) stay at full size.
-# (Side by side at 540x360 the same picture.) Elsewhere scale; the full textures back: unset it, run the setup again.
-# There also ASTC blocks of 6x6 texels instead of 4x4 (lowmem_block): 3.56 bits a texel instead of 8, the textures'
-# memory (in the GPU's share of the 1 GB) and the GPU's texture reads less than half. Testers found 8x8 visibly
-# blocky and 6x6 good enough; text atlases keep 4x4 (sharp_block).
+# textures at 0.375 of their size on every handheld (until 2026.11.12 only where it had 1 GB of RAM or less,
+# lowmem_scale; full size elsewhere): the game draws its world at 540x360 (480x360 on 4:3) everywhere, and
+# Hallownest's art, made for 1080p, still has about a texel for each pixel of it (405 lines for 360). Text atlases
+# (SDF, tmpro, Font Texture) stay at full size. (Side by side at 540x360 the same picture.) The full textures back:
+# scale = 1.0 and block = [4, 4], then run the setup again.
+# ASTC blocks of 6x6 texels instead of 4x4: 3.56 bits a texel instead of 8, the textures' memory (in the GPU's share
+# of the RAM) and the GPU's texture reads less than half. Testers found 8x8 visibly blocky and 6x6 good enough; text
+# atlases keep 4x4 (sharp_block).
 [convert.textures]
-scale = 1.0
-lowmem_scale = 0.375
-lowmem_block = [6, 6]
+scale = 0.375
 sharp_names = "SDF|tmpro|Font Texture"
-block = [4, 4]
+block = [6, 6]
 quality = "medium"
 mips = "keep"
 [convert.settings]
 graphics_apis = [11]
+[convert.video]
+mode = "on"
 
 # pmunity android-data: asmpatch = auto (run tools/asmpatch; it changes only what it
 # finds: Rewired, the Input System package) | off | ["patch", ...]; streaming_assets = obb |
@@ -177,8 +181,8 @@ UA_FLIPBOOK = "@flipbooks.txt"
 ASMPATCH_HK_ASPECT = "fill"
 # Handhelds whose Mali driver draws through SDL's KMSDRM (RK3326: the R36S family, the BattleXP G350) wait
 # in each swap until the GPU has finished the frame, so the game's render thread and the GPU took turns.
-# ua_host's present thread shows the frames instead (where the game renders at a smaller size: the
-# 1 GB handhelds below): the render thread goes straight on with the next frame. The same picture, up to
+# ua_host's present thread shows the frames instead (where the game renders at a smaller size: every
+# handheld, the render size below): the render thread goes straight on with the next frame. The same picture, up to
 # two frames queued. G350: Greenpath 17.5 -> 25.1 fps, King's Pass 32 -> 38, Dirtmouth 31 -> 50.
 # Nothing changes on the fbdev handhelds (Knulli, muOS on the H700).
 UA_PRESENT_THREAD = "1"
@@ -194,9 +198,25 @@ UA_GL_REC = "auto"
 # can use, it says so at once (32 ms on the G350 before) and libvpx plays them as before. RG34XX-SP, the 1080p intro: the four cores 73 -> 54 % busy, the lowest second
 # 20 -> 33 fps. The path is the port folder's (ua_host's working folder). Where its test program
 # (pmhwdec/pmhwdec-test) finds the decoder, the setup leaves the cinematics at full size (Knifethrower's idea):
-# no re-encode on 1 GB Allwinner handhelds, a shorter setup
+# no re-encode on Allwinner handhelds, a shorter setup
 UM_PMHWDEC = "pmhwdec/libpmhwdec.so.1"
 # (UA_GL_PERSIST, the same arena without the ranged draws, stays off: the slabs above.)
+# The three below on every handheld, with either picture. Until 2026.11.12 only on handhelds with 1 GB of RAM
+# or less: bigger ones, often with the same four small cores, got none of them (nor the render size below)
+# and testers saw them run slower than 1 GB ones (portmaster-unity docs/porting.md "Small handhelds"). Set one
+# at the top of port.env (e.g. UA_AUDIO_RATE= for 48 kHz) and that wins.
+# Unity's legacy graphics jobs on OpenGL ES (the draw calls built on the job workers; ua_host's
+# hook for this player build): the main thread, the limit at 600x400, +9 %; the same picture
+UA_GFX_JOBS = "legacy"
+# FMOD mixing at 24 kHz instead of 48: duller highs, the same sounds at the same times; its mixer
+# 48 -> 31 % of a core, CPU time the chip's shared power budget gives back to the GPU
+UA_AUDIO_RATE = "24000"
+# one Unity job worker instead of three (four cores shared by the main thread, the render thread,
+# FMOD's mixer and the GPU driver's submission thread; three workers woken for every job batch take
+# CPU from both the main and the render thread). The same jobs, the same results; Greenpath
+# 42.1 / 42.2 -> 45.6 fps (Knulli), 44.2 / 43.7 -> 45.9 (muOS), Soul Master 48.9 -> 51.9 / 52.8
+# (Knulli), 50.7 -> 51.9 (muOS); the Colosseum, King's Pass and City of Tears as before
+UA_UNITY_ARGS = "-job-worker-count 1"
 
 # The Low picture, on every handheld: the picture gives a little, the game play nothing (portmaster-unity
 # docs/porting.md "The Low picture at launch"). The setup offers no other picture (players who chose a
@@ -209,8 +229,10 @@ UM_PMHWDEC = "pmhwdec/libpmhwdec.so.1"
 # no background blur: the background camera off and the far background drawn sharp (NoBlur's look);
 # the main thread draws one camera fewer
 ASMPATCH_HK_BLUR = "off"
-# on 1 GB handhelds the game rendered at 540x360 and scaled to the panel (by the display engine on the
-# fbdev path, else the GPU): softer. 540x360 rather than 600x400 since 2026-11-04: the GPU-bound rooms
+# the game rendered at 540x360 on every handheld and scaled to the panel (by the display engine on the
+# fbdev path, else the GPU): softer. Until 2026.11.12 only on 1 GB handhelds (UA_RENDER_RAM=1024): bigger
+# ones drew at the panel's size, and on KMSDRM drivers without the present thread above (it needs a render
+# size), so they could run slower than 1 GB ones. 540x360 rather than 600x400 since 2026-11-04: the GPU-bound rooms
 # gain most (City of Tears 41.3 -> 47.3 fps, Crystal Peak 48.2 -> 52.9, Queen's Gardens 52.3 -> 54.0 on
 # Knulli; Greenpath 41.4 -> 43.6 on muOS), the picture a little softer still. Square screens (720x720) 480x480
 # instead of the 360x360 that 540x360 fits into them (hard to read, testers said): Greenpath on a 1:1 stand-in
@@ -223,9 +245,8 @@ UA_RENDER_SIZE = "540x360 480x480"
 # fps without, 41.7 with; the title menu, drawn whole at the panel's size, 60 -> 50. The launcher turns it off
 # for a game whose code has not had that patch (.patches, written by the setup and the update)
 UA_RENDER_SIZE_VAR = "ASMPATCH_HK_RENDER_SIZE"
-UA_RENDER_RAM = "1024"
-# on bigger devices at most about 560,000 pixels, scaled up by the GPU: a 1920x1152 screen 960x576, a
-# 1920x1080 one 992x558; a 720x480 one stays at its size
+# at most about 560,000 pixels, scaled up by the GPU, for a player who empties UA_RENDER_SIZE: a 1920x1152
+# screen 960x576, a 1920x1080 one 992x558; a 720x480 one stays at its size
 UA_RENDER_PIXELS = "560000"
 # the game's own video options at their lowest (Options, Video), as defaults the game reads until the
 # player picks otherwise there (ua_host UA_PREFS_DEFAULTS; a choice in the menu is stored and kept):
@@ -233,23 +254,6 @@ UA_RENDER_PIXELS = "560000"
 # (halves the decorative particle systems the developers tagged), Dithering off, Noise off. City of
 # Tears 45.1 -> 46.3 - 48.2 fps at 540x360 with Particles Low and Dithering off (muOS)
 UA_PREFS_DEFAULTS = "ShaderQuality=0 VidParticles=0 VidDithering=0 VidNoise=0"
-
-# On handhelds with 1 GB of RAM or less (MemTotal at most 1024 MB, read by port.env at each launch),
-# with either picture: the four A53 cores and the memory are short there (docs/porting.md "Small
-# handhelds"). Set one at the top of port.env (e.g. UA_AUDIO_RATE= for 48 kHz) and that wins.
-[runtime_lowmem]
-# Unity's legacy graphics jobs on OpenGL ES (the draw calls built on the job workers; ua_host's
-# hook for this player build): the main thread, the limit at 600x400, +9 %; the same picture
-UA_GFX_JOBS = "legacy"
-# FMOD mixing at 24 kHz instead of 48: duller highs, the same sounds at the same times; its mixer
-# 48 -> 31 % of a core, CPU time the chip's shared power budget gives back to the Mali
-UA_AUDIO_RATE = "24000"
-# one Unity job worker instead of three (the A53's four cores are shared by the main thread, the
-# render thread, FMOD's mixer and Mali's submission thread; three workers woken for every job batch
-# take CPU from both the main and the render thread). The same jobs, the same results; Greenpath
-# 42.1 / 42.2 -> 45.6 fps (Knulli), 44.2 / 43.7 -> 45.9 (muOS), Soul Master 48.9 -> 51.9 / 52.8
-# (Knulli), 50.7 -> 51.9 (muOS); the Colosseum, King's Pass and City of Tears as before
-UA_UNITY_ARGS = "-job-worker-count 1"
 
 # the porter's own files (paths relative to this file), copied into setup/: converter plugins
 # (--plugin), managed = assemblies shipped into the game (--managed-file), assembly_patches =

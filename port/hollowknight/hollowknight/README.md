@@ -1,7 +1,8 @@
 # Hollow Knight on PortMaster
 
-Hollow Knight runs on Unity's own Android player, run natively on the handheld's 32-bit userland by
-[portmaster-unity](https://github.com/wild1walker/portmaster-unity)'s `ua_host`. No game files come
+Hollow Knight runs on Unity's own Android player, run natively on the handheld's Linux by
+[portmaster-unity](https://github.com/wild1walker/portmaster-unity)'s `ua_host` (the 32-bit player, or
+the 64-bit one where the system has no 32-bit libraries). No game files come
 with this port: you provide your own copy, and the first launch builds the game from it on the
 handheld.
 
@@ -28,7 +29,7 @@ handheld.
 2. Launch Hollow Knight from the Ports menu. PortMaster's patcher shows the setup's progress: it finds
    (or unpacks) the game, unpacks Unity's player, converts the game for the handheld's GPU and
    packs it for the player (about 45 minutes on an RG34XX-SP with Knulli; about ten more for the
-   cinematics on 1 GB handhelds whose video engine the port cannot use). If it is interrupted, launch
+   cinematics on handhelds whose video engine the port cannot use). If it is interrupted, launch
    again: it continues where it stopped.
    The log is `ports/hollowknight/patchlog.txt`.
 3. When it is done the game starts. The setup uses up the game's folder in `gamedata/` (its files
@@ -40,8 +41,9 @@ Saves and settings: `ports/hollowknight/data/`. PortMaster's exit hotkey quits. 
 run's log.
 
 **Updating:** install a newer release over this one, as you installed it. Its first launch brings
-the game you already have up to date in place (newer code patches, smaller cinematics on 1 GB
-handhelds without a video engine the port can use): from about a minute to a few minutes, nothing downloaded, your saves untouched.
+the game you already have up to date in place (newer code patches, smaller cinematics on handhelds
+without a video engine the port can use): from about a minute to a few minutes, nothing downloaded, your
+saves untouched.
 
 ## The picture
 
@@ -50,18 +52,21 @@ The picture fills 4:3 (640x480) and 3:2 (720x480) screens: the game's own rule f
 keep the bars, put `bars` in `aspect.txt` (the setup asks; `fill` fills the screen again).
 
 On every handheld the port gives a little of the picture for speed, the game play never: no
-background blur, the game drawn smaller and scaled up (540x360 on handhelds with 1 GB of memory or
-less, 480x360 on 4:3; at most about 960x576 on bigger ones), the game's own video options at their
-lowest (until you change them in its Options, Video). On 1 GB handhelds also the sound mixed at
-24 kHz, the textures smaller and more compressed (0.375 of their size, ASTC 6x6), and the cinematics too where the handheld's video engine cannot
-play them (it does on Allwinner handhelds with Knulli or muOS and RK3326 ones with dArkOS, through the
-port's libpmhwdec; on dArkOS the launcher opens the decoder's two device files to the game while it
-runs and puts them back as they were when it ends). The port is tested with all of these on;
-each costs frame rate when it is off. To turn one off anyway, add its line at the top of `port.env`:
+background blur, the game's world drawn smaller and scaled up (540x360, 480x360 on 4:3 screens,
+480x480 on square ones; the HUD, inventory, map and text at the screen's own size), the game's own
+video options at their lowest (until you change them in its Options, Video), the sound mixed at
+24 kHz, the textures smaller and more compressed (0.375 of their size, ASTC 6x6; the text at full
+size), and the cinematics too where the handheld's video engine cannot play them (it does on
+Allwinner handhelds with Knulli or muOS and RK3326 ones with dArkOS, through the port's libpmhwdec; on
+dArkOS the launcher opens the decoder's two device files to the game while it runs and puts them back
+as they were when it ends). Until 2026.11.12 most of these were only for handhelds with 1 GB of
+memory or less, and bigger handhelds could run slower than 1 GB ones. The port is tested with all of
+these on; each costs frame rate when it is off. To turn one off anyway, add its line at the top of
+`port.env`:
 
 ```bash
 export ASMPATCH_HK_BLUR=full   # the game's four-pass background blur
-export UA_RENDER_SIZE=1280x768 UA_RENDER_RAM= UA_RENDER_PIXELS=   # draw at a size of your choice (the screen's shape is kept)
+export UA_RENDER_SIZE=1280x768 UA_RENDER_PIXELS=   # draw at a size of your choice (the screen's shape is kept)
 export UA_RENDER_SIZE= UA_RENDER_PIXELS=   # draw at the screen's own size
 export UA_AUDIO_RATE=          # mix the sound at 48 kHz
 ```

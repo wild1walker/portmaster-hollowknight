@@ -8,9 +8,9 @@
 #     apk-asmpatch` runs asmpatch on the installed APK's assemblies; the patches they have already
 #     say "done", a newer release's go in (after the APK's end: nothing there is overwritten)
 #   - the game's videos (convert's `video` step, when the port's setup/convert.json has it):
-#     `pmu video` makes the VP8 clips of the installed APK and OBB smaller in place on handhelds
-#     with 1 GB of RAM or less (nothing elsewhere, for a game without such clips, or where the
-#     port's libpmhwdec decodes VP8 on the handheld's video engine)
+#     `pmu video` makes the VP8 clips of the installed APK and OBB smaller in place (this port:
+#     video.mode "on", every handheld; nothing for a game without such clips, for clips already
+#     small enough, or where the port's libpmhwdec decodes VP8 on the handheld's video engine)
 # This port has two builds (the 32-bit one in the port's folder, the 64-bit one in arm64/): the
 # launcher names the one this handheld runs (UPDATE_GAME, UPDATE_READY, UPDATE_PMHWDEC).
 # It can be interrupted: the next launch runs it again. Log: ports/<port>/patchlog.txt.
@@ -52,7 +52,7 @@ if { [ "${ASMPATCH:-off}" != off ] || [ "$SA" != obb ] || [ "${DATA_PATH:-0}" = 
 fi
 
 if [ -f "$S/convert.json" ] && grep -q '"video"' "$S/convert.json"; then
-  step "the game's videos (a few minutes on a 1 GB handheld)"
+  step "the game's videos (a few minutes on a small handheld)"
   # (where the port's libpmhwdec decodes VP8 on this handheld's video engine they are left as they
   # are: the hardware plays them in time; pmhwdec-test says so in milliseconds)
   hw="$GAMEDIR/${UPDATE_PMHWDEC:-pmhwdec}"; t="$hw/pmhwdec-test"; r=

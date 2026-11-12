@@ -88,19 +88,17 @@
     "lowmem_pcm_budget_mb": 16
    },
    "textures": {
-    "scale": 1.0,
-    "lowmem_scale": 0.375,
-    "lowmem_block": [
+    "scale": 0.375,
+    "sharp_names": "SDF|tmpro|Font Texture",
+    "block": [
      6,
      6
     ],
-    "sharp_names": "SDF|tmpro|Font Texture",
-    "block": [
-     4,
-     4
-    ],
     "quality": "medium",
     "mips": "keep"
+   },
+   "video": {
+    "mode": "on"
    }
   },
   "android_data": {
@@ -136,21 +134,19 @@
    "ASMPATCH_HK_ASPECT": "fill",
    "UA_PRESENT_THREAD": "1",
    "UA_GL_REC": "auto",
-   "UM_PMHWDEC": "pmhwdec/libpmhwdec.so.1"
+   "UM_PMHWDEC": "pmhwdec/libpmhwdec.so.1",
+   "UA_GFX_JOBS": "legacy",
+   "UA_AUDIO_RATE": "24000",
+   "UA_UNITY_ARGS": "-job-worker-count 1"
   },
   "runtime_low": {
    "ASMPATCH_HK_BLUR": "off",
    "UA_RENDER_SIZE": "540x360 480x480",
    "UA_RENDER_SIZE_VAR": "ASMPATCH_HK_RENDER_SIZE",
-   "UA_RENDER_RAM": "1024",
    "UA_RENDER_PIXELS": "560000",
    "UA_PREFS_DEFAULTS": "ShaderQuality=0 VidParticles=0 VidDithering=0 VidNoise=0"
   },
-  "runtime_lowmem": {
-   "UA_GFX_JOBS": "legacy",
-   "UA_AUDIO_RATE": "24000",
-   "UA_UNITY_ARGS": "-job-worker-count 1"
-  },
+  "runtime_lowmem": {},
   "questions": [
    {
     "id": "TEXTURE_QUALITY",

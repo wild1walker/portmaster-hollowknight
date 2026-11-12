@@ -7,7 +7,7 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 > the R36S family). The setup that converts your copy has run end to end on the RG34XX-SP with
 > Knulli; the other two ran a copy converted there. Knifethrower reports it playable on an
 > Anbernic RG552 with AmberELEC (a 1920x1152 screen: King's Pass at about 11 fps with the full
-> picture; the next release turns the port's speed options on there too). Please report how far it gets on yours.
+> picture, before the port's speed options reached bigger handhelds). Please report how far it gets on yours.
 
 - **You need your own copy of the game.** This project contains **no game files**, and its
   releases don't either. You bring the Linux version, from GOG or Steam; the port converts it for the handheld
@@ -23,9 +23,9 @@ A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmas
 
 | | |
 |---|---|
-| **A handheld** | One that runs PortMaster, with OpenGL ES 3 and a 64-bit ARM system. With 32-bit (armhf) libraries beside it (Knulli or muOS on Allwinner H700 handhelds, dArkOS on RK3326 ones) the port runs its 32-bit build; without them (TrimUI handhelds, for one), its 64-bit build (below, "The 64-bit build"). Tested on an Anbernic RG34XX-SP and a BattleXP G350 (1 GB of RAM or less each). |
+| **A handheld** | One that runs PortMaster, with OpenGL ES 3 and a 64-bit ARM system. With 32-bit (armhf) libraries beside it (Knulli or muOS on Allwinner H700 handhelds, dArkOS on RK3326 ones) the port runs its 32-bit build; without them (TrimUI handhelds, for one), its 64-bit build (below, "The 64-bit build"). Tested on an Anbernic RG34XX-SP and a BattleXP G350 (1 GB of RAM or less each); handhelds with more get the same options (below, "The picture"). |
 | **The game** | Hollow Knight for **Linux**, from **GOG** (its `.sh` installer as downloaded, no need to rename it, or the installed game folder) or **Steam** (the Linux game folder: below). GOG's 1.5.12620 is the version tested here; testers report Steam's current Linux files working too (2026-11-09). Both are Unity 6000.0.61f1, which the setup checks. |
-| **Free space and time** | About 15.5 GB free on the card when you start from GOG's installer (the setup checks this before unpacking it), about 8 GB from the installed game folder, about 4 GB once it is done. The setup runs once, on the first launch: about 45 minutes on an RG34XX-SP with Knulli (2026-11-02), plus about ten minutes for the cinematics on 1 GB handhelds (below). |
+| **Free space and time** | About 15.5 GB free on the card when you start from GOG's installer (the setup checks this before unpacking it), about 8 GB from the installed game folder, about 4 GB once it is done. The setup runs once, on the first launch: about 45 minutes on an RG34XX-SP with Knulli (2026-11-02), plus about ten minutes for the cinematics on handhelds whose video engine the port cannot use (below). |
 
 **Steam's Linux files, from any PC with Steam** (Windows and macOS too): open Steam's console (type
 `steam://open/console` into a web browser's address bar, or Windows' Run box), enter
@@ -56,7 +56,7 @@ yet run on a TrimUI handheld itself.
 | Read the game's files and find its Unity version | Done (Unity 6, Mono scripting) |
 | Get Unity's matching Android player | Done: the release ships a donor (a small game of pong built with Unity 6000.0.61f1, whose APK carries the player: the same 75 files Unity's installer has); the setup never downloads anything, no Wi-Fi. Nothing of Unity's is in this repository |
 | Convert the shaders for the handheld's GPU | Done |
-| Convert the textures so they fit in 1 GB of memory | Done (re-encoded in a format the handheld's GPU reads; at half size on handhelds with 1 GB or less, the text at full size: below) |
+| Convert the textures so they fit in 1 GB of memory | Done (re-encoded in a format the handheld's GPU reads, at 0.375 of their size in ASTC 6x6 blocks, the text at full size: below) |
 | Pack the game for the player | Done |
 | First start in an emulated handheld | Done: menus, the opening cinematics and the first area (King's Pass) all work |
 | Controls | Done: Hollow Knight's own controls by position, the prompts in the letters printed on the handheld (see below) |
@@ -93,45 +93,47 @@ the G350: 17.5 -> 30 - 33 fps. Nothing changes on the RG34XX-SP, which has no us
 
 **Updating:** install a newer release over the old one, as you installed the first. Its first launch
 brings the game you already have up to date in place (newer code patches such as the screen fill,
-the smaller cinematics on 1 GB handhelds): from about a minute to a few minutes, nothing downloaded,
-your saves untouched.
+the smaller cinematics): from about a minute to a few minutes, nothing downloaded, your saves
+untouched.
 
 ## The picture
 
 On every handheld the port turns on these by itself (`ports/hollowknight/port.env`):
 
 - no background blur: the far background is drawn sharp instead of blurred
-- the game drawn smaller and scaled to the screen (a little softer): 540x360 on handhelds with 1 GB
-  of memory or less (480x360 on 4:3 screens, 480x480 on square ones), at most about 960x576 on bigger ones (a 1920x1152
-  screen at half its size; a 720x480 one keeps its size)
+- the game's world drawn smaller and scaled to the screen (a little softer): 540x360 (480x360 on 4:3
+  screens, 480x480 on square ones); the HUD, the inventory, the map and the text at the screen's own size
 - the game's own video options at their lowest: Shader Quality Low, Particle Effects Low, Dithering
   and Noise off, until you choose otherwise in its Options, Video
-
-On handhelds with 1 GB of memory or less, also:
-
 - Unity's graphics jobs (the same picture, less work for the game's main thread)
 - the sound mixed at 24 kHz instead of 48 kHz (slightly duller highs, the same sounds)
-- one Unity job thread instead of three (the same game; the handheld's four cores go to the game itself)
+- one Unity job thread instead of three (the same game; the handheld's cores go to the game itself)
 
-The setup also converts the textures at 0.375 of their size on these handhelds, the text at full
-size: Hallownest's art, made for 1080p screens, still has about a texel for each pixel of the game's
-540x360 picture. It packs them in larger compressed blocks there too (ASTC 6x6 instead of 4x4: less
-than half the memory, a little less detail; City of Tears 623 -> 588 MB on an RG34XX-SP with Knulli,
-the same frame rate; testers found 8x8 visibly blocky). And it keeps at most 16 MB of a scene's
-sounds decoded in memory (36 MB on bigger
-handhelds); the longer ones are decoded as they play. Handhelds with dArkOS keep EmulationStation in
+Until 2026.11.12 the smaller world and the last three were only for handhelds with 1 GB of memory or
+less. Bigger handhelds, many with the same four small cores, drew at the screen's own size without
+them (and on RK3326-type graphics drivers without the port's present thread, which needs the smaller
+size), and testers saw them run slower than 1 GB handhelds. Every handheld now gets what the port is
+tested with.
+
+The setup also converts the textures at 0.375 of their size, the text at full size: Hallownest's art,
+made for 1080p screens, still has about a texel for each pixel of the game's 540x360 picture. It packs
+them in larger compressed blocks (ASTC 6x6 instead of 4x4: less than half the memory, a little less
+detail; City of Tears 623 -> 588 MB on an RG34XX-SP with Knulli, the same frame rate; testers found
+8x8 visibly blocky). On handhelds with 1 GB of memory or less it keeps at most 16 MB of a scene's
+sounds decoded in memory (36 MB on bigger handhelds, a little less work for their CPU); the longer
+ones are decoded as they play. Handhelds with dArkOS keep EmulationStation in
 memory while the game runs (up to about 126 MB), and with no swap the game ran a 1 GB handheld out of
 memory in City of Tears before this. Measured on an RG34XX-SP with muOS in City of Tears: the game
 663 -> 597 MB, the same frame rate, the same picture side by side. A game set up by an earlier release
 keeps its textures and sounds as they were (the setup no longer has your copy's originals): to get
 these, unzip the release over your ports folder again (the setup's files and donors go when a setup is
 done), put your copy in `ports/hollowknight/gamedata/` again and delete `ports/hollowknight/.setup_done`
-(`.setup_done64` for the 64-bit build); the next launch sets the game up again and your saves stay. Building the port yourself, `[convert.textures] lowmem_scale = 1.0` in
-`port.toml` keeps the textures full size.
+(`.setup_done64` for the 64-bit build); the next launch sets the game up again and your saves stay. Building the port yourself,
+`[convert.textures] scale = 1.0` and `block = [4, 4]` in `port.toml` keep the textures full size.
 
-And it makes the cinematics smaller on these handhelds: 960x540 instead of 1920x1080, which
-looks the same on their screens and plays at the videos' own 30 pictures a second (at full size the
-handheld cannot decode them in time and they played in slow motion). Not where the handheld's video
+And it makes the cinematics smaller: 960x540 instead of 1920x1080, which looks the same on these
+screens and plays at the videos' own 30 pictures a second (at full size a handheld's small cores
+cannot decode them in time and they played in slow motion; until 2026.11.12 only on 1 GB handhelds). Not where the handheld's video
 engine decodes them through the port's libpmhwdec (Allwinner handhelds with Knulli or muOS, such as
 the RG34XX-SP, and RK3326 handhelds with dArkOS, such as the G350): there they stay at full size and
 the setup is about ten minutes shorter. On dArkOS the launcher opens the video decoder to the game
@@ -149,7 +151,7 @@ frame rate when it is off; to turn one off anyway, add its line at the top of `p
 
 ```bash
 export ASMPATCH_HK_BLUR=full   # the game's four-pass background blur
-export UA_RENDER_SIZE=1280x768 UA_RENDER_RAM= UA_RENDER_PIXELS=   # draw at a size of your choice (the screen's shape is kept)
+export UA_RENDER_SIZE=1280x768 UA_RENDER_PIXELS=   # draw at a size of your choice (the screen's shape is kept)
 export UA_RENDER_SIZE= UA_RENDER_PIXELS=   # draw at the screen's own size
 export UA_AUDIO_RATE=          # mix the sound at 48 kHz
 ```

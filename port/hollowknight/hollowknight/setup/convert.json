@@ -19,18 +19,16 @@
   "lowmem_pcm_budget_mb": 16
  },
  "textures": {
-  "scale": 1.0,
-  "lowmem_scale": 0.375,
-  "lowmem_block": [
+  "scale": 0.375,
+  "sharp_names": "SDF|tmpro|Font Texture",
+  "block": [
    6,
    6
   ],
-  "sharp_names": "SDF|tmpro|Font Texture",
-  "block": [
-   4,
-   4
-  ],
   "quality": "medium",
   "mips": "keep"
+ },
+ "video": {
+  "mode": "on"
  }
 }
