@@ -121,7 +121,8 @@ memory while the game runs (up to about 126 MB), and with no swap the game ran a
 memory in City of Tears before this. Measured on an RG34XX-SP with muOS in City of Tears: the game
 663 -> 597 MB, the same frame rate, the same picture side by side. A game set up by an earlier release
 keeps its textures and sounds as they were (the setup no longer has your copy's originals): to get
-these, put your copy in `ports/hollowknight/gamedata/` again and delete `ports/hollowknight/.setup_done`
+these, unzip the release over your ports folder again (the setup's files and donors go when a setup is
+done), put your copy in `ports/hollowknight/gamedata/` again and delete `ports/hollowknight/.setup_done`
 (`.setup_done64` for the 64-bit build); the next launch sets the game up again and your saves stay. Building the port yourself, `[convert.textures] lowmem_scale = 1.0` in
 `port.toml` keeps the textures full size.
 

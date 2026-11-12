@@ -87,7 +87,11 @@ if [ ! -f "$GAMEDIR/$READY" ]; then
     source "$controlfolder/utils/patcher.txt"
   fi
   if [ ! -f "$GAMEDIR/$READY" ]; then
-    pm_message "Hollow Knight is not set up yet: put Hollow Knight for Linux (Unity 6000.0.61f1): GOG's installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam in ports/hollowknight/gamedata and launch again (ports/hollowknight/README.md; log: ports/hollowknight/patchlog.txt)."
+    if [ -f "$GAMEDIR/setup/$SETUP" ]; then
+      pm_message "Hollow Knight is not set up yet: put Hollow Knight for Linux (Unity 6000.0.61f1): GOG's installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam in ports/hollowknight/gamedata and launch again (ports/hollowknight/README.md; log: ports/hollowknight/patchlog.txt)."
+    else    # (no setup to run: the port's folder without its setup/, e.g. deleted, or copied without it)
+      pm_message "Hollow Knight is not set up and its setup files are missing. Install the port again (unzip it over your ports folder), put the game in ports/hollowknight/gamedata if it is not there any more, and launch again."
+    fi
     sleep 8
     pm_finish
     exit 1
@@ -107,6 +111,16 @@ if [ -f "$GAMEDIR/setup/update" ] && [ -f "$controlfolder/utils/patcher.txt" ]; 
   export PATCHER_TIME="a few minutes, once"
   unset PATCHER_QUESTIONS
   source "$controlfolder/utils/patcher.txt"
+fi
+
+# ---- the game is set up: what a setup cut off right after it marked the game set up left behind,
+# and the setup files a release unzipped over the set-up game brings again, are not needed to play
+# (setup/update still there: the update has not run or not finished, and runs at the next launch)
+if [ ! -f "$GAMEDIR/setup/update" ]; then
+  work=gamedata/.setup; [ "$HK_ROUTE" = 64 ] && work=gamedata/.setup64
+  for d in setup donor "$work"; do
+    [ -d "$GAMEDIR/$d" ] && rm -rf "${GAMEDIR:?}/$d" && echo "removed $d: the setup's, not needed to play"
+  done
 fi
 
 # the built-in pad reaches the game as an Android gamepad (ua_host: SDL GameController ->

@@ -9,7 +9,7 @@ handheld.
 
 - **Hollow Knight for Linux (Unity 6000.0.61f1): GOG's installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam.** The setup checks the Unity version it was built with (this port is made
   for 6000.0.61f1).
-- Unity's Android player comes with the port (`donor/`: small games built with Unity for it, whose APKs carry the player); nothing is downloaded, no Wi-Fi.
+- Unity's Android player comes with the port (`donor/`: small games built with Unity for it, whose APKs carry the player; the setup removes them once the game is built); nothing is downloaded, no Wi-Fi.
 - About 15.5 GB free on the card during the setup when you start from GOG's installer (the setup
   checks it before unpacking), about 8 GB from the installed game folder, about 4 GB once it is done.
 - A handheld with a 64-bit (aarch64) system and GLES 3. With 32-bit (armhf) libraries beside it (Knulli
