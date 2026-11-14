@@ -140,8 +140,8 @@ export SDL_GAMECONTROLLERCONFIG="${SDL_GAMECONTROLLERCONFIG:-$sdl_controllerconf
 # program reaches the system's sound server or ALSA itself)
 [ "$HK_ROUTE" = 32 ] && export SDL_AUDIODRIVER=${SDL_AUDIODRIVER:-alsa}
 # the 64-bit build's libpmhwdec (pmhwdec64/; port.env names the 32-bit one)
-[ "$HK_ROUTE" = 64 ] && export UM_PMHWDEC=${UM_PMHWDEC-pmhwdec64/libpmhwdec.so.1}
-export UA_FPS=${UA_FPS:-10}                     # a line of frame statistics every 10 s in log.txt
+[ "$HK_ROUTE" = 64 ] && export UM_PMHWDEC=pmhwdec64/libpmhwdec.so.1
+export UA_FPS=10                                # a line of frame statistics every 10 s in log.txt
 # the game's options (port.env), and the setup's answers that apply when the game runs
 # the picture shape and the button letters the setup asked for: aspect.txt (fill, or bars for the game's
 # 16:9 with black bars) and buttons.txt (nintendo or xbox), read at each launch; port.env's own lines are
@@ -152,11 +152,11 @@ case "$(cat "$GAMEDIR/buttons.txt" 2>/dev/null)" in nintendo) export UA_PAD_LETT
 # UA_RENDER_SIZE_VAR with asmpatch's hk-render-size): only for a game whose code has had that patch (the setup
 # and the update note their patches in the setup's marker); a game set up before it keeps the picture that
 # ua_host scales, as it was
-grep -qs hk-render-size "$GAMEDIR/$READY" || export UA_RENDER_SIZE_VAR=${UA_RENDER_SIZE_VAR-}
+grep -qs hk-render-size "$GAMEDIR/$READY" || export UA_RENDER_SIZE_VAR=
 # the other languages' text atlases and fonts given back after the start (port.env's UA_UNLOAD_ASSETS): only for a
 # game whose setup left them out of the scenes' preload lists (pmu's lazy step; the mark says convert=lazy), since
 # with the lists as they were every room would load them again
-grep -qs "convert=lazy" "$GAMEDIR/$READY" || export UA_UNLOAD_ASSETS=${UA_UNLOAD_ASSETS-}
+grep -qs "convert=lazy" "$GAMEDIR/$READY" || export UA_UNLOAD_ASSETS=
 [ -f "$GAMEDIR/port.env" ] && source "$GAMEDIR/port.env"
 [ -f "$GAMEDIR/answers.env" ] && source "$GAMEDIR/answers.env"
 # handhelds without analog sticks whose pad mapping still names a left stick: where PortMaster says there are
@@ -164,8 +164,6 @@ grep -qs "convert=lazy" "$GAMEDIR/$READY" || export UA_UNLOAD_ASSETS=${UA_UNLOAD
 if [ "${ANALOG_STICKS:-2}" = 0 ]; then
   case "${UA_DPAD_STICK:-}" in auto|auto,both) export UA_DPAD_STICK=${UA_DPAD_STICK/auto/1} ;; esac
 fi
-# a Wwise game: ua_host's own Wwise player plays the banks the setup converted (set UA_WWISE_DATA= empty for none)
-[ -d "$GAMEDIR/wwise" ] && export UA_WWISE_DATA="${UA_WWISE_DATA-$GAMEDIR/wwise}"
 chmod +x "$GAMEDIR/$HOST"
 for d in pmhwdec pmhwdec64; do   # libpmhwdec's Allwinner decoder, where the port ships it
   [ -f "$GAMEDIR/$d/pmhwdec-cedard" ] && chmod +x "$GAMEDIR/$d/pmhwdec-cedard"

@@ -132,6 +132,14 @@ printed like an Xbox pad (A at the bottom): the setup asks which letters your bu
 it later, put `xbox` (or `nintendo`) in `buttons.txt`, and the prompts show the game's Xbox buttons.
 The buttons never move.
 
+## Compile
+
+Nothing is compiled on the handheld: the setup builds the game from your copy with the tools in
+`setup/`. The port itself (`ua_host`, `ua_host64`, the setup's `pmu` and `asmpatch`) is built from
+[portmaster-unity](https://github.com/wild1walker/portmaster-unity), and the release zip by
+`port/hollowknight/package.sh` in [portmaster-hollowknight](https://github.com/wild1walker/portmaster-hollowknight)
+(its README, "For developers").
+
 ## Licences
 
 The port's code is MIT (`licenses/`). The setup tools are removed when the setup is done; their

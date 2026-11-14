@@ -231,8 +231,10 @@ Please don't attach game files, and don't ask for them. Logs from the port are f
 ## For developers
 
 The port is made with [portmaster-unity](https://github.com/wild1walker/portmaster-unity):
-`port/hollowknight/port.toml` holds its settings, and everything else in `port/hollowknight/` is
-generated from it by `pmunity port new`:
+`port/hollowknight/port.toml` holds its settings, and everything else in `port/hollowknight/` was
+first generated from it by `pmunity port new`. The launcher (`Hollow Knight.sh`), `setup/patchscript64`
+and `setup/update` are kept by hand since; regenerate into a scratch folder and copy only `port.env`,
+`setup/convert.json` and `port.build.json` back:
 
 ```bash
 cd portmaster-unity/convert
