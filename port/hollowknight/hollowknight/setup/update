@@ -41,7 +41,7 @@ if { [ "${ASMPATCH:-off}" != off ] || [ "$SA" != obb ] || [ "${DATA_PATH:-0}" = 
    && [ -f "$G/$APK_NAME.apk" ]; then
   step "the game's code patches"
   f=$(df -Pm "$GAMEDIR" | awk 'NR==2{print $4}')
-  [ -z "$f" ] || [ "$f" -gt 300 ] || fail "Patching the game's code needs about 300 MB free on the card ($f MB free)."
+  case "$f" in ""|*[!0-9]*) ;; *) [ "$f" -gt 300 ] || fail "Patching the game's code needs about 300 MB free on the card ($f MB free).";; esac
   chmod +x "$S/asmpatch"
   a="'$S/asmpatch'"
   # (as the setup ran it: the streaming-assets and data-path patches android-data adds too)
@@ -69,7 +69,7 @@ fi
 if [ -f "$S/convert.json" ] && grep -q '"lazy"' "$S/convert.json" && ! grep -qs "convert=lazy" "$GAMEDIR/$READY"; then
   step "the other languages' text out of the rooms' load lists (a few minutes on a small handheld)"
   f=$(df -Pm "$GAMEDIR" | awk 'NR==2{print $4}')
-  [ -z "$f" ] || [ "$f" -gt 500 ] || fail "This update needs about 500 MB free on the card ($f MB free)."
+  case "$f" in ""|*[!0-9]*) ;; *) [ "$f" -gt 500 ] || fail "This update needs about 500 MB free on the card ($f MB free).";; esac
   "$S/pmu" lazy "$G" --config "$S/convert.json" || fail "Could not update the game's load lists (see patchlog.txt)."
   # (noted for the launcher, which gives that text back after the start only then: UA_UNLOAD_ASSETS)
   [ -f "$GAMEDIR/$READY" ] && echo "convert=lazy" >> "$GAMEDIR/$READY"
