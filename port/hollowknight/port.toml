@@ -101,7 +101,7 @@ mode = "on"
 # docs/android-data.md); data_path = true (files read or written at Application.dataPath);
 # name = the APK's, package (keep it: it names the PlayerPrefs file); args = more options
 [android_data]
-asmpatch = ["auto", "hk-blur", "hk-aspect", "hk-pad-letters", "hk-render-size"]      # the default patches, the blur reduction ASMPATCH_HK_BLUR reads, the screen fit ASMPATCH_HK_ASPECT reads, the prompts' letters UA_PAD_LETTERS reads, the world's render size ASMPATCH_HK_RENDER_SIZE reads (tools/asmpatch)
+asmpatch = ["auto", "hk-blur", "hk-aspect", "hk-pad-letters", "hk-render-size", "hk-unload"]      # the default patches, the blur reduction ASMPATCH_HK_BLUR reads, the screen fit ASMPATCH_HK_ASPECT reads, the prompts' letters UA_PAD_LETTERS reads, the world's render size ASMPATCH_HK_RENDER_SIZE reads, the room-change unload ASMPATCH_HK_UNLOAD reads (tools/asmpatch)
 video_shader = true
 swappy = "off"
 streaming_assets = "both"
@@ -229,6 +229,12 @@ UA_UNITY_ARGS = "-job-worker-count 1"
 # the RG34XX-SP: the game 593 -> 480 MB, the lowest MemAvailable 308 -> 421 MB; the launcher sets
 # it only for a game whose setup ran that step: the setup's mark says convert=lazy)
 UA_UNLOAD_ASSETS = "chinese_body Atlas|chinese_trad_body Atlas|chinese_body_bold Atlas|japanese_title Atlas|japanese_body Atlas|korean_body Atlas|japanese_body_bold Atlas|russian_body Atlas|russian_title Atlas|russian_body_fallback Atlas|russian_title_fallback Atlas|NotoSerifCJKsc-Regular|NotoSerifTC-Medium"
+# what earlier rooms loaded given back at a room change while the system's available memory is under 150 MB (asmpatch's
+# hk-unload; the game itself does so only after a death or past 2.1 - 2.5 GB of Unity's memory, which a 1 GB handheld
+# never reaches, so every room since the last death stayed loaded: 46 rooms took the game 531 -> 630 MB and MemAvailable
+# down by 122 MB on the RG34XX-SP). Only when memory is short: that room change's load takes about a second longer.
+# Every handheld; the update step adds the patch to games set up by earlier releases. "" turns it off
+ASMPATCH_HK_UNLOAD = "150"
 
 # The Low picture, on every handheld: the picture gives a little, the game play nothing (portmaster-unity
 # docs/porting.md "The Low picture at launch"). The setup offers no other picture (players who chose a

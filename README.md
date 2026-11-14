@@ -166,6 +166,17 @@ The picture is the same in every language; a game in Chinese, Japanese, Korean o
 language's text again at the title. A game set up by an earlier release keeps the old way until it is set
 up again (the launcher reads `convert=lazy` in `.setup_done`).
 
+Each room you visit also stays in memory: Hollow Knight gives back what earlier rooms loaded only after a
+death (or a dream gate, a boss sequence) or once Unity's own memory passes 2.1 - 2.5 GB, which a 1 GB
+handheld never reaches. Exploring without dying ran the memory down: 46 rooms of King's Pass, Dirtmouth,
+the Crossroads and Greenpath took the game from 531 to 630 MB on an RG34XX-SP and its free memory down by
+122 MB. Now a room change while the handheld has less than 150 MB free gives them back (asmpatch's
+`hk-unload`, `ASMPATCH_HK_UNLOAD=150` in `port.env`; `export ASMPATCH_HK_UNLOAD=` at the top turns it
+off). On the same 46 rooms it did so at 5 of 54 room changes, each of those loads 0.4 - 1 s longer (one
+3.9 s, in Greenpath), and the handheld kept 143 - 155 MB free instead of falling to 93; the same frame
+rate, the same game. With more than 150 MB free nothing changes. A game set up by an earlier release gets
+the patch from the update step on its first launch after the update.
+
 One more reduction is there to try and is not on by itself, because it takes scenery away: with
 this line at the top of `port.env` the far background (what the game shows blurred: far walls,
 waterfalls, far vines) is not drawn at all and the fog stands before black. The game play is the
