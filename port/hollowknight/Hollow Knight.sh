@@ -33,7 +33,7 @@ echo "Hollow Knight: $CFW_NAME on $DEVICE_NAME ($DEVICE_ARCH), ${DISPLAY_WIDTH}x
 # ---- the route: 32-bit where the system has 32-bit (armhf) libraries, else 64-bit. HK_ROUTE=64 at the
 # top of port.env picks the 64-bit one on a system with both. A build that is set up, or a setup under
 # way, keeps its route (the libraries' check alone flipped between launches on muOS for Cuphead's port).
-[ -n "$HK_ROUTE" ] || HK_ROUTE=$(sed -n 's/^[[:space:]]*export[[:space:]]*HK_ROUTE=[^0-9]*\([0-9]*\).*/\1/p' "$GAMEDIR/port.env" 2>/dev/null | tail -1)
+[ -n "$HK_ROUTE" ] || HK_ROUTE=$(sed -n 's/^[[:space:]]*\(export[[:space:]]\{1,\}\)\{0,1\}HK_ROUTE=[^0-9]*\([0-9]*\).*/\2/p' "$GAMEDIR/port.env" 2>/dev/null | tail -1)
 ARMHF=no; [ -e /lib/ld-linux-armhf.so.3 ] && ARMHF=yes
 # ua_host needs glibc 2.35 of the 32-bit libraries (port.json's min_glibc is the 64-bit system's): older ones
 # take the 64-bit build; a version the loader does not print counts as new enough
@@ -43,8 +43,10 @@ if [ "$ARMHF" = yes ]; then
   set --
 fi
 if [ "$HK_ROUTE" = 64 ]; then ROUTE_WHY="HK_ROUTE=64"
-elif [ -f "$GAMEDIR/.setup_done" ] || [ -d "$GAMEDIR/gamedata/.setup" ]; then HK_ROUTE=32; ROUTE_WHY="the 32-bit build is there"
-elif [ -f "$GAMEDIR/.setup_done64" ] || [ -d "$GAMEDIR/gamedata/.setup64" ]; then HK_ROUTE=64; ROUTE_WHY="the 64-bit build is there"
+elif [ -f "$GAMEDIR/.setup_done" ]; then HK_ROUTE=32; ROUTE_WHY="the 32-bit build is there"
+elif [ -f "$GAMEDIR/.setup_done64" ]; then HK_ROUTE=64; ROUTE_WHY="the 64-bit build is there"
+elif [ -d "$GAMEDIR/gamedata/.setup" ]; then HK_ROUTE=32; ROUTE_WHY="the 32-bit setup is under way"
+elif [ -d "$GAMEDIR/gamedata/.setup64" ]; then HK_ROUTE=64; ROUTE_WHY="the 64-bit setup is under way"
 elif [ "$ARMHF" = yes ]; then HK_ROUTE=32; ROUTE_WHY="32-bit libraries found"
 elif [ "$ARMHF" = no ]; then HK_ROUTE=64; ROUTE_WHY="no 32-bit libraries"
 else HK_ROUTE=64; ROUTE_WHY="32-bit libraries too old for ua_host, which needs glibc 2.35"; fi
@@ -52,6 +54,12 @@ echo "$HK_ROUTE-bit build ($ROUTE_WHY; 32-bit libraries: $ARMHF)"
 if [ "$HK_ROUTE" = 32 ] && [ "$ARMHF" = no ]; then
   pm_message "The 32-bit build is set up, but this system's 32-bit libraries are missing right now (/lib/ld-linux-armhf.so.3). Restart the handheld and launch again; please send ports/hollowknight/log.txt if it stays."
   sleep 8
+  pm_finish
+  exit 1
+fi
+if [ "$HK_ROUTE" = 32 ] && [ "$ARMHF" != yes ]; then   # (set up by a release before the glibc check)
+  pm_message "This system's 32-bit libraries ($ARMHF) are older than the 32-bit build needs (glibc 2.35). Put export HK_ROUTE=64 at the top of ports/hollowknight/port.env, put your copy of the game in ports/hollowknight/gamedata again and launch: the 64-bit build is set up instead."
+  sleep 10
   pm_finish
   exit 1
 fi
@@ -96,7 +104,12 @@ if [ ! -f "$GAMEDIR/$READY" ]; then
     source "$controlfolder/utils/patcher.txt"
   fi
   if [ ! -f "$GAMEDIR/$READY" ]; then
-    if [ -f "$GAMEDIR/setup/$SETUP" ]; then
+    work=gamedata/.setup; [ "$HK_ROUTE" = 64 ] && work=gamedata/.setup64
+    if [ ! -f "$controlfolder/utils/patcher.txt" ]; then
+      pm_message "This PortMaster has no patcher (utils/patcher.txt), which the first launch's setup needs. Update PortMaster, then launch Hollow Knight again."
+    elif [ -d "$GAMEDIR/$work" ]; then
+      pm_message "Hollow Knight's setup stopped before it finished (the reason is at the end of ports/hollowknight/patchlog.txt). Launch again to go on from where it stopped."
+    elif [ -f "$GAMEDIR/setup/$SETUP" ]; then
       pm_message "Hollow Knight is not set up yet: put Hollow Knight for Linux (Unity 6000.0.61f1): GOG's installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam in ports/hollowknight/gamedata and launch again (ports/hollowknight/README.md; log: ports/hollowknight/patchlog.txt)."
     else    # (no setup to run: the port's folder without its setup/, e.g. deleted, or copied without it)
       pm_message "Hollow Knight is not set up and its setup files are missing. Install the port again (unzip it over your ports folder), put the game in ports/hollowknight/gamedata if it is not there any more, and launch again."
@@ -110,6 +123,8 @@ fi
 # ---- a game set up by an earlier release: what this release's setup does that it has not had yet
 # (setup/update, once: the setup folder comes with each release and goes when it is done), on the
 # build this handheld runs (UPDATE_*: the 64-bit build's files are in arm64/, its mark is .setup_done64)
+[ -f "$GAMEDIR/setup/update" ] && [ ! -f "$controlfolder/utils/patcher.txt" ] && \
+  echo "this release's update waits for a PortMaster with utils/patcher.txt; the game starts as it was set up"
 if [ -f "$GAMEDIR/setup/update" ] && [ -f "$controlfolder/utils/patcher.txt" ]; then
   export GAMEDIR DEVICE_ARCH controlfolder
   export UPDATE_GAME="$GAME" UPDATE_READY="$READY" UPDATE_PMHWDEC=pmhwdec
@@ -126,8 +141,8 @@ fi
 # and the setup files a release unzipped over the set-up game brings again, are not needed to play
 # (setup/update still there: the update has not run or not finished, and runs at the next launch)
 if [ ! -f "$GAMEDIR/setup/update" ]; then
-  work=gamedata/.setup; [ "$HK_ROUTE" = 64 ] && work=gamedata/.setup64
-  for d in setup donor "$work"; do
+  # (both builds' work folders: one a setup of the other build left, stopped, once this build was chosen)
+  for d in setup donor gamedata/.setup gamedata/.setup64; do
     [ -d "$GAMEDIR/$d" ] && rm -rf "${GAMEDIR:?}/$d" && echo "removed $d: the setup's, not needed to play"
   done
 fi
