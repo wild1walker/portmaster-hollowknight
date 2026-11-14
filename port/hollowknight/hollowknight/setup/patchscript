@@ -337,7 +337,9 @@ sync
 rm -f "$S/update"                         # (for games an earlier release set up: not this one)
 # (the mark names the code patches this game has had, for the launcher: a setting that needs one
 # stays off without it)
-echo "asmpatch=$ASMPATCH" > "$GAMEDIR/$READY" || nowrite "the setup's last mark"
+# (and convert=lazy where the convert ran pmu's lazy step: the launcher gives back the other languages' text only then)
+lazy=; grep -q '"lazy"' "$S/convert.json" 2>/dev/null && lazy=" convert=lazy"
+echo "asmpatch=$ASMPATCH$lazy" > "$GAMEDIR/$READY" || nowrite "the setup's last mark"
 sync
 rm -rf "$W" "$S" "$DONOR_DIR"
 # archives and installers the setup unpacked (the game's; a Unity installer an older setup read) are not needed

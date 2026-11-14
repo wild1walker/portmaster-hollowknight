@@ -11,6 +11,9 @@
 #     `pmu video` makes the VP8 clips of the installed APK and OBB smaller in place (this port:
 #     video.mode "on", every handheld; nothing for a game without such clips, for clips already
 #     small enough, or where the port's libpmhwdec decodes VP8 on the handheld's video engine)
+#   - the other languages' text (convert's `lazy` step, when setup/convert.json has it): `pmu lazy` leaves the
+#     named assets out of the rooms' preload lists in the installed APK in place (every file the same length),
+#     once: the setup's mark says convert=lazy after it
 # This port has two builds (the 32-bit one in the port's folder, the 64-bit one in arm64/): the
 # launcher names the one this handheld runs (UPDATE_GAME, UPDATE_READY, UPDATE_PMHWDEC).
 # It can be interrupted: the next launch runs it again. Log: ports/<port>/patchlog.txt.
@@ -61,6 +64,15 @@ if [ -f "$S/convert.json" ] && grep -q '"video"' "$S/convert.json"; then
     ""|"no hardware"*) "$S/pmu" video "$G" --config "$S/convert.json" || fail "Could not update the game's videos (see patchlog.txt).";;
     *) echo "VP8 on this handheld's video engine ($r): the videos are left as they are";;
   esac
+fi
+
+if [ -f "$S/convert.json" ] && grep -q '"lazy"' "$S/convert.json" && ! grep -qs "convert=lazy" "$GAMEDIR/$READY"; then
+  step "the other languages' text out of the rooms' load lists (a few minutes on a small handheld)"
+  f=$(df -Pm "$GAMEDIR" | awk 'NR==2{print $4}')
+  [ -z "$f" ] || [ "$f" -gt 500 ] || fail "This update needs about 500 MB free on the card ($f MB free)."
+  "$S/pmu" lazy "$G" --config "$S/convert.json" || fail "Could not update the game's load lists (see patchlog.txt)."
+  # (noted for the launcher, which gives that text back after the start only then: UA_UNLOAD_ASSETS)
+  [ -f "$GAMEDIR/$READY" ] && echo "convert=lazy" >> "$GAMEDIR/$READY"
 fi
 
 # (bash keeps this script open: on a FUSE card, Knulli's, setup/ stays behind empty until it ends;

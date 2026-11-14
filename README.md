@@ -156,6 +156,16 @@ export UA_RENDER_SIZE= UA_RENDER_PIXELS=   # draw at the screen's own size
 export UA_AUDIO_RATE=          # mix the sound at 48 kHz
 ```
 
+**Memory.** Hollow Knight keeps the text of all its languages loaded, whatever language you play in: the
+Chinese, Japanese, Korean and Russian font pictures (uncompressed) and the Chinese font files, about 90 MB,
+and loads them again with every room. The setup leaves them out of the rooms' load lists, and the port gives
+back what the game loaded at its start (Unity loads one again whenever it is shown): in City of Tears on an
+RG34XX-SP the game holds about 110 MB less (593 -> 480 MB) and the handheld kept 421 MB free instead of 308; on a
+BattleXP G350 (dArkOS) 617 -> 492 MB and 353 MB free instead of 231.
+The picture is the same in every language; a game in Chinese, Japanese, Korean or Russian loads its own
+language's text again at the title. A game set up by an earlier release keeps the old way until it is set
+up again (the launcher reads `convert=lazy` in `.setup_done`).
+
 One more reduction is there to try and is not on by itself, because it takes scenery away: with
 this line at the top of `port.env` the far background (what the game shows blurred: far walls,
 waterfalls, far vines) is not drawn at all and the fog stands before black. The game play is the

@@ -47,7 +47,7 @@ donors = ["donor-6000.0.61f1-mono-armv7.apk", "donor-6000.0.61f1-il2cpp-arm64.ap
 # pmunity convert's config (each step's DEFAULTS); "textures" re-encodes BC/DXT as ASTC
 # (less memory, a longer setup, slightly different pixels: off unless you add it)
 [convert]
-steps = ["shaders", "settings", "audio", "textures", "video"]
+steps = ["shaders", "settings", "audio", "textures", "video", "lazy"]
 # the cinematics (1920x1080 VP8: more than an A53 decodes in time while the game runs) halved to
 # 960x540 on every handheld whose video engine does not play them (pmu's video step: mode "on",
 # max_height 720; the setup and the update turn it off where libpmhwdec decodes VP8 in hardware);
@@ -85,6 +85,13 @@ quality = "medium"
 mips = "keep"
 [convert.settings]
 graphics_apis = [11]
+# the TextMeshPro atlases of the other languages (uncompressed: the two Chinese ones 16 MB each) and the CJK font files
+# (32 MB), which every scene with text lists for loading in every language: left out of the scenes' preload lists
+# (pmu's lazy step: Unity loads one when something uses it); UA_UNLOAD_ASSETS below gives back what the first scenes
+# loaded. The game in English, French, ... never loads them again; in Chinese, Japanese, Korean or Russian its own
+# language's atlas comes back at once and stays (one load at the title). The same picture in every language.
+[convert.lazy]
+names = "chinese_body Atlas|chinese_trad_body Atlas|chinese_body_bold Atlas|japanese_title Atlas|japanese_body Atlas|korean_body Atlas|japanese_body_bold Atlas|russian_body Atlas|russian_title Atlas|russian_body_fallback Atlas|russian_title_fallback Atlas|NotoSerifCJKsc-Regular|NotoSerifTC-Medium"
 [convert.video]
 mode = "on"
 
@@ -217,6 +224,11 @@ UA_AUDIO_RATE = "24000"
 # 42.1 / 42.2 -> 45.6 fps (Knulli), 44.2 / 43.7 -> 45.9 (muOS), Soul Master 48.9 -> 51.9 / 52.8
 # (Knulli), 50.7 -> 51.9 (muOS); the Colosseum, King's Pass and City of Tears as before
 UA_UNITY_ARGS = "-job-worker-count 1"
+# the other languages' text atlases and the CJK font files given back after the start (Resources.UnloadAsset; Unity
+# loads one again if the game shows it): with the lazy step above, about 90 MB of a 1 GB handheld (City of Tears on
+# the RG34XX-SP: the game 593 -> 480 MB, the lowest MemAvailable 308 -> 421 MB; the launcher sets
+# it only for a game whose setup ran that step: the setup's mark says convert=lazy)
+UA_UNLOAD_ASSETS = "chinese_body Atlas|chinese_trad_body Atlas|chinese_body_bold Atlas|japanese_title Atlas|japanese_body Atlas|korean_body Atlas|japanese_body_bold Atlas|russian_body Atlas|russian_title Atlas|russian_body_fallback Atlas|russian_title_fallback Atlas|NotoSerifCJKsc-Regular|NotoSerifTC-Medium"
 
 # The Low picture, on every handheld: the picture gives a little, the game play nothing (portmaster-unity
 # docs/porting.md "The Low picture at launch"). The setup offers no other picture (players who chose a

@@ -144,6 +144,10 @@ case "$(cat "$GAMEDIR/buttons.txt" 2>/dev/null)" in nintendo) export UA_PAD_LETT
 # and the update note their patches in the setup's marker); a game set up before it keeps the picture that
 # ua_host scales, as it was
 grep -qs hk-render-size "$GAMEDIR/$READY" || export UA_RENDER_SIZE_VAR=${UA_RENDER_SIZE_VAR-}
+# the other languages' text atlases and fonts given back after the start (port.env's UA_UNLOAD_ASSETS): only for a
+# game whose setup left them out of the scenes' preload lists (pmu's lazy step; the mark says convert=lazy), since
+# with the lists as they were every room would load them again
+grep -qs "convert=lazy" "$GAMEDIR/$READY" || export UA_UNLOAD_ASSETS=${UA_UNLOAD_ASSETS-}
 [ -f "$GAMEDIR/port.env" ] && source "$GAMEDIR/port.env"
 [ -f "$GAMEDIR/answers.env" ] && source "$GAMEDIR/answers.env"
 # handhelds without analog sticks whose pad mapping still names a left stick: where PortMaster says there are
