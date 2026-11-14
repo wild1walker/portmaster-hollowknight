@@ -1,5 +1,9 @@
 # Hollow Knight on PortMaster
 
+## Notes
+
+Thanks to Team Cherry for creating Hollow Knight!
+
 Hollow Knight runs on Unity's own Android player, run natively on the handheld's Linux by
 [portmaster-unity](https://github.com/wild1walker/portmaster-unity)'s `ua_host` (the 32-bit player, or
 the 64-bit one where the system has no 32-bit libraries). No game files come

@@ -14,6 +14,7 @@ else
 fi
 
 source $controlfolder/control.txt
+[ -f "${controlfolder}/mod_${CFW_NAME}.txt" ] && source "${controlfolder}/mod_${CFW_NAME}.txt"
 get_controls
 
 # Hollow Knight on Unity's own Android player, run natively by portmaster-unity's ua_host: the 32-bit
@@ -34,11 +35,19 @@ echo "Hollow Knight: $CFW_NAME on $DEVICE_NAME ($DEVICE_ARCH), ${DISPLAY_WIDTH}x
 # way, keeps its route (the libraries' check alone flipped between launches on muOS for Cuphead's port).
 [ -n "$HK_ROUTE" ] || HK_ROUTE=$(sed -n 's/^[[:space:]]*export[[:space:]]*HK_ROUTE=[^0-9]*\([0-9]*\).*/\1/p' "$GAMEDIR/port.env" 2>/dev/null | tail -1)
 ARMHF=no; [ -e /lib/ld-linux-armhf.so.3 ] && ARMHF=yes
+# ua_host needs glibc 2.35 of the 32-bit libraries (port.json's min_glibc is the 64-bit system's): older ones
+# take the 64-bit build; a version the loader does not print counts as new enough
+if [ "$ARMHF" = yes ]; then
+  set -- $(/lib/ld-linux-armhf.so.3 --version 2>/dev/null | sed -n '1s/.*version \([0-9][0-9]*\)\.\([0-9][0-9]*\).*/\1 \2/p')
+  [ -n "$2" ] && { [ "$1" -lt 2 ] || { [ "$1" = 2 ] && [ "$2" -lt 35 ]; }; } && ARMHF="glibc $1.$2"
+  set --
+fi
 if [ "$HK_ROUTE" = 64 ]; then ROUTE_WHY="HK_ROUTE=64"
 elif [ -f "$GAMEDIR/.setup_done" ] || [ -d "$GAMEDIR/gamedata/.setup" ]; then HK_ROUTE=32; ROUTE_WHY="the 32-bit build is there"
 elif [ -f "$GAMEDIR/.setup_done64" ] || [ -d "$GAMEDIR/gamedata/.setup64" ]; then HK_ROUTE=64; ROUTE_WHY="the 64-bit build is there"
 elif [ "$ARMHF" = yes ]; then HK_ROUTE=32; ROUTE_WHY="32-bit libraries found"
-else HK_ROUTE=64; ROUTE_WHY="no 32-bit libraries"; fi
+elif [ "$ARMHF" = no ]; then HK_ROUTE=64; ROUTE_WHY="no 32-bit libraries"
+else HK_ROUTE=64; ROUTE_WHY="32-bit libraries too old for ua_host, which needs glibc 2.35"; fi
 echo "$HK_ROUTE-bit build ($ROUTE_WHY; 32-bit libraries: $ARMHF)"
 if [ "$HK_ROUTE" = 32 ] && [ "$ARMHF" = no ]; then
   pm_message "The 32-bit build is set up, but this system's 32-bit libraries are missing right now (/lib/ld-linux-armhf.so.3). Restart the handheld and launch again; please send ports/hollowknight/log.txt if it stays."
