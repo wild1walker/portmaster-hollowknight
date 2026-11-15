@@ -55,6 +55,10 @@ The picture fills 4:3 (640x480) and 3:2 (720x480) screens: the game's own rule f
 (the width of 16:9, a little more above and below) carried down to them, instead of black bars. To
 keep the bars, put `bars` in `aspect.txt` (the setup asks; `fill` fills the screen again).
 
+A screen mounted sideways in the handheld (the RG28XX's) gets the picture turned onto it by the GPU,
+the way PortMaster says the screen is turned. Should it come out upside down, add
+`export UA_ROTATE=90` at the top of `port.env` (`UA_ROTATE=0` turns nothing).
+
 On every handheld the port gives a little of the picture for speed, the game play never: no
 background blur, the game's world drawn smaller and scaled up (540x360, 480x360 on 4:3 screens,
 480x480 on square ones; the HUD, inventory, map and text at the screen's own size), the game's own
