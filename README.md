@@ -2,7 +2,7 @@
 
 A port of **Hollow Knight** to Linux handhelds with [PortMaster](https://portmaster.games/).
 
-> **Latest test release: 2026.11.16.3** ([Releases](https://github.com/wild1walker/portmaster-hollowknight/releases)).
+> **Latest test release: 2026.11.16.4** ([Releases](https://github.com/wild1walker/portmaster-hollowknight/releases)).
 > Tested on an Anbernic RG34XX-SP (Knulli and muOS) and a BattleXP G350 (dArkOS, the RK3326 chip of
 > the R36S family). The setup that converts your copy has run end to end on the RG34XX-SP with
 > Knulli; the other two ran a copy converted there. Knifethrower reports it playable on an
