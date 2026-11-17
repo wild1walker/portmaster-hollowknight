@@ -101,7 +101,7 @@ mode = "on"
 # docs/android-data.md); data_path = true (files read or written at Application.dataPath);
 # name = the APK's, package (keep it: it names the PlayerPrefs file); args = more options
 [android_data]
-asmpatch = ["auto", "hk-blur", "hk-aspect", "hk-pad-letters", "hk-render-size", "hk-unload"]      # the default patches, the blur reduction ASMPATCH_HK_BLUR reads, the screen fit ASMPATCH_HK_ASPECT reads, the prompts' letters UA_PAD_LETTERS reads, the world's render size ASMPATCH_HK_RENDER_SIZE reads, the room-change unload ASMPATCH_HK_UNLOAD reads (tools/asmpatch)
+asmpatch = ["auto", "hk-blur", "hk-aspect", "hk-pad-letters", "hk-render-size", "hk-unload", "hk-text"]      # the default patches, the blur reduction ASMPATCH_HK_BLUR reads, the screen fit ASMPATCH_HK_ASPECT reads, the prompts' letters UA_PAD_LETTERS reads, the world's render size ASMPATCH_HK_RENDER_SIZE reads, the room-change unload ASMPATCH_HK_UNLOAD reads, the text size ASMPATCH_HK_TEXT reads (tools/asmpatch)
 video_shader = true
 swappy = "off"
 streaming_assets = "both"
@@ -235,6 +235,16 @@ UA_UNLOAD_ASSETS = "chinese_body Atlas|chinese_trad_body Atlas|chinese_body_bold
 # down by 122 MB on the RG34XX-SP). Only when memory is short: that room change's load takes about a second longer.
 # Every handheld; the update step adds the patch to games set up by earlier releases. "" turns it off
 ASMPATCH_HK_UNLOAD = "150"
+# The words readable on a small screen: the game lays its text out for 1920x1080, and at 720x480 the item, charm
+# and journal descriptions come out about 13 pixels a line (letters 5 pixels tall without ascenders), the dialogue
+# 17. asmpatch's hk-text lets the body text (descriptions, dialogue, journal, map labels, prompts; not the titles,
+# counters or menus) grow up to as big as the game draws it on a 1024-wide screen: 1.42x at 720x480, 1.6x at
+# 640x480, 1.2x at 854x480, nothing from 1024x576 up. Each text grows only as far as it still fits its own box
+# (and stays above the inventory's frame, the charms' Equip prompt, the journal's divider): no text runs out of
+# its place, the dialogue keeps the game's pages, nothing gets smaller. RG34XX-SP: 59.6 fps in a conversation as
+# without. A number (e.g. 1.25) caps it there; "" is the game's size. Games set up by earlier releases get the
+# patch from the update step
+ASMPATCH_HK_TEXT = "auto"
 
 # The Low picture, on every handheld: the picture gives a little, the game play nothing (portmaster-unity
 # docs/porting.md "The Low picture at launch"). The setup offers no other picture (players who chose a

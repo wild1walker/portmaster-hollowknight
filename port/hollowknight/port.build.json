@@ -112,7 +112,8 @@
     "hk-aspect",
     "hk-pad-letters",
     "hk-render-size",
-    "hk-unload"
+    "hk-unload",
+    "hk-text"
    ],
    "video_shader": true,
    "swappy": "off",
@@ -144,7 +145,8 @@
    "UA_AUDIO_RATE": "24000",
    "UA_UNITY_ARGS": "-job-worker-count 1",
    "UA_UNLOAD_ASSETS": "chinese_body Atlas|chinese_trad_body Atlas|chinese_body_bold Atlas|japanese_title Atlas|japanese_body Atlas|korean_body Atlas|japanese_body_bold Atlas|russian_body Atlas|russian_title Atlas|russian_body_fallback Atlas|russian_title_fallback Atlas|NotoSerifCJKsc-Regular|NotoSerifTC-Medium",
-   "ASMPATCH_HK_UNLOAD": "150"
+   "ASMPATCH_HK_UNLOAD": "150",
+   "ASMPATCH_HK_TEXT": "auto"
   },
   "runtime_low": {
    "ASMPATCH_HK_BLUR": "off",

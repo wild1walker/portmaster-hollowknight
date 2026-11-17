@@ -79,6 +79,24 @@ export UA_RENDER_SIZE= UA_RENDER_PIXELS=   # draw at the screen's own size
 export UA_AUDIO_RATE=          # mix the sound at 48 kHz
 ```
 
+**Text size.** Hollow Knight lays its words out for a 1920x1080 screen, so on a 720x480 handheld the item,
+charm and journal descriptions come out about 13 pixels a line and the dialogue 17: hard to read on a 3.5"
+screen, harder on a 2.8" one. The port lets the game's body text (descriptions, dialogue, the journal, the
+map's labels, prompts; not titles, counters or the menus) grow to about the size the game draws it on a
+1024-wide screen: 1.42x at 720x480, 1.6x at 640x480, 1.2x at 854x480, nothing from 1024x576 up
+(asmpatch's `hk-text`, `ASMPATCH_HK_TEXT=auto` in `port.env`). Each text grows only as far as it still
+fits its own box, as the game laid it out, and stays above the inventory's frame, the charms' Equip prompt
+and the journal's divider: nothing runs out of its place, a conversation keeps the game's pages, nothing
+gets smaller than the game's size. On an RG34XX-SP a conversation runs at 59.6 fps, as without. A number
+caps the growth there, an empty value keeps the game's size:
+
+```bash
+export ASMPATCH_HK_TEXT=1.25   # at most 1.25x
+export ASMPATCH_HK_TEXT=       # the game's text size
+```
+
+A game set up by an earlier release gets the patch from the update step on its first launch after the update.
+
 **Memory.** Hollow Knight keeps the text of all its languages loaded, whatever language you play in: the
 Chinese, Japanese, Korean and Russian font pictures (uncompressed) and the Chinese font files, about 90 MB,
 and loads them again with every room. The setup leaves them out of the rooms' load lists, and the port gives
