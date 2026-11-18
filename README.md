@@ -91,10 +91,10 @@ shows each frame, from threads of its own, so the game goes on with the next fra
 the same order, the same picture (`UA_PRESENT_THREAD` and `UA_GL_REC` in `port.env`). Greenpath on
 the G350: 17.5 -> 30 - 33 fps. Nothing changes on the RG34XX-SP, which has no use for them.
 
-**Updating:** install a newer release over the old one, as you installed the first. Its first launch
-brings the game you already have up to date in place (newer code patches such as the screen fill,
-the smaller cinematics): from about a minute to a few minutes, nothing downloaded, your saves
-untouched.
+**Updating:** install a newer release over the old one, as you installed the first: the game you
+already have keeps running as it was set up, saves untouched. What a newer setup does (code patches,
+smaller cinematics) reaches it when it is set up again: put your copy back in `ports/hollowknight/gamedata/`,
+delete `.setup_done` (`.setup_done64` for the 64-bit build) and launch.
 
 ## The picture
 
@@ -173,7 +173,7 @@ export ASMPATCH_HK_TEXT=1.25   # at most 1.25x
 export ASMPATCH_HK_TEXT=       # the game's text size
 ```
 
-A game set up by an earlier release gets the patch from the update step on its first launch after the update.
+A game set up by an earlier release gets the patch when it is set up again.
 
 **Memory.** Hollow Knight keeps the text of all its languages loaded, whatever language you play in: the
 Chinese, Japanese, Korean and Russian font pictures (uncompressed) and the Chinese font files, about 90 MB,
@@ -196,7 +196,7 @@ the Crossroads and Greenpath took the game from 531 to 630 MB on an RG34XX-SP an
 off). On the same 46 rooms it did so at 5 of 54 room changes, each of those loads 0.4 - 1 s longer (one
 3.9 s, in Greenpath), and the handheld kept 143 - 155 MB free instead of falling to 93; the same frame
 rate, the same game. With more than 150 MB free nothing changes. A game set up by an earlier release gets
-the patch from the update step on its first launch after the update.
+the patch when it is set up again.
 
 One more reduction is there to try and is not on by itself, because it takes scenery away: with
 this line at the top of `port.env` the far background (what the game shows blurred: far walls,
@@ -253,8 +253,8 @@ Please don't attach game files, and don't ask for them. Logs from the port are f
 
 The port is made with [portmaster-unity](https://github.com/wild1walker/portmaster-unity):
 `port/hollowknight/port.toml` holds its settings, and everything else in `port/hollowknight/` was
-first generated from it by `pmunity port new`. The launcher (`Hollow Knight.sh`), `setup/patchscript64`
-and `setup/update` are kept by hand since; regenerate into a scratch folder and copy only `port.env`,
+first generated from it by `pmunity port new`. The launcher (`Hollow Knight.sh`) and `setup/patchscript64`
+are kept by hand since; regenerate into a scratch folder and copy only `port.env`,
 `setup/convert.json` and `port.build.json` back:
 
 ```bash

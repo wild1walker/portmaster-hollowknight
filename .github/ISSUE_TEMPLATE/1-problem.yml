@@ -125,7 +125,7 @@ body:
       label: Logs
       description: |
         Drag and drop these files from `ports/hollowknight/` into this box:
-        - `log.txt`: the last time the game ran (the time before that: `log.prev.txt`)
+        - `log.txt`: the last time the game ran
         - `patchlog.txt`: the setup
 
         On Knulli they are in `roms/ports/hollowknight/` on the card with your games, or

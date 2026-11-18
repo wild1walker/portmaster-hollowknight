@@ -233,7 +233,7 @@ UA_UNLOAD_ASSETS = "chinese_body Atlas|chinese_trad_body Atlas|chinese_body_bold
 # hk-unload; the game itself does so only after a death or past 2.1 - 2.5 GB of Unity's memory, which a 1 GB handheld
 # never reaches, so every room since the last death stayed loaded: 46 rooms took the game 531 -> 630 MB and MemAvailable
 # down by 122 MB on the RG34XX-SP). Only when memory is short: that room change's load takes about a second longer.
-# Every handheld; the update step adds the patch to games set up by earlier releases. "" turns it off
+# Every handheld. "" turns it off
 ASMPATCH_HK_UNLOAD = "150"
 # The words readable on a small screen: the game lays its text out for 1920x1080, and at 720x480 the item, charm
 # and journal descriptions come out about 13 pixels a line (letters 5 pixels tall without ascenders), the dialogue
@@ -242,8 +242,7 @@ ASMPATCH_HK_UNLOAD = "150"
 # 640x480, 1.2x at 854x480, nothing from 1024x576 up. Each text grows only as far as it still fits its own box
 # (and stays above the inventory's frame, the charms' Equip prompt, the journal's divider): no text runs out of
 # its place, the dialogue keeps the game's pages, nothing gets smaller. RG34XX-SP: 59.6 fps in a conversation as
-# without. A number (e.g. 1.25) caps it there; "" is the game's size. Games set up by earlier releases get the
-# patch from the update step
+# without. A number (e.g. 1.25) caps it there; "" is the game's size.
 ASMPATCH_HK_TEXT = "auto"
 
 # The Low picture, on every handheld: the picture gives a little, the game play nothing (portmaster-unity

@@ -9,13 +9,12 @@ game on the handheld from your copy (one to three hours, once). Unity's Android 
 The game runs on Unity's own Android player, through
 [portmaster-unity](https://github.com/wild1walker/portmaster-unity)'s `ua_host` (its android
 route). Saves and settings are in `ports/hollowknight/data/`; the game's options are in
-`ports/hollowknight/port.env`. Tested on an Anbernic RG34XX-SP (Knulli, muOS) and a BattleXP G350
-(dArkOS).
+`ports/hollowknight/port.env`. Tested on AmberELEC, dArkOS, muOS, Knulli and
+ROCKNIX.
 
 The picture fills 4:3 and 3:2 screens (the game's own rule for 16:10 carried down to them); the setup
 asks, and `bars` in `aspect.txt` keeps the game's 16:9 with bars. On every handheld the picture gives a
-little for speed, the game play never (the port's README says what). A newer release installed over this one updates the game in place on its first launch
-(about a minute; saves untouched).
+little for speed, the game play never ([what and why](https://github.com/wild1walker/portmaster-hollowknight)).
 
 ## Controls
 

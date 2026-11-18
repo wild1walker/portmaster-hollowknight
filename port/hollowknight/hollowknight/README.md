@@ -44,10 +44,10 @@ Saves and settings: `ports/hollowknight/data/`. PortMaster's exit hotkey quits. 
 (the button letters, the picture, ...) are in `ports/hollowknight/port.env`; `log.txt` is the last
 run's log.
 
-**Updating:** install a newer release over this one, as you installed it. Its first launch brings
-the game you already have up to date in place (newer code patches, smaller cinematics on handhelds
-without a video engine the port can use): from about a minute to a few minutes, nothing downloaded, your
-saves untouched.
+**Updating:** install a newer release over this one, as you installed it: the game you
+already have keeps running as it was set up, saves untouched. What a newer setup does (code patches,
+smaller cinematics) reaches it when it is set up again: put your copy back in `ports/hollowknight/gamedata/`,
+delete `.setup_done` (`.setup_done64` for the 64-bit build) and launch.
 
 ## The picture
 
@@ -96,7 +96,7 @@ export ASMPATCH_HK_TEXT=1.25   # at most 1.25x
 export ASMPATCH_HK_TEXT=       # the game's text size
 ```
 
-A game set up by an earlier release gets the patch from the update step on its first launch after the update.
+A game set up by an earlier release gets the patch when it is set up again.
 
 **Memory.** Hollow Knight keeps the text of all its languages loaded, whatever language you play in: the
 Chinese, Japanese, Korean and Russian font pictures (uncompressed) and the Chinese font files, about 90 MB,
@@ -119,7 +119,7 @@ the Crossroads and Greenpath took the game from 531 to 630 MB on an RG34XX-SP an
 off). On the same 46 rooms it did so at 5 of 54 room changes, each of those loads 0.4 - 1 s longer (one
 3.9 s, in Greenpath), and the handheld kept 143 - 155 MB free instead of falling to 93; the same frame
 rate, the same game. With more than 150 MB free nothing changes. A game set up by an earlier release gets
-the patch from the update step on its first launch after the update.
+the patch when it is set up again.
 
 One more reduction is there to try and is not on by itself, because it takes scenery away: with
 this line at the top of `port.env` the far background (what the game shows blurred: far walls,

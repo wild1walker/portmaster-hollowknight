@@ -12,7 +12,6 @@ hollowknight/setup/convert.json
 hollowknight/setup/patchscript
 hollowknight/setup/questions.lua
 hollowknight/setup/setup.env
-hollowknight/setup/update
 package.sh
 port.build.json
 testing_thread.txt
