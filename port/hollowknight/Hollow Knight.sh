@@ -172,6 +172,14 @@ grep -qs hk-render-size "$GAMEDIR/$READY" || export UA_RENDER_SIZE_VAR=
 # game whose setup left them out of the scenes' preload lists (pmu's lazy step; the mark says convert=lazy), since
 # with the lists as they were every room would load them again
 grep -qs "convert=lazy" "$GAMEDIR/$READY" || export UA_UNLOAD_ASSETS=
+# ... and not when the game shows one of those languages: the player's saved language (M2H_lastLanguage in the
+# game's PlayerPrefs) is Japanese, Korean, Chinese or Russian, or none is saved yet (the first launch asks): Unity
+# does not load an atlas given back again for a text that already uses it (the start screen's notice showed white
+# blocks in Korean), so every atlas is kept then
+case "$(awk -F'\t' '$1 == "s" && $2 == "M2H_lastLanguage" { print $3 }' \
+         "$GAME/data/shared_prefs/com.pmunity.hollowknight.v2.playerprefs.prefs" 2>/dev/null | tail -n 1)" in
+  ""|JA|KO|ZH|ZH_TW|RU) export UA_UNLOAD_ASSETS= ;;
+esac
 [ -f "$GAMEDIR/port.env" ] && source "$GAMEDIR/port.env"
 [ -f "$GAMEDIR/answers.env" ] && source "$GAMEDIR/answers.env"
 # handhelds without analog sticks whose pad mapping still names a left stick: where PortMaster says there are

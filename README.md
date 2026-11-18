@@ -164,7 +164,8 @@ map's labels, prompts; not titles, counters or the menus) grow to about the size
 (asmpatch's `hk-text`, `ASMPATCH_HK_TEXT=auto` in `port.env`). Each text grows only as far as it still
 fits its own box, as the game laid it out, and stays above the inventory's frame, the charms' Equip prompt
 and the journal's divider: nothing runs out of its place, a conversation keeps the game's pages, nothing
-gets smaller than the game's size. On an RG34XX-SP a conversation runs at 59.6 fps, as without. A number
+gets smaller than the game's size. A text outside the inventory and the dialogue (the start screen's notice,
+the prompts over the world) also stays inside the screen's sides on a 4:3 screen. On an RG34XX-SP a conversation runs at 59.6 fps, as without. A number
 caps the growth there, an empty value keeps the game's size:
 
 ```bash
@@ -180,8 +181,10 @@ and loads them again with every room. The setup leaves them out of the rooms' lo
 back what the game loaded at its start (Unity loads one again whenever it is shown): in City of Tears on an
 RG34XX-SP the game holds about 110 MB less (593 -> 480 MB) and the handheld kept 421 MB free instead of 308; on a
 BattleXP G350 (dArkOS) 617 -> 492 MB and 353 MB free instead of 231.
-The picture is the same in every language; a game in Chinese, Japanese, Korean or Russian loads its own
-language's text again at the title. A game set up by an earlier release keeps the old way until it is set
+The picture is the same in every language. A game saved in Chinese, Japanese, Korean or Russian (or with no
+language chosen yet) keeps all of it loaded: Unity did not always load a font picture again for text already
+on screen (the start screen's notice showed white blocks in Korean). After switching to one of those languages
+in the game's options, start the game again. A game set up by an earlier release keeps the old way until it is set
 up again (the launcher reads `convert=lazy` in `.setup_done`).
 
 Each room you visit also stays in memory: Hollow Knight gives back what earlier rooms loaded only after a
