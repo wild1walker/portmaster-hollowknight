@@ -63,8 +63,8 @@ On every handheld the port gives a little of the picture for speed, the game pla
 background blur, the game's world drawn smaller and scaled up (540x360, 480x360 on 4:3 screens,
 480x480 on square ones; the HUD, inventory, map and text at the screen's own size), the game's own
 video options at their lowest (until you change them in its Options, Video), the sound mixed at
-24 kHz, the textures smaller and more compressed (0.375 of their size, ASTC 6x6; the text at full
-size), and the cinematics too where the handheld's video engine cannot play them (it does on
+24 kHz, the textures smaller and more compressed (0.375 of their size, ASTC 6x6; the text and the light
+around the Knight at full size), and the cinematics too where the handheld's video engine cannot play them (it does on
 Allwinner handhelds with Knulli or muOS and RK3326 ones with dArkOS, through the port's libpmhwdec; on
 dArkOS the launcher opens the decoder's two device files to the game while it runs and puts them back
 as they were when it ends). Until 2026.11.12 most of these were only for handhelds with 1 GB of

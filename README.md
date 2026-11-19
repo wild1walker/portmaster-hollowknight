@@ -115,11 +115,13 @@ them (and on RK3326-type graphics drivers without the port's present thread, whi
 size), and testers saw them run slower than 1 GB handhelds. Every handheld now gets what the port is
 tested with.
 
-The setup also converts the textures at 0.375 of their size, the text at full size: Hallownest's art,
+The setup also converts the textures at 0.375 of their size, the text and the light around the Knight at
+full size: Hallownest's art,
 made for 1080p screens, still has about a texel for each pixel of the game's 540x360 picture. It packs
 them in larger compressed blocks (ASTC 6x6 instead of 4x4: less than half the memory, a little less
 detail; City of Tears 623 -> 588 MB on an RG34XX-SP with Knulli, the same frame rate; testers found
-8x8 visibly blocky). On handhelds with 1 GB of memory or less it keeps at most 16 MB of a scene's
+8x8 visibly blocky). The light around the Knight is a small soft picture (128x121) drawn many times its
+size: smaller and in 6x6 blocks its edge showed the blocks, so from 2026.11.19 it keeps its size (4x4, 15 KB). On handhelds with 1 GB of memory or less it keeps at most 16 MB of a scene's
 sounds decoded in memory (36 MB on bigger handhelds, a little less work for their CPU); the longer
 ones are decoded as they play. Handhelds with dArkOS keep EmulationStation in
 memory while the game runs (up to about 126 MB), and with no swap the game ran a 1 GB handheld out of

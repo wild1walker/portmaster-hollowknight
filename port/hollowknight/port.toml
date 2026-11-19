@@ -72,14 +72,16 @@ lowmem_pcm_budget_mb = 16
 # textures at 0.375 of their size on every handheld (until 2026.11.12 only where it had 1 GB of RAM or less,
 # lowmem_scale; full size elsewhere): the game draws its world at 540x360 (480x360 on 4:3) everywhere, and
 # Hallownest's art, made for 1080p, still has about a texel for each pixel of it (405 lines for 360). Text atlases
-# (SDF, tmpro, Font Texture) stay at full size. (Side by side at 540x360 the same picture.) The full textures back:
+# (SDF, tmpro, Font Texture) stay at full size, and so does the light around the Knight (light_effect_v02, 128x121,
+# drawn many times its size: at 48x45 in 6x6 blocks its soft edge showed the blocks; full size in 4x4 is within 3
+# levels of the original on screen, 15 KB). (Side by side at 540x360 the same picture.) The full textures back:
 # scale = 1.0 and block = [4, 4], then run the setup again.
 # ASTC blocks of 6x6 texels instead of 4x4: 3.56 bits a texel instead of 8, the textures' memory (in the GPU's share
 # of the RAM) and the GPU's texture reads less than half. Testers found 8x8 visibly blocky and 6x6 good enough; text
 # atlases keep 4x4 (sharp_block).
 [convert.textures]
 scale = 0.375
-sharp_names = "SDF|tmpro|Font Texture"
+sharp_names = "SDF|tmpro|Font Texture|light_effect"
 block = [6, 6]
 quality = "medium"
 mips = "keep"
