@@ -1,0 +1,22 @@
+# build output (dotnet's obj/ holds local paths)
+out/
+obj/
+bin/
+__pycache__/
+*.pyc
+# never commit game files, Unity's player, logs or the rig's screenshots
+*.apk
+*.obb
+*.so
+*.dll
+*.assets
+*.resS
+*.resource
+*.bnk
+*_Data/
+*.app/
+*.log
+*.ppm
+shots/
+.DS_Store
+._*

@@ -21,28 +21,18 @@ GAMEDIR="/$directory/ports/hollowknight"
 cd "$GAMEDIR" || exit 1
 > "$GAMEDIR/log.txt" && exec > >(tee "$GAMEDIR/log.txt") 2>&1
 
-# Unity's 32-bit player (ua_host) needs 32-bit libraries with glibc 2.35 or newer; elsewhere the 64-bit
-# build (ua_host64, the game in arm64/). A build that is set up, or being set up, keeps its route.
-ARMHF=no
-if [ -e /lib/ld-linux-armhf.so.3 ]; then
-  ARMHF=yes
-  read -r major minor < <(/lib/ld-linux-armhf.so.3 --version 2>/dev/null | sed -n '1s/.*version \([0-9][0-9]*\)\.\([0-9][0-9]*\).*/\1 \2/p')
-  [ -n "$minor" ] && [ $((major * 1000 + minor)) -lt 2035 ] && ARMHF="glibc $major.$minor"
+# The game runs on Unity's 64-bit (arm64) player, the game's own code on Unity's Mono for aarch64 (the release
+# ships nothing for armhf); its build is in arm64/ (.setup_done64), as when releases had a 32-bit build beside it.
+echo "$CFW_NAME, $DEVICE_NAME, ${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}, $(uname -m)"
+if [ "$(uname -m)" != aarch64 ]; then
+  pm_message "Hollow Knight needs a 64-bit ARM (aarch64) system (this one: $(uname -m))."
+  sleep 8
+  pm_finish
+  exit 1
 fi
-[ "$HK_ROUTE" = 64 ] || grep -Eqs '^[[:space:]]*(export[[:space:]]+)?HK_ROUTE=["'"'"']?64' port.env && HK_ROUTE=64
-if [ "$HK_ROUTE" = 64 ]; then :
-elif [ -f .setup_done ]; then HK_ROUTE=32
-elif [ -f .setup_done64 ]; then HK_ROUTE=64
-elif [ -d gamedata/.setup ]; then HK_ROUTE=32
-elif [ -d gamedata/.setup64 ]; then HK_ROUTE=64
-elif [ "$ARMHF" = yes ]; then HK_ROUTE=32
-else HK_ROUTE=64; fi
-echo "$CFW_NAME, $DEVICE_NAME, ${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}: $HK_ROUTE-bit build (32-bit libraries: $ARMHF)"
-if [ "$HK_ROUTE" = 64 ]; then
-  SETUP=patchscript64; READY=.setup_done64; HOST=ua_host64; GAME="$GAMEDIR/arm64"
-else
-  SETUP=patchscript; READY=.setup_done; HOST=ua_host; GAME="$GAMEDIR"
-fi
+READY=.setup_done64; GAME="$GAMEDIR/arm64"
+# what an earlier release with both builds left of its own: its 64-bit runtime and decoder by their old names
+rm -rf ua_host64 pmhwdec64
 
 # Rockchip vendor kernels (dArkOS, ArkOS) keep the video decoder root-only: open it to the video group
 # for the game's videos (pmhwdec/) and put it back when the game ends.
@@ -55,15 +45,20 @@ trap 'for e in "${nodes[@]}"; do o=${e#*:}; $ESUDO chown "${o%:*}" "${e%%:*}"; $
 
 # First launch: the setup builds the game from the player's copy in gamedata/ (PortMaster's patcher)
 if [ ! -f "$READY" ]; then
-  if [ -f "setup/$SETUP" ]; then
+  if [ -f setup/patchscript ]; then
     export GAMEDIR DEVICE_ARCH controlfolder
-    export PATCHER_FILE="$GAMEDIR/setup/$SETUP" PATCHER_GAME="Hollow Knight" PATCHER_TIME="one to three hours, once"
+    export PATCHER_FILE="$GAMEDIR/setup/patchscript" PATCHER_GAME="Hollow Knight" PATCHER_TIME="one to three hours, once"
     export PATCHER_QUESTIONS="$GAMEDIR/setup/questions.lua"
     chmod +x "$PATCHER_FILE"
     source "$controlfolder/utils/patcher.txt"
     cd "$GAMEDIR"
   fi
-  if [ ! -f "$READY" ]; then
+  if [ ! -f "$READY" ] && [ -f .setup_done ]; then   # (an earlier release's 32-bit build: this one is 64-bit only)
+    pm_message "This Hollow Knight release runs the 64-bit build only, which is set up once from your copy of the game: put GOG's Linux installer, or the game folder from GOG or Steam, in ports/hollowknight/gamedata again and launch again. Your saves are kept (log: ports/hollowknight/patchlog.txt)."
+    sleep 10
+    pm_finish
+    exit 1
+  elif [ ! -f "$READY" ]; then
     pm_message "Hollow Knight is not set up yet. Put GOG's Linux installer, or the game folder from GOG or Steam, in ports/hollowknight/gamedata and launch again; a setup that stopped goes on from there (log: ports/hollowknight/patchlog.txt)."
     sleep 8
     pm_finish
@@ -71,9 +66,16 @@ if [ ! -f "$READY" ]; then
   fi
 fi
 rm -rf setup donor gamedata/.setup gamedata/.setup64   # the setup's files, not needed to play
+# the saves of an earlier release's 32-bit build (data/: files/, shared_prefs/, external/; the same game
+# package, so the same names), once, where the 64-bit build has none yet
+if [ -d data ] && [ ! -d arm64/data ]; then
+  mkdir -p arm64/data
+  for d in files shared_prefs external; do
+    [ -d "data/$d" ] && cp -a "data/$d" arm64/data/ && echo "the 32-bit build's saves: data/$d copied to arm64/data/"
+  done
+fi
 
 export SDL_GAMECONTROLLERCONFIG="${SDL_GAMECONTROLLERCONFIG:-$sdl_controllerconfig}"
-[ "$HK_ROUTE" = 64 ] && export UM_PMHWDEC=pmhwdec64/libpmhwdec.so.1
 export UA_FPS=10   # a frame-rate line every 10 s in log.txt
 # the setup's answers (aspect.txt: fill or bars; buttons.txt: nintendo or xbox prompts)
 case "$(cat aspect.txt 2>/dev/null)" in fill) export ASMPATCH_HK_ASPECT=fill ;; bars) export ASMPATCH_HK_ASPECT= ;; esac
@@ -93,15 +95,11 @@ esac
 if [ "${ANALOG_STICKS:-2}" = 0 ]; then
   case "${UA_DPAD_STICK:-}" in auto|auto,both) export UA_DPAD_STICK=${UA_DPAD_STICK/auto/1} ;; esac
 fi
-chmod +x "$HOST" pmhwdec/pmhwdec-cedard pmhwdec64/pmhwdec-cedard 2>/dev/null
+chmod +x ua_host pmhwdec/pmhwdec-cedard 2>/dev/null
 
-$GPTOKEYB2 "$HOST" -c "$GAMEDIR/hollowknight.ini" &   # exit hotkey only: the game reads the pad itself
-pm_platform_helper "$GAMEDIR/$HOST"
+$GPTOKEYB2 ua_host -c "$GAMEDIR/hollowknight.ini" &   # exit hotkey only: the game reads the pad itself
+pm_platform_helper "$GAMEDIR/ua_host"
 
-if [ "$HK_ROUTE" = 64 ]; then
-  ./ua_host64 "$GAME"
-else
-  LD_LIBRARY_PATH=/lib32:/usr/lib32${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH} ./ua_host "$GAME"
-fi
+./ua_host "$GAME"
 
 pm_finish

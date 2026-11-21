@@ -4,7 +4,7 @@
   "port": {
    "name": "hollowknight",
    "title": "Hollow Knight",
-   "route": "android",
+   "route": "mono-arm64",
    "porter": [
     "wild1walker"
    ],
@@ -33,10 +33,11 @@
    "reqs": [],
    "setup_time": "one to three hours",
    "exp": false,
-   "ready_marker": ".setup_done",
+   "ready_marker": ".setup_done64",
    "thanks": "Thanks to [Team Cherry](https://www.teamcherry.com.au/) for creating Hollow Knight and its hand-drawn kingdom of Hallownest.",
    "screenshot": "screenshot.png",
-   "cover": "cover.png"
+   "cover": "cover.png",
+   "aarch64_only": true
   },
   "game": {
    "data": "Hollow Knight_Data",
@@ -54,17 +55,30 @@
    "url": "",
    "description": ""
   },
-  "controls": {},
+  "controls": {
+   "D-pad": "Move; with up or down, the nail and spells go that way",
+   "B (bottom)": "Jump; confirm in menus",
+   "Y (left)": "Attack with the nail",
+   "A (right)": "Focus (hold) and cast spells; back in menus",
+   "X (top)": "Dream Nail",
+   "R2": "Dash",
+   "L2": "Crystal Dash",
+   "L1": "Quick map",
+   "R1": "Quick cast",
+   "Select": "Inventory",
+   "Start": "Pause",
+   "Select + Start": "Quit"
+  },
   "player": {
-   "backend": "mono",
-   "abi": "armeabi-v7a",
+   "backend": "il2cpp",
+   "abi": "arm64-v8a",
    "sha256": {
-    "libmain.so": "f9ea09a232a33b4c971bfcb45053fc5ef4c7ccc5999014d7bf7f46bae0bd5a31",
-    "libunity.so": "4ac0f68ffd66e0af2470544b75500ccda60e1d3c00b172e870690bf75000007d"
+    "libmain.so": "74239fee829c3be83e5161f6aaf89b22c8ea6c8794b1e2c042274dcc9a02711a",
+    "libunity.so": "d42a6805f34630801f4056728d6f0e67df1028a2aa6f93c4e2e459f544ec914d"
    },
    "donors": [
-    "donor-6000.0.61f1-mono-armv7.apk",
-    "donor-6000.0.61f1-il2cpp-arm64.apk"
+    "donor-6000.0.61f1-il2cpp-arm64.apk",
+    "donor-6000.0.61f1-mono-armv7.apk"
    ]
   },
   "convert": {
@@ -98,11 +112,11 @@
     "quality": "medium",
     "mips": "keep"
    },
-   "video": {
-    "mode": "on"
-   },
    "lazy": {
     "names": "chinese_body Atlas|chinese_trad_body Atlas|chinese_body_bold Atlas|japanese_title Atlas|japanese_body Atlas|korean_body Atlas|japanese_body_bold Atlas|russian_body Atlas|russian_title Atlas|russian_body_fallback Atlas|russian_title_fallback Atlas|NotoSerifCJKsc-Regular|NotoSerifTC-Medium"
+   },
+   "video": {
+    "mode": "on"
    }
   },
   "android_data": {
@@ -125,6 +139,9 @@
    "args": []
   },
   "wwise": {
+   "banks": ""
+  },
+  "fmod": {
    "banks": ""
   },
   "runtime": {
@@ -211,42 +228,48 @@
    "hooks": {},
    "extra": [
     "flipbooks.txt"
+   ],
+   "own": [
+    "Hollow Knight.sh",
+    "README.md",
+    "testing_thread.txt",
+    "hollowknight/README.md",
+    "hollowknight/port.json",
+    "hollowknight/setup.txt",
+    "hollowknight/gamedata/PUT_GAME_FILES_HERE.txt",
+    "hollowknight/setup/patchscript",
+    "hollowknight/setup/questions.lua"
    ]
   },
   "build": {
    "commands": [
-    "\"$PMUNITY/tools/pmhwdec/build.sh\" \"$BUILD/pmhwdec\"",
-    "\"$PORT_SRC/build64.sh\" \"$BUILD/arm64\""
+    "MPP_ARM64=1 \"$PMUNITY/tools/pmhwdec/build.sh\" \"$BUILD/pmhwdec\""
    ],
    "outputs": {
-    "pmhwdec/libpmhwdec.so.1": "{build}/pmhwdec/armhf/libpmhwdec.so.1",
+    "pmhwdec/libpmhwdec.so.1": "{build}/pmhwdec/arm64/libpmhwdec.so.1",
     "pmhwdec/pmhwdec-cedard": "{build}/pmhwdec/aarch64/pmhwdec-cedard",
-    "pmhwdec/pmhwdec-test": "{build}/pmhwdec/armhf/pmhwdec-test",
-    "pmhwdec/librockchip_mpp.so": "{build}/pmhwdec/armhf/librockchip_mpp.so",
-    "pmhwdec64/libpmhwdec.so.1": "{build}/pmhwdec/arm64/libpmhwdec.so.1",
-    "pmhwdec64/pmhwdec-cedard": "{build}/pmhwdec/aarch64/pmhwdec-cedard",
-    "pmhwdec64/pmhwdec-test": "{build}/pmhwdec/arm64/pmhwdec-test",
-    "ua_host64": "{build}/arm64/ua_host64",
-    "setup/mono64/6000.0/libil2cpp.so": "{build}/arm64/mono64/libil2cpp.so",
-    "setup/mono64/6000.0/libmonobdwgc-2.0.so": "{build}/arm64/mono64/libmonobdwgc-2.0.so",
-    "setup/mono64/6000.0/libMonoPosixHelper.so": "{build}/arm64/mono64/libMonoPosixHelper.so",
-    "setup/mono64/6000.0/libmono-native.so": "{build}/arm64/mono64/libmono-native.so"
+    "pmhwdec/pmhwdec-test": "{build}/pmhwdec/arm64/pmhwdec-test",
+    "pmhwdec/librockchip_mpp.so": "{build}/pmhwdec/arm64/librockchip_mpp.so"
    },
    "licenses": {
     "LICENSE.libpmhwdec.txt": "{build}/pmhwdec/src/pmhwdec/LICENSE",
     "LICENSE.pmhwdec-cedard.txt": "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhwdec-cedard",
     "LICENSE.libpmhwdec-libvpx.txt": "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt",
-    "LICENSE.mpp.txt": "{build}/pmhwdec/armhf/LICENSE.mpp.txt",
-    "LICENSE.mono-6000.0.txt": "{build}/arm64/LICENSE.mono-6000.0.txt",
-    "LICENSE.bdwgc-6000.0.txt": "{build}/arm64/LICENSE.bdwgc-6000.0.txt",
-    "LICENSE.corefx-6000.0.txt": "{build}/arm64/LICENSE.corefx-6000.0.txt"
+    "LICENSE.mpp.txt": "{build}/pmhwdec/arm64/LICENSE.mpp.txt"
    }
   }
  },
  "route": {
-  "title": "Unity's Android player (armv7, Mono), run natively by ua_host on the handheld's 32-bit userland",
+  "title": "Unity's arm64 Android player with the game's own assemblies on Unity's Mono (built for aarch64 Linux, shipped with the port), run natively by ua_host (for 64-bit systems, no IL2CPP compile)",
+  "defaults": {
+   "player": {
+    "backend": "il2cpp",
+    "abi": "arm64-v8a"
+   }
+  },
   "donors": [
-   "player"
+   "player",
+   "mono/armeabi-v7a"
   ],
   "files": {
    "@@TITLE@@.sh": "launcher.sh",
@@ -261,7 +284,8 @@
    }
   },
   "package": [
-   "ua_host",
+   "ua_host_arm64",
+   "mono64",
    "pmu?",
    "pmunity?",
    "pybundle?",
@@ -274,6 +298,7 @@
   "Hollow Knight.sh",
   "README.md",
   "hollowknight/README.md",
+  "hollowknight/flipbooks.txt",
   "hollowknight/gamedata/PUT_GAME_FILES_HERE.txt",
   "hollowknight/gameinfo.xml",
   "hollowknight/hollowknight.ini",

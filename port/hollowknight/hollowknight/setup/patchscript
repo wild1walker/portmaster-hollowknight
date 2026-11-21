@@ -1,23 +1,29 @@
 #!/bin/bash
-# First-run setup on the handheld, run by the launcher through PortMaster's patcher (made with
-# `pmunity port new`, android route): builds the game for Unity's Android player from the
-# player's own copy in ports/<port>/gamedata/:
+# Hollow Knight's setup (64-bit: the release ships nothing for armhf). Made from `pmunity port new`'s
+# mono-arm64 route, the port's own since (port.toml files.own); its work folder is gamedata/.setup64 and the
+# game goes into arm64/, as when the release had a 32-bit build beside it (until 2026.11.19), so a 64-bit
+# build set up by such a release stays as it is. It builds the game for Unity's 64-bit (arm64) IL2CPP Android
+# player, whose libil2cpp.so is the release's Mono bridge (setup/mono64: Unity's Mono built for
+# aarch64 Linux runs the game's own assemblies; docs/mono-arm64.md), from the player's own copy in
+# ports/<port>/gamedata/:
 #   1. the game: its data folder, from the folder or archive (.zip, .7z, .tar.*, macOS .pkg, GOG's
 #      Linux installer .sh: its zip is unpacked, the script never runs) put there
-#   2. Unity's Android player of the game's exact version, from the port's donor (donor/: a small
-#      game of the port's own built with that Unity version, whose APK carries the player); then
+#   2. Unity's arm64 Android player of the game's exact version with its engine modules, from the
+#      port's donors (donor/: small games of the port's own built with that Unity version, an IL2CPP
+#      one for the player, a Mono one for the engine modules); then
 #      Unity's class libraries the build lacks for it (pmunity winbcl: a Windows build of 2021.2+
-#      has Windows-only ones; a facade such as netstandard.dll), from the same Mono donor (nothing
-#      is read when the build needs none). Nothing is downloaded: no Wi-Fi
+#      has Windows-only ones; a facade such as netstandard.dll), from the Mono donor (nothing is
+#      read when the build needs none). Nothing is downloaded: no Wi-Fi
 #   3. the conversion (pmunity convert: GLES3 shaders, settings, the port's steps; a Windows
 #      build's Direct3D 11 shaders with setup/pmhlslcc)
-#   4. the APK + OBB the player reads (pmunity android-data; asmpatch when the port uses it)
-#   5. installing: the player's libraries (and only the Mono runtime the game needs), the game
+#   4. the APK + OBB the player reads (pmunity android-data --mono64: the IL2CPP player's engine
+#      modules with the game's assemblies; asmpatch when the port uses it)
+#   5. installing: the player's libraries, the Mono bridge (as libil2cpp.so) and runtime, the game
 # Settings: setup/setup.env (from port.toml). Every step can be interrupted (battery, power button):
 # the next launch continues where it stopped. Log: ports/<port>/patchlog.txt.
 # PortMaster's patcher protocol: a line "PATCH_FAIL_MSG:<text>" says why the setup failed.
-S="${GAMEDIR:?}/setup"; GD="$GAMEDIR/gamedata"; W="$GD/.setup"
-. "$S/setup.env"
+S="${GAMEDIR:?}/setup"; GD="$GAMEDIR/gamedata"; W="$GD/.setup64"; I="$GAMEDIR/arm64"
+. "$S/setup.env"      # (the mono-arm64 route's: the il2cpp arm64-v8a player and its hashes, READY=.setup_done64)
 
 exec > >(tee -a "$GAMEDIR/patchlog.txt") 2>&1
 # muOS: the setup is not idle time. With nobody at the pad muOS dims and drops to its idle CPU governor after
@@ -190,7 +196,7 @@ if [ ! -f "$W/.step_game" ]; then
   mark game
 fi
 
-# ---- 2. Unity's Android player of exactly that version, from the port's donor (donor/: small
+# ---- 2. Unity's Android player of exactly that version, from the port's donors (donor/: small
 # games of the port's own built with that Unity version by portmaster-unity's tools/donor, whose
 # APKs carry the player). The setup never downloads Unity's player.
 DONOR_DIR="$GAMEDIR/donor"
@@ -202,10 +208,11 @@ donor() {   # donor <backend> <abi>: the port's donor of Unity $V for that playe
 P="$W/player"
 if [ ! -f "$W/.step_player" ]; then
   rm -rf "$P"
-  donor "$PLAYER_BACKEND" "$PLAYER_ABI"
-  step "Unity's Android player $V, from the port's donor $(basename "$DONOR")"
-  pm player donor "$V" "$P" --backend "$PLAYER_BACKEND" --abi "$PLAYER_ABI" --apk "$DONOR" \
-    || fail "Could not unpack Unity's player from the port's donor (see patchlog.txt)."
+  donor "$PLAYER_BACKEND" "$PLAYER_ABI"; apks=(--apk "$DONOR")
+  donor mono armeabi-v7a; apks+=(--apk "$DONOR")        # (its engine modules: an IL2CPP donor has none)
+  step "Unity's Android player $V, from the port's donors"
+  pm player donor "$V" "$P" --backend "$PLAYER_BACKEND" --abi "$PLAYER_ABI" --managed "${apks[@]}" \
+    || fail "Could not unpack Unity's player from the port's donors (see patchlog.txt)."
   for kv in $PLAYER_SHA256; do
     f=${kv%%=*}; h=${kv#*=}
     got=$(sha256sum "$P/Variations/$PLAYER_BACKEND/Release/Libs/$PLAYER_ABI/$f" 2>/dev/null | cut -d' ' -f1)
@@ -278,7 +285,7 @@ fi
 # ---- 4. what Unity's Android player reads: APK + OBB (the data's files are moved into them)
 if [ ! -f "$W/.step_package" ]; then
   step "packing the game for the player"
-  args=(--src "$D" --pkg "$P" --out "$W/android" --name "$APK_NAME" --package "$PACKAGE" --swappy "$SWAPPY"
+  args=(--src "$D" --pkg "$P" --mono64 --out "$W/android" --name "$APK_NAME" --package "$PACKAGE" --swappy "$SWAPPY"
         --consume-src --verify-bundles 2 --pack all)
   [ "$VIDEO_SHADER" = 1 ] || args+=(--no-video-shader)
   # StreamingAssets the game reads as files: beside the APK too (Game_Data/StreamingAssets), and
@@ -306,36 +313,39 @@ if [ ! -f "$W/.step_package" ]; then
   mark package
 fi
 
-# ---- 5. into place: the player (only the Mono runtime the game needs: with both, libunity takes
-# the .NET 4.x one) and the APK, OBB, Mono's config
-step "installing"
+# ---- 5. into place: the IL2CPP player's libraries, the Mono bridge as its libil2cpp.so with Mono's
+# runtime (setup/mono64/<line>/, built for the game's Unity line), and the APK, OBB, Mono's config
+step "installing (in arm64/)"
+mkdir -p "$I" || fail "Cannot write to ports/$PORT_NAME/arm64."
 Z="$W/android/zip"
-# (the report's "unity" section names the scripting runtime: json.dump's one key a line)
-rt=$(sed -n 's/^  "scripting_runtime": "\(.*\)",\{0,1\}$/\1/p' "$W/android/android_data_report.json" 2>/dev/null | head -1)
-case "$rt" in "") other=;; *bdwgc*) other=libmono.so;; *) other=libmonobdwgc-2.0.so;; esac   # (no report: both, libunity picks)
-mkdir -p "$GAMEDIR/lib"
-rm -f "$GAMEDIR/lib/"*.so
-for f in "$P/Variations/$PLAYER_BACKEND/Release/Libs/$PLAYER_ABI/"*.so "$P/Variations/$PLAYER_BACKEND/Release/MonoLibs/$PLAYER_ABI/"*.so; do
+L="$P/Variations/$PLAYER_BACKEND/Release/Libs/$PLAYER_ABI"
+line=$(echo "$V" | sed -E 's/^([0-9]+\.[0-9]+).*/\1/')
+M="$S/mono64/$line"
+[ -f "$M/libmonobdwgc-2.0.so" ] && [ -f "$M/libil2cpp.so" ] || fail "This release has no Mono runtime for Unity $line (setup/mono64)."
+mkdir -p "$I/lib"
+rm -f "$I/lib/"*.so
+for f in "$L"/*.so; do
   [ -f "$f" ] || continue
-  [ "$(basename "$f")" = "$other" ] && continue
-  cp "$f" "$GAMEDIR/lib/" || fail "Could not install Unity's player."
+  [ "$(basename "$f")" = libil2cpp.so ] && continue
+  cp "$f" "$I/lib/" || fail "Could not install Unity's player."
 done
-[ -f "$GAMEDIR/lib/libunity.so" ] || fail "Unity's player is incomplete (see patchlog.txt)."
-[ -d "$Z/assets" ] && rm -rf "$GAMEDIR/assets"        # (an interrupted install moved it already)
+for f in "$M"/*.so; do cp "$f" "$I/lib/" || fail "Could not install the Mono runtime."; done
+[ -f "$I/lib/libunity.so" ] || fail "Unity's player is incomplete (see patchlog.txt)."
+[ -d "$Z/assets" ] && rm -rf "$I/assets"        # (an interrupted install moved it already)
 # Game_Data/ (StreamingAssets as files, the data folder's own files): the new ones replace the old;
 # files the game wrote there stay
-if [ -d "$Z/Game_Data" ] && [ -d "$GAMEDIR/Game_Data" ]; then
-  rm -rf "$GAMEDIR/Game_Data/StreamingAssets"
+if [ -d "$Z/Game_Data" ] && [ -d "$I/Game_Data" ]; then
+  rm -rf "$I/Game_Data/StreamingAssets"
   for f in "$Z/Game_Data"/*; do
     [ -e "$f" ] || continue
-    rm -rf "$GAMEDIR/Game_Data/$(basename "$f")"
-    mv -f "$f" "$GAMEDIR/Game_Data/" || fail "Could not install $(basename "$f")."
+    rm -rf "$I/Game_Data/$(basename "$f")"
+    mv -f "$f" "$I/Game_Data/" || fail "Could not install $(basename "$f")."
   done
   rm -rf "$Z/Game_Data"
 fi
 for f in "$Z"/*; do
   [ -e "$f" ] || continue
-  mv -f "$f" "$GAMEDIR/" || fail "Could not install $(basename "$f")."
+  mv -f "$f" "$I/" || fail "Could not install $(basename "$f")."
 done
 cp "$W/answers.env" "$GAMEDIR/answers.env" || nowrite "the game's settings"
 hook post_install

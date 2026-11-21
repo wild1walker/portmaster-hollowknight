@@ -6,7 +6,12 @@
 [port]
 name = "hollowknight"
 title = "Hollow Knight"
-route = "android"
+route = "mono-arm64"
+# aarch64 only (portmaster-unity docs/arm64.md, "Shipping aarch64 only"): the release ships nothing for armhf; the
+# game runs on Unity's 64-bit (arm64) IL2CPP player with its own assemblies on Unity's Mono for aarch64
+# (setup/mono64/6000.0), ua_host the 64-bit one. Until 2026.11.19 the release carried both builds and the launcher
+# picked (HK_ROUTE): the 32-bit one (Unity's armv7 Mono player) where the system had 32-bit libraries.
+aarch64_only = true
 porter = ["wild1walker"]
 desc = "Hollow Knight, the hand-drawn action adventure by Team Cherry, on Unity's own Android player (run natively, no emulator). You need your own copy: the Linux version from GOG or Steam."
 inst = "Put the GOG Linux installer as downloaded (hollow_knight_*.sh, no renaming), or the game folder from GOG or Steam into ports/hollowknight/gamedata, then launch. The first launch builds the game on the handheld."
@@ -16,7 +21,8 @@ store = [{name = "GOG", gameurl = "https://www.gog.com/game/hollow_knight", deve
 setup_time = "one to three hours"
 exp = false
 thanks = "Thanks to [Team Cherry](https://www.teamcherry.com.au/) for creating Hollow Knight and its hand-drawn kingdom of Hallownest."
-ready_marker = ".setup_done"
+# (.setup_done64: the 64-bit build's mark since the release had both builds; .setup_done is the 32-bit one's)
+ready_marker = ".setup_done64"
 
 # what the player provides: the data folder the setup looks for (data, a glob), the build
 # kind (linux | macos | windows), the Unity versions the setup accepts (empty: any the
@@ -32,17 +38,16 @@ developer = "Team Cherry"
 publisher = "Team Cherry"
 release_date = "2017-02-24"
 
-# Unity's Android player: backend/abi; url = the installer (`pmunity player url <version>`; empty:
-# looked up on the handheld); sha256 = {"<file>" = "<hash>"} checked after the fetch
+# Unity's Android player: backend/abi; sha256 = {"<file>" = "<hash>"} checked after it is unpacked (the
+# installer's files, as the donor carries them)
 [player]
-backend = "mono"
-abi = "armeabi-v7a"
-url = "https://download.unity3d.com/download_unity/74a0adb02c31/TargetSupportInstaller/UnitySetup-Android-Support-for-Editor-6000.0.61f1.exe"
-sha256 = {"libmain.so" = "f9ea09a232a33b4c971bfcb45053fc5ef4c7ccc5999014d7bf7f46bae0bd5a31", "libunity.so" = "4ac0f68ffd66e0af2470544b75500ccda60e1d3c00b172e870690bf75000007d"}
-# the donors the release ships: the 32-bit Mono player, and Unity's 64-bit IL2CPP player for the 64-bit
-# build (setup/patchscript64, on systems without a 32-bit userland: the game's own assemblies on Unity's Mono
-# for 64-bit ARM behind that player's libil2cpp.so, nothing compiled; its engine modules from the Mono donor)
-donors = ["donor-6000.0.61f1-mono-armv7.apk", "donor-6000.0.61f1-il2cpp-arm64.apk"]
+backend = "il2cpp"
+abi = "arm64-v8a"
+sha256 = {"libmain.so" = "74239fee829c3be83e5161f6aaf89b22c8ea6c8794b1e2c042274dcc9a02711a", "libunity.so" = "d42a6805f34630801f4056728d6f0e67df1028a2aa6f93c4e2e459f544ec914d"}
+# the donors the release ships: Unity's 64-bit IL2CPP player (the game's own assemblies on Unity's Mono for
+# 64-bit ARM behind that player's libil2cpp.so, nothing compiled), and the Mono one for the engine's assemblies
+# (an IL2CPP build has none; `port package` ships it without its 32-bit player)
+donors = ["donor-6000.0.61f1-il2cpp-arm64.apk", "donor-6000.0.61f1-mono-armv7.apk"]
 
 # pmunity convert's config (each step's DEFAULTS); "textures" re-encodes BC/DXT as ASTC
 # (less memory, a longer setup, slightly different pixels: off unless you add it)
@@ -287,24 +292,29 @@ UA_PREFS_DEFAULTS = "ShaderQuality=0 VidParticles=0 VidDithering=0 VidNoise=0"
 # the porter's own files (paths relative to this file), copied into setup/: converter plugins
 # (--plugin), managed = assemblies shipped into the game (--managed-file), assembly_patches =
 # [{name, command, files}] ({setup} = the setup folder), hooks = {game|pre_convert|post_convert|
-# post_pack|post_install = "x.sh"} sourced by the setup, extra = files for the port folder
+# post_pack|post_install = "x.sh"} sourced by the setup, extra = files for the port folder, own = files
+# `port new` leaves as they are (this port's own launcher, setup, questions and READMEs, made by hand)
 [files]
 plugins = []
 managed = []
 assembly_patches = []
 hooks = {}
 extra = ["flipbooks.txt"]   # the background flip-books' controllers (UA_FLIPBOOK above)
+own = ["Hollow Knight.sh", "README.md", "testing_thread.txt", "hollowknight/README.md", "hollowknight/port.json",
+       "hollowknight/setup.txt", "hollowknight/gamedata/PUT_GAME_FILES_HERE.txt", "hollowknight/setup/patchscript",
+       "hollowknight/setup/questions.lua"]
 
 # commands `port package` runs in this folder first (env PMUNITY, PORT_SRC, BUILD), the files
 # they make put into the port folder (outputs = {"setup/files/x" = "build/x"}), and their licences
 # (licenses = {"LICENSE.x.txt" = "path"})
 [build]
-# libpmhwdec for both builds (Rockchip MPP only for the 32-bit one: the Rockchip firmwares on vendor kernels, dArkOS
-# and ArkOS, have 32-bit libraries), and the 64-bit build's runtime (build64.sh: ua_host64, the Mono bridge and
-# Unity's Mono of the 6000.0 line, their licences)
-commands = ['"$PMUNITY/tools/pmhwdec/build.sh" "$BUILD/pmhwdec"', '"$PORT_SRC/build64.sh" "$BUILD/arm64"']
-outputs = {"pmhwdec/libpmhwdec.so.1" = "{build}/pmhwdec/armhf/libpmhwdec.so.1", "pmhwdec/pmhwdec-cedard" = "{build}/pmhwdec/aarch64/pmhwdec-cedard", "pmhwdec/pmhwdec-test" = "{build}/pmhwdec/armhf/pmhwdec-test", "pmhwdec/librockchip_mpp.so" = "{build}/pmhwdec/armhf/librockchip_mpp.so", "pmhwdec64/libpmhwdec.so.1" = "{build}/pmhwdec/arm64/libpmhwdec.so.1", "pmhwdec64/pmhwdec-cedard" = "{build}/pmhwdec/aarch64/pmhwdec-cedard", "pmhwdec64/pmhwdec-test" = "{build}/pmhwdec/arm64/pmhwdec-test", "ua_host64" = "{build}/arm64/ua_host64", "setup/mono64/6000.0/libil2cpp.so" = "{build}/arm64/mono64/libil2cpp.so", "setup/mono64/6000.0/libmonobdwgc-2.0.so" = "{build}/arm64/mono64/libmonobdwgc-2.0.so", "setup/mono64/6000.0/libMonoPosixHelper.so" = "{build}/arm64/mono64/libMonoPosixHelper.so", "setup/mono64/6000.0/libmono-native.so" = "{build}/arm64/mono64/libmono-native.so"}
-licenses = {"LICENSE.libpmhwdec.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE", "LICENSE.pmhwdec-cedard.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhwdec-cedard", "LICENSE.libpmhwdec-libvpx.txt" = "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt", "LICENSE.mpp.txt" = "{build}/pmhwdec/armhf/LICENSE.mpp.txt", "LICENSE.mono-6000.0.txt" = "{build}/arm64/LICENSE.mono-6000.0.txt", "LICENSE.bdwgc-6000.0.txt" = "{build}/arm64/LICENSE.bdwgc-6000.0.txt", "LICENSE.corefx-6000.0.txt" = "{build}/arm64/LICENSE.corefx-6000.0.txt"}
+# Knifethrower's libpmhwdec, 64-bit, in pmhwdec/ (pmhwdec-cedard, the Allwinner decoder, is a 64-bit program
+# for every build), with Rockchip MPP built for aarch64 too (MPP_ARM64=1) for the RK3326 firmwares on vendor
+# kernels (dArkOS, ArkOS). The 64-bit runtime (ua_host, Unity's Mono of the 6000.0 line, the Mono bridge) is
+# the mono-arm64 route's: `port package` ships it (PMUNITY_MONO64_WORK: the Mono builds' work folder)
+commands = ['MPP_ARM64=1 "$PMUNITY/tools/pmhwdec/build.sh" "$BUILD/pmhwdec"']
+outputs = {"pmhwdec/libpmhwdec.so.1" = "{build}/pmhwdec/arm64/libpmhwdec.so.1", "pmhwdec/pmhwdec-cedard" = "{build}/pmhwdec/aarch64/pmhwdec-cedard", "pmhwdec/pmhwdec-test" = "{build}/pmhwdec/arm64/pmhwdec-test", "pmhwdec/librockchip_mpp.so" = "{build}/pmhwdec/arm64/librockchip_mpp.so"}
+licenses = {"LICENSE.libpmhwdec.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE", "LICENSE.pmhwdec-cedard.txt" = "{build}/pmhwdec/src/pmhwdec/LICENSE.pmhwdec-cedard", "LICENSE.libpmhwdec-libvpx.txt" = "{build}/pmhwdec/src/pmhwdec/licenses/LICENSE.libvpx.txt", "LICENSE.mpp.txt" = "{build}/pmhwdec/arm64/LICENSE.mpp.txt"}
 
 # Questions PortMaster's patcher asks before the setup (each answer is kept for later runs), e.g.:
 # [[questions]]
